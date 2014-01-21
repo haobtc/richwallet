@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-lg-12 text-center">
+    <h1>Receive Addresses</h2>
+      <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div id="addresses">
+
+      <% if(data.addresses.length == 0) {%>
+
+        <h4>No receive addresses yet.</h4>
+
+      <% } else { %>
+        
+        <div class="hidden-lg hidden-md">
+          <% for(var i=0;i<data.addresses.length;i++) { %>
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                <strong><%- data.addresses[i].name || 'No Label' %></strong>
+                <span class="addExchangePrice pull-right" style="color: #33CC33;">
+                  <%- richwallet.wallet.addressReceivedAmount(data.addresses[i].address) %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                </span>
+              </div>
+              <div><%- data.addresses[i].address %></div>
+              
+              <div><a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> Request Payment</a></div>
+            </div>
+          </div>
+          <hr>
+          <% } %>
+        </div>
+        
+        <div class="visible-md visible-lg">
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Label</th>
+                <th>Address</th>
+                <th>Network</th>
+                <th>
+                  <span class="visible-xs visible-sm">Total</span>
+                  <span class="visible-md visible-lg">Total Received</span>
+                </th>
+		<th>&nbsp;</th>
+                <!--
+                <th>Backups</th>
+                <th>Receive QR Code</th>
+                -->
+              </tr>
+            </thead>
+            <tbody>
+              <% for(var i=0; i<data.addresses.length; i++) { %>
+                <% if(!data.addresses[i].isChange) { %>
+                  <tr>
+                    <td><%- data.addresses[i].name %></td>
+                    <td><%- data.addresses[i].address %></td>
+                    <td><%- data.addresses[i].network  %></td>
+                    <td>
+                      <span class="addExchangePrice">
+                        <%- richwallet.wallet.addressReceivedAmount(data.addresses[i].address) %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> Request Payment</a>
+                      <!--
+                      <a href="#" class="btn btn-info"><i class="fa fa-edit"></i> Edit Label</a>
+                      <a href="#" class="btn btn-danger"><i class="fa fa-archive"></i> Archive</a>
+                      -->
+                    </td>
+                    <!--
+                    <td>Create Paper Wallet</td>
+                    <td>Generate</td>
+                    -->
+                  </tr>
+                <% } %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <h2>New Address</h2>
+    <form onsubmit="richwallet.controllers.addresses.generateNewAddress($('#addressNetwork').val(), $('#addressLabel').val()); return false;">
+      <div>
+        Label <small>(optional)</small>: <input id="addressLabel" type="text" style="width: 200px">
+	<select id="addressNetwork"><option value="bitcoin">Bitcoin</option><option value="litecoin">Litecoin</option></select>
+	<button class="btn btn-primary"><i class="fa fa-plus"></i> Generate</button>
+        <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">
+          <button type="btn" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <span id="newAddressMessage"></span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

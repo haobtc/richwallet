@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-lg-12 text-center">
+    <h1>Settings</h1>
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8 col-lg-offset-2">
+    <h3 style="color: #E00000" class="text-center">Warning</h3>
+    <h4>YOU MUST REMEMBER ANY CHANGES YOU MAKE HERE. If you forget your email or changed password, you will not be able to access your Bitcoin wallet, and the server admin <strong>WILL NOT</strong> be able to reset it. If you lose your login, you will lose your Bitcoins, forever. Write it down if you have to. <strong>Don't forget it.</strong></h4>
+    <h4>It is also strongly recommended that you make a <a href="#/backup">backup of your current wallet</a> before making any changes to prevent possible loss of data.</h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 col-lg-offset-3 text-center">
+    <div id="changeDialog" class="alert hidden">
+      <span id="changeMessage"></span>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4 col-lg-offset-2 text-center">
+    <h3>Change Email</h3>
+
+    <form role="form" onsubmit="richwallet.controllers.accounts.changeId(); return false;">
+      <div class="form-group">
+        <label for="email">New email address</label>
+        <input type="email" class="form-control" id="changeEmailNew" placeholder="Your new email">
+
+        <label for="password">Confirm password</label>
+        <input type="password" class="form-control" id="changeEmailPassword" placeholder="Current password" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary">Change Email</button>
+    </form>
+  </div>
+  <div class="col-lg-4 text-center">
+    <h3>Change Password</h3>
+
+    <form role="form" onsubmit="richwallet.controllers.accounts.changePassword(); return false;">
+      <div class="form-group">
+        <label for="currentPassword">Current password</label>
+        <input type="password" class="form-control" id="currentPassword" placeholder="Current password" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="newPassword">New password</label>
+        <input type="password" class="form-control" id="newPassword" placeholder="New password" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmNewPassword">Confirm new password</label>
+        <input type="password" class="form-control" id="confirmNewPassword" placeholder="Re-enter new password" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary">Change password</button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4 col-lg-offset-2" id="authKey">
+    <h3 class="text-center">Two Factor Auth</h3>
+    <% if(richwallet.usingAuthKey == true) { %>
+      <p>You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it:</p>
+
+      <div id="disableAuthDialog" class="alert hidden">
+      </div>
+
+      <form id="disableAuth" role="form">
+        <div class="form-group">
+          <label for="authCode">Enter code to disable</label>
+          <input class="form-control" type="password" id="disableAuthCode" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-danger">Disable</button>
+      </form>
+    <% } else { %>
+      <p>Two factor authentication allows you to require a code from your phone from Login. Richwallet uses Google Authenticator, which you will need to download to use this.</p>
+
+      <a class="btn btn-primary" id="generateAuthQR">Generate QR Code to Scan</a>
+    <% } %>
+  </div>
+</div>
+

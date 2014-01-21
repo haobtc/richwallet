@@ -1,0 +1,42 @@
+{
+  "name": "richwallet",
+  "description": "DIY Multi Encryptcoin Wallet Service",
+  "version": "0.2.1",
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "app.js",
+  "author": "Ke Zeng <superisaac.ke@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haobtc/richwallet.git"
+  },
+  "dependencies": {
+    "express": "~3.4.4",
+    "optimist": "~0.6.0",
+    "redis": "~0.9.0",
+    "request": "~2.27.0",
+    "browserify": "~2.35.2",
+    "sockjs": "~0.3.8",
+    "speakeasy": "~1.0.3"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.1",
+    "istanbul": "~0.1.30",
+    "supertest": "~0.8.1",
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.11",
+    "grunt-shell": "~0.5.0",
+    "webdriverjs": "~0.7.14",
+    "chai": "~1.8.1",
+    "phantomjs": "~1.9.2",
+    "redis-mock": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-watch": "~0.5.3",
+    "uglify-js": "~2.4.3"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test istanbul test ./node_modules/.bin/_mocha -- --reporter list test/coinpunk/*",
+    "browsertest": "./node_modules/.bin/_mocha --reporter list test/browser/functional.js"
+  }
+}

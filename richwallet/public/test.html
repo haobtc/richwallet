@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <script src="js/lib/bitcoinjs.js"></script>
+    <script>
+        var Bitcoin = require('./lib/bitcoinjs/index.js');
+    </script>
+    <script src="js/all.js"></script>
+  </head>
+
+  <body>
+    <div id="mocha"></div>
+  </body>
+  
+    <script src="js/lib/mocha.js"></script>
+    <script src="js/lib/chai.js"></script>
+    <script>
+      mocha.setup('bdd');
+      var assert = chai.assert;
+    </script>
+
+    <link href="css/mocha.css" rel="stylesheet">
+
+    <script src="test/wallet_test.js"></script>
+
+    <script>
+      // mocha.checkLeaks();
+      mocha.globals(['jQuery']);
+      mocha.run();
+    </script>
+</html>
