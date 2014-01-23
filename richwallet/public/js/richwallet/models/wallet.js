@@ -30,6 +30,15 @@ richwallet.Wallet = function(walletKey, walletId) {
 	    tx.network = addr.getNetwork();
 	}
     }
+
+    for(var i=0; i<this.unspent.length; i++) {
+	var tx = this.unspent[i];
+	if(!tx.network) {
+	    var addr = new Bitcoin.Address(tx.address);
+	    tx.network = addr.getNetwork();
+	}
+    }
+
     return true;
   };
 
@@ -113,13 +122,16 @@ richwallet.Wallet = function(walletKey, walletId) {
     return addrHashes;
   };
 
-  this.changeAddressHashes = function() {
+  this.changeAddressHashes = function(network) {
     var addrHashes = [];
-    for(var i=0; i<keyPairs.length; i++) {
-      if(keyPairs[i].isChange == true)
-        addrHashes.push(keyPairs[i].address);
+    for(var i=0; i<keyPairs.length; i++) { 
+      if(keyPairs[i].isChange == true) {
+	var addr = new Bitcoin.Address(keyPairs[i].address);
+	if(!network || addr.getNetwork() == network) {
+            addrHashes.push(keyPairs[i].address);
+	}
+      }
     }
-
     return addrHashes;
   };
 
@@ -206,40 +218,71 @@ richwallet.Wallet = function(walletKey, walletId) {
     return changed;
   };
 
-  this.getUnspent = function(confirmations) {
-    var confirmations = confirmations || 0;
-    var unspent = [];
-
-    for(var i=0; i<this.unspent.length; i++)
-      if(this.unspentConfirmations[this.unspent[i].hash] >= confirmations)
-        unspent.push(this.unspent[i]);
-    return unspent;
+   this.filterNetwork = function(arr, network, iterator) {
+      for(var i=0; i<arr.length; i++) {
+	  var obj = arr[i];
+	  if(!network || network == obj.network) {
+	      iterator.call(this, obj, i);
+	  }
+      }
   };
 
-  this.pendingUnspentBalance = function() {
-    var unspent = this.getUnspent(0);
-    var changeAddresses = this.changeAddressHashes();
+  this.getUnspent = function(network, confirmations) {
+    var confirmations = confirmations || 0;
+    var unspentList = [];
+    this.filterNetwork(this.unspent, network, function(unspent) {
+	if(this.unspentConfirmations[unspent.hash] >= confirmations) {
+	    unspentList.push(unspent);
+	}
+    });
+    return unspentList;
+  };
+
+  this.pendingUnspentBalance = function(network) {
+    var unspentList = this.getUnspent(network, 0);
+    var changeAddresses = this.changeAddressHashes(network);
     var balance = new BigNumber(0);
 
-    for(var u=0;u<unspent.length;u++) {
-      if(this.unspentConfirmations[unspent[u].hash] == 0 && _.contains(changeAddresses, unspent[u].address) == false)
-        balance = balance.plus(unspent[u].amount);
+    for(var u=0;u<unspentList.length;u++) {
+      var unspent = unspentList[u];
+      if(this.unspentConfirmations[unspent.hash] == 0 &&
+	 _.contains(changeAddresses, unspent.address) == false)
+        balance = balance.plus(unspent.amount);
     }
     return balance;
   };
 
-  this.safeUnspentBalance = function() {
-    var safeUnspent = this.safeUnspent();
+  this.safeUnspentBalance = function(network) {
+    var safeUnspentList = this.safeUnspent(network);
     var amount = new BigNumber(0);
-    for(var i=0;i<safeUnspent.length;i++)
-      amount = amount.plus(safeUnspent[i].amount);
+    for(var i=0;i<safeUnspentList.length;i++)
+      amount = amount.plus(safeUnspentList[i].amount);
     return amount;
   };
 
+  this.balances = function() {
+      var balances = [];
+      for(var network in richwallet.config.networkConfigs) {
+	  var conf = richwallet.config.networkConfigs[network];
+	  var balance = this.safeUnspentBalance(network);
+	  var pendingBalance = this.pendingUnspentBalance(network);
+	  if (balance.eq(0) && pendingBalance.eq(0)) {
+	      continue;
+	  }
+	  balances.push({
+	      'network': network,
+	      'currency': conf['currency'],
+	      'balance': balance,
+	      'pendingBalance': pendingBalance
+	  });
+      }
+      return balances;
+  };
+
   // Safe to spend unspent txs.
-  this.safeUnspent = function() {
-    var unspent = this.getUnspent();
-    var changeAddresses = this.changeAddressHashes();
+  this.safeUnspent = function(network) {
+    var unspent = this.getUnspent(network);
+    var changeAddresses = this.changeAddressHashes(network);
     var safeUnspent = [];
     for(var u=0;u<unspent.length;u++) {
       if(_.contains(changeAddresses, unspent[u].address) == true || this.unspentConfirmations[unspent[u].hash] >= this.minimumConfirmations)
@@ -370,6 +413,8 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     return tx.raw;
   };
+
+
 
   if(walletKey && walletId)
     this.createServerKey();

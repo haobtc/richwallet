@@ -5,8 +5,9 @@ richwallet.controllers.Dashboard.prototype = new richwallet.Controller();
 richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
   var i = 0;
   var self = this;
-  $('#balance').text(richwallet.wallet.safeUnspentBalance());
-  $('#pendingBalance').text(richwallet.wallet.pendingUnspentBalance());
+  var balances = richwallet.wallet.balances();
+  /*$('#balance').text(richwallet.wallet.safeUnspentBalance());
+  $('#pendingBalance').text(richwallet.wallet.pendingUnspentBalance()); */
 
   var txHashes = [];
   var txs = richwallet.wallet.transactions;
@@ -33,6 +34,9 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
       if(txs[i].type == 'receive')
         rtxs.push(txs[i]);
 
+    self.template('currencyBalances', 'dashboard/balances', {balances:balances}, function(id) {
+      $('#'+id+" [rel='tooltip']").tooltip();
+    });
     self.template('sentTransactions', 'dashboard/sent', {tx: stxs.reverse()}, function(id) {
       $('#'+id+" [rel='tooltip']").tooltip();
     });
