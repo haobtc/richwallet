@@ -24,49 +24,8 @@ richwallet.controllers.Tx.prototype.send = function() {
 
   this.getUnspent(function(resp) {
     richwallet.router.render('view', 'tx/send', {balance: richwallet.wallet.safeUnspentBalance()}, function(id) {
-      self.updateExchangeRates(id, false);
       $('#'+id+" [rel='tooltip']").tooltip();
     });
-  });
-};
-
-richwallet.controllers.Tx.prototype.sendExchangeUpdate = function() {
-  var self = this;
-  var amount = $('#amount').val();
-  richwallet.pricing.getLatest(function(price, currency) {
-    var newAmount = parseFloat(price * amount).toFixed(2);
-
-    if(newAmount == "NaN")
-      return;
-
-    var amountExchange = $('#amountExchange');
-
-    if(amountExchange.val() != newAmount) {
-      $('#amountExchange').val(newAmount);
-      self.calculateFee();
-    }
-  });
-};
-
-richwallet.controllers.Tx.prototype.sendBTCUpdate = function() {
-  var self = this;
-  var amountExchange = $('#amountExchange').val();
-  richwallet.pricing.getLatest(function(price, currency) {
-    
-    if(amountExchange == 0)
-      return;
-
-    var newAmount = parseFloat(amountExchange / price).toFixed(6).replace(/\.0+$/, '');
-    
-    if(newAmount == "NaN")
-      return;
-    
-    var amount = $('#amount');
-    
-    if(amount.val() != newAmount) {
-      amount.val(newAmount);
-      self.calculateFee();
-    }
   });
 };
 
@@ -172,7 +131,6 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
   var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
   $('#calculatedFee').val(calculatedFee);
   $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' BTC');
-  this.updateExchangeRates('container', false);
 };
 
 richwallet.controllers.Tx.prototype.scanQR = function(event) {

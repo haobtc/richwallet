@@ -35,10 +35,8 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
 
     self.template('sentTransactions', 'dashboard/sent', {tx: stxs.reverse()}, function(id) {
       $('#'+id+" [rel='tooltip']").tooltip();
-      self.updateExchangeRates(id);
     });
     self.template('receivedTransactions', 'dashboard/received', {category: 'Received', tx: rtxs.reverse()}, function(id) {
-      self.updateExchangeRates('receivedTransactions');
       $('#'+id+" [rel='tooltip']").tooltip();
     });
   });
@@ -56,20 +54,6 @@ richwallet.controllers.Dashboard.prototype.index = function() {
       });
     } else {
       self.renderDashboard();
-    }
-  });
-};
-
-richwallet.controllers.Dashboard.prototype.updateExchangeRates = function(id) {
-  richwallet.pricing.getLatest(function(price, currency) {
-    $('#balanceExchange').text(' ≈ '+ parseFloat(price * $('#balance').text()).toFixed(2) + ' ' + currency);
-    $('#exchangePrice').text('1 BTC ≈ ' + price + ' ' + currency);
-
-    $('#'+id+' .exchangePrice').remove();
-
-    var prices = $('#'+id+' .addExchangePrice');
-    for(var i=0;i<prices.length;i++) {
-      $(prices[i]).append('<span class="exchangePrice pull-right"><small>'+($(prices[i]).text().split(' ')[0] * price).toFixed(2)+' ' +currency+'</small></span>');
     }
   });
 };

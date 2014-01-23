@@ -34,16 +34,15 @@
       </div>
       
       <div class="form-group">
-        <label for="address" class="col-lg-5 control-label">Bitcoin address to send to</label>
+        <label for="address" class="col-lg-5 control-label">To Address</label>
         <div class="col-lg-5">
-          <input id="address" type="text" name="address" autocomplete="off" class="form-control" onchange="richwallet.controllers.tx.calculateFee()">
+          <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="BTC, LTC, and any other supported coin addresses" onchange="richwallet.controllers.tx.calculateFee()">
         </div>
       </div>
       <div class="form-group">
         <label for="amount" class="col-lg-5 control-label">Amount</label>
         <div class="col-lg-5">
-          <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" oninput="richwallet.controllers.tx.sendExchangeUpdate()" onchange="richwallet.controllers.tx.calculateFee()"> BTC <span style="padding-left: 30px"> ≈ 
-          <input id="amountExchange" type="text" name="amountExchange" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" oninput="richwallet.controllers.tx.sendBTCUpdate()"> <%- richwallet.pricing.getCurrency() %>
+          <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" onchange="richwallet.controllers.tx.calculateFee()"> BTC <span style="padding-left: 30px">
         </div>
       </div>
       

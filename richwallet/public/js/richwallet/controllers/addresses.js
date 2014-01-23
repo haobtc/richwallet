@@ -4,7 +4,6 @@ richwallet.controllers.Addresses.prototype = new richwallet.Controller();
 richwallet.controllers.Addresses.prototype.list = function() {
   var self = this;
   this.render('addresses/list', {addresses: richwallet.wallet.receiveAddresses()}, function(id) {
-    self.updateExchangeRates(id);
   });
 }
 
@@ -16,7 +15,6 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
 
   this.saveWallet({address: address, override: true}, function() {
     self.render('addresses/list', {addresses: richwallet.wallet.addresses()}, function(id) {
-      self.updateExchangeRates(id, false);
     });
     $('#newAddressDialog').removeClass('hidden');
     var message = 'Created new address '+address;
@@ -28,38 +26,11 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
 
 richwallet.controllers.Addresses.prototype.request = function(address) {
   var self = this;
-  this.render('addresses/request', {address: address}, function(id) {
+  var addr = new Bitcoin.Address(address);
+  this.render('addresses/request', {address: address, network: addr.getNetwork()}, function(id) {
     self.drawRequestQR(address);
   });
 }
-
-richwallet.controllers.Addresses.prototype.requestExchangeUpdate = function() {
-  var amount = $('#amount').val();
-  richwallet.pricing.getLatest(function(price, currency) {
-    var newAmount = parseFloat(price * amount).toFixed(2);
-    
-    if(newAmount == "NaN")
-      return;
-    
-    $('#amountExchange').val(newAmount);
-  });
-};
-
-richwallet.controllers.Addresses.prototype.requestBTCUpdate = function() {
-  var amountExchange = $('#amountExchange').val();
-  richwallet.pricing.getLatest(function(price, currency) {
-    
-    if(amountExchange == 0)
-      return;
-
-    var newAmount = parseFloat(amountExchange / price).toFixed(6).replace(/0+$/, '');
-    
-    if(newAmount == "NaN")
-      return;
-    
-    $('#amount').val(newAmount);
-  });
-};
 
 richwallet.controllers.Addresses.prototype.drawRequestQR = function(address) {
   var uri = URI({protocol: 'bitcoin', path: address});

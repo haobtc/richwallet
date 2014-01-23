@@ -15,8 +15,7 @@
     
     <h4>Amount</h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
-      <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" oninput="richwallet.controllers.addresses.requestExchangeUpdate()" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"> BTC <span style="padding-left: 30px"> ≈ 
-      <input id="amountExchange" type="text" name="amountExchange" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" oninput="richwallet.controllers.addresses.requestBTCUpdate()" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"> <%- richwallet.pricing.getCurrency() %>
+      <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"> <%- richwallet.config.networkConfigs[data.network].currency %> <span style="padding-left: 30px">
     </div>
     <h4>Label <small>Optional</small></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">

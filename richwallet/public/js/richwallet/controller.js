@@ -90,20 +90,6 @@ richwallet.Controller.prototype.friendlyTimeString = function(timestamp) {
   return date.toLocaleString();
 };
 
-richwallet.Controller.prototype.updateExchangeRates = function(id) {
-  richwallet.pricing.getLatest(function(price, currency) {
-    $('#balanceExchange').text(' ≈ '+ parseFloat(price * $('#balance').text()).toFixed(2) + ' ' + currency);
-    $('#exchangePrice').text('1 BTC ≈ ' + price + ' ' + currency);
-
-    $('#'+id+' .exchangePrice').remove();
-
-    var prices = $('#'+id+' .addExchangePrice');
-    for(var i=0;i<prices.length;i++) {
-      $(prices[i]).append('<span class="exchangePrice"><small>'+($(prices[i]).text().trim().split(' ')[0] * price).toFixed(2)+' ' +currency+'</small></span>');
-    }
-  });
-};
-
 richwallet.Controller.prototype.minimumSendConfirmations = 1;
 richwallet.Controller.prototype.minimumStrongSendConfirmations = 6;
 
