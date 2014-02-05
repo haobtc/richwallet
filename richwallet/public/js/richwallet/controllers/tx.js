@@ -23,7 +23,7 @@ richwallet.controllers.Tx.prototype.send = function() {
   var self = this;
 
   this.getUnspent(function(resp) {
-    richwallet.router.render('view', 'tx/send', {balance: richwallet.wallet.safeUnspentBalance()}, function(id) {
+    richwallet.router.render('view', 'tx/send', {balance: richwallet.wallet.safeUnspentBalance('bitcoin')}, function(id) {
       $('#'+id+" [rel='tooltip']").tooltip();
     });
   });
@@ -131,6 +131,26 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
   var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
   $('#calculatedFee').val(calculatedFee);
   $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' BTC');
+};
+
+richwallet.controllers.Tx.prototype.calculateUnspentBalance = function() {
+    var network = '';
+    var address = $('#address').val();
+    try{
+	var addr = new Bitcoin.Address(address);
+	network = addr.getNetwork();
+    }catch(e) {
+	network = '';
+    }
+    if(network) {
+	var balance = richwallet.wallet.safeUnspentBalance(network);
+	var currency = richwallet.config.networkConfigs[network].currency;
+	$('#availableBalance').html('' + balance + ' ' + currency);
+	$('#availableBalance').parents('.row').show();
+    } else {
+	$('#availableBalance').html('');
+	$('#availableBalance').parents('.row').hide();
+    }
 };
 
 richwallet.controllers.Tx.prototype.scanQR = function(event) {
