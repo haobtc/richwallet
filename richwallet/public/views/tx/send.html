@@ -31,7 +31,7 @@
       <div class="form-group">
         <label for="address" class="col-lg-5 control-label">To Address</label>
         <div class="col-lg-5">
-          <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="BTC, LTC, and any other supported coin addresses" onchange="richwallet.controllers.tx.calculateFee();richwallet.controllers.tx.calculateUnspentBalance();">
+          <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="BTC, LTC, and any other supported coin addresses" onchange="richwallet.controllers.tx.calculateFee();richwallet.controllers.tx.calculateUnspentBalance();" value="<%- data.toaddress %>">
         </div>
       </div>
       <div class="form-group">

@@ -133,6 +133,15 @@ richwallet.router.map('#/tx/send').to(function() {
   });
 });
 
+richwallet.router.map('#/tx/sendto/:address').to(function() {
+  var address = this.params.address;
+  richwallet.router.initWallet(function(res) {
+    if(res == false)
+      return;
+    richwallet.controllers.tx.send(address);
+  });
+});
+
 richwallet.router.map('#/accounts/import').to(function() {
   if(richwallet.wallet) {
     richwallet.router.route('dashboard');

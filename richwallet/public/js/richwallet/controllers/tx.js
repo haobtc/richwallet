@@ -19,13 +19,21 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
   });
 };
 
-richwallet.controllers.Tx.prototype.send = function() {
+richwallet.controllers.Tx.prototype.send = function(toaddress) {
   var self = this;
-
+  toaddress = toaddress || '';
   this.getUnspent(function(resp) {
-    richwallet.router.render('view', 'tx/send', {balance: richwallet.wallet.safeUnspentBalance('bitcoin')}, function(id) {
-      $('#'+id+" [rel='tooltip']").tooltip();
-    });
+    richwallet.router.render(
+	'view',
+	'tx/send',
+	{balance: richwallet.wallet.safeUnspentBalance('bitcoin'),
+	toaddress: toaddress},
+	function(id) {
+	    $('#'+id+" [rel='tooltip']").tooltip();
+	    if(toaddress) {
+		$('#' + id + ' #address').change();
+	    }
+	});
   });
 };
 
