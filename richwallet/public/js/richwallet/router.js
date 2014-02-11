@@ -176,14 +176,6 @@ richwallet.router.map('#/addresses/request/:address').to(function() {
   });
 });
 
-richwallet.router.map('#/buy').to(function() {
-  richwallet.router.initWallet(function(res) {
-    if(res == false)
-      return;
-    richwallet.router.render('view', 'buy');
-  });
-});
-
 richwallet.router.map('#/').to(function() {
 /*
   if(window.navigator.registerProtocolHandler)
@@ -202,4 +194,3 @@ richwallet.router.map('#/').to(function() {
 
 richwallet.router.root("#/");
 richwallet.router.listen();
-

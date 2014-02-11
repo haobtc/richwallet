@@ -16,8 +16,6 @@ var server     = express();
 var db = new RedisDB();
 db.connect();
 
-//var bitcoind = new Bitcoind(config.bitcoind);
-
 var listener = sockjs.createServer({log: function(severity, message) {}});
 
 function listUnspent(addresses, callback) {

@@ -16,7 +16,7 @@ var Address = function (bytes, network) {
 };
 
 /**
- * Get the network according to its first byte: the version
+ * Get the network according to its first char: the version
  * for bitcoin it's 0
  * for bitcoin testnet it's 111
  * for litecoin it's 48

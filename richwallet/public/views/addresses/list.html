@@ -93,7 +93,11 @@
     <form onsubmit="richwallet.controllers.addresses.generateNewAddress($('#addressNetwork').val(), $('#addressLabel').val()); return false;">
       <div>
         Label <small>(optional)</small>: <input id="addressLabel" type="text" style="width: 200px">
-	<select id="addressNetwork"><option value="bitcoin">Bitcoin</option><option value="litecoin">Litecoin</option></select>
+	<select id="addressNetwork">
+	  <% for(var network in richwallet.config.networkConfigs) { %>
+	  <option value="<%- network %>"><%- network %></option>
+	  <% } %>
+	</select>
 	<button class="btn btn-primary"><i class="fa fa-plus"></i> Generate</button>
         <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">
           <button type="btn" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

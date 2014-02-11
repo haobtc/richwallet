@@ -3,16 +3,19 @@
 	"litecoin": {"leadingChar": "L", 
 		     "version": 48, "p2sh": 5, "keyVersion":121,
 		     "currency": "LTC",		     
-		     "rpcserver": "http://litecoinrpc:pass@dev.haobtc.com:28555"
+		     "rpcserver": "http://litecoinrpc:pass@localhost:28555"
 		    },
 	"bitcoin": {"leadingChar": "1", 
 		    "version": 0, "p2sh": 1, "keyVersion":128,
 		    "currency": "BTC",
-		    "rpcserver": "http://bitcoinrpc:pass@dev.haobtc.com:28455"
+		    "rpcserver": "http://bitcoinrpc:pass@localhost:28455"
+		   },
+	"dogecoin": {"leadingChar": "D", 
+		    "version": 30, "p2sh": 4, "keyVersion":126,
+		    "currency": "DOG",
+		    "rpcserver": "http://dogecoinrpc:pass@localhost:28655"
 		   }
     },
-  "bitcoind": "http://litecoinrpc:litepass@dev.haobtc.com:28555",
-  "pricesUrl": "https://bitpay.com/api/rates",
   "testnet": false,
   "httpPort": 8080
 }
