@@ -9,9 +9,7 @@ function Bitcoind(href, opts) {
 };
 
 Bitcoind.prototype.rpc = function(method, params, callback) {
-   console.log('bitcoin rpc', method, params);
   this.request({jsonrpc: '2.0', method: method, params: params}, function(err, body) {
-      console.info('result', err, body);
       callback(err, body);
   });
 };

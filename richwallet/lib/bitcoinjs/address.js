@@ -7,14 +7,17 @@ var Address = function (bytes, network) {
     // bytes is an address string such as LVgwn1DTmrqbAR5H4Ey66FGUUVt56oWp6Q
     // in this case the argument network is not used
     this.decodeAddress(bytes);
-    this.getNetwork();
   } else {
     // bytes is the public key hash
     this.hash = bytes;
     this.version = richwallet.config.networkConfigs[network].version;
   }
+  this.getNetwork();
 };
 
+Address.prototype.networkConfig = function() {
+    return richwallet.config.networkConfigs[this.getNetwork()];
+}
 /**
  * Get the network according to its first char: the version
  * for bitcoin it's 0
@@ -22,11 +25,15 @@ var Address = function (bytes, network) {
  * for litecoin it's 48
  */
 Address.prototype.getNetwork = function () {
+    if(this.network) {
+	return this.network;
+    }
     for(var nw in richwallet.config.networkConfigs) {
 	var conf = richwallet.config.networkConfigs[nw];
 	if (conf.version == this.version ||
 	    conf.p2sh == this.version) {
-	    return nw;
+	    this.network = nw;
+	    return this.network;
 	}
     }
     throw new Error('Unknown address type');

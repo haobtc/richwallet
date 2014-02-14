@@ -122,9 +122,17 @@ server.post('/api/disableAuthKey', function(req, res) {
   });
 });
 
+server.post('/api/proxy/:network/:command', function(req, res) {
+    var rpcServer = rpcpool.rpcServer(req.params.network);
+    rpcServer.rpc(req.params.command, req.body.args, function(err, btcres) {
+      /*console.info('rpc', req.params.network, req.params.command,  req.body.args);
+      console.info('rpc return', err, btcres); */
+      res.send([err, btcres]);
+    });
+});
+
 server.get('/api/wallet', function(req,res) {
   db.getWalletRecord(req.query.serverKey, function(err, payload) {
-    console.info('got wallet', payload);
     if(err) {
       console.log('Wallet Get Error: '+err);
       return res.send({result: 'error', message: 'Error retreiving wallet'});
@@ -211,7 +219,6 @@ function errorResponse(errors) {
 
 server.post('/api/wallet', function(req,res) {
   db.getWallet(req.body.serverKey, function(err, wallet) {
-    console.info('wallet', wallet);
     if(err) {
       console.log('Database error: '+err);
       return res.send(errorResponse('There was a server error, please try again later.'));
@@ -242,6 +249,7 @@ server.get('/api/config', function(req, res) {
 	nwConf[network] = {
 	    leadingChar: conf.leadingChar,
 	    version: conf.version,
+	    fee: conf.fee,
 	    keyVersion: conf.keyVersion,
 	    p2sh: conf.p2sh,
 	    currency: conf.currency
@@ -340,18 +348,6 @@ server.post('/api/tx/details', function(req,res) {
     }, function(resobj) {
 	res.send(resobj.txes);
     });
-});
-
-
-server.post('/api/tx/send', function(req, res) {
-   console.info('tx', req.body.tx, req.body.network);
-   var rpcServer = rpcpool.rpcServer(req.body.network);
-   rpcServer.rpc('sendrawtransaction', [req.body.tx], function(err, btcres) {
-     console.info('send rawtransaction', err, btcres);
-    if(err)
-      return res.send({messages: ['Bitcoind error: '+err]});
-    res.send({hash: btcres});
-  });
 });
 
 if(config.httpsPort || config.sslKey || config.sslCert) {
