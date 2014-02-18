@@ -3,19 +3,21 @@
 	"litecoin": {"leadingChar": "L", 
 		     "version": 48, "p2sh": 5, "keyVersion":121,
 		     "currency": "LTC",		     
+		    "fee": 0.001,
 		     "rpcserver": "http://litecoinrpc:pass@localhost:28555"
 		    },
 	"bitcoin": {"leadingChar": "1", 
 		    "version": 0, "p2sh": 1, "keyVersion":128,
 		    "currency": "BTC",
+		    "fee": 0.0001,
 		    "rpcserver": "http://bitcoinrpc:pass@localhost:28455"
 		   },
 	"dogecoin": {"leadingChar": "D", 
 		    "version": 30, "p2sh": 4, "keyVersion":126,
-		    "currency": "DOG",
+		    "currency": "DGC",
+		    "fee": 1.0,
 		    "rpcserver": "http://dogecoinrpc:pass@localhost:28655"
 		   }
     },
-  "testnet": false,
   "httpPort": 8080
 }

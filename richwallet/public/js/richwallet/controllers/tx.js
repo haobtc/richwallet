@@ -23,7 +23,12 @@ richwallet.controllers.Tx.prototype.send = function() {
   var self = this;
 
   this.getUnspent(function(resp) {
-    richwallet.router.render('view', 'tx/send', {balance: richwallet.wallet.safeUnspentBalance('bitcoin')}, function(id) {
+    var balances = {};
+    for(var network in richwallet.config.networkConfigs) {
+	var b = richwallet.wallet.safeUnspentBalance(network);
+	balances[network] = b;
+    }
+    richwallet.router.render('view', 'tx/send', {balances:balances}, function(id) {
       $('#'+id+" [rel='tooltip']").tooltip();
     });
   });
@@ -137,7 +142,8 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
 
   var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
   $('#calculatedFee').val(calculatedFee);
-  $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' BTC');
+  $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
+  $('#fee').parents('p').show();
 };
 
 richwallet.controllers.Tx.prototype.calculateUnspentBalance = function() {

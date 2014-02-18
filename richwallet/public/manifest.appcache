@@ -28,7 +28,6 @@ views/header.html
 views/node_error.html
 views/signin.html
 views/signup.html
-views/buy.html
 
 NETWORK:
 /api
