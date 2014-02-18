@@ -173,8 +173,10 @@ richwallet.Wallet = function(walletKey, walletId) {
       var match = false;
 
       for(var j=0;j<this.unspent.length;j++) {
-        if(this.unspent[j].hash == newUnspent[i].hash)
-          match = true;
+        if(this.unspent[j].hash == newUnspent[i].hash) {
+            match = true;
+	    break;
+	}
       }
 
       this.unspentConfirmations[newUnspent[i].hash] = newUnspent[i].confirmations;

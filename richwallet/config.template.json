@@ -14,7 +14,7 @@
 		   },
 	"dogecoin": {"leadingChar": "D", 
 		    "version": 30, "p2sh": 4, "keyVersion":126,
-		    "currency": "DGC",
+		    "currency": "DOG",
 		    "fee": 1.0,
 		    "rpcserver": "http://dogecoinrpc:pass@localhost:28655"
 		   }

@@ -1,18 +1,6 @@
 var config     = require('./config');
 var Bitcoind   = require('./bitcoind');
 
-/*var networks = {
-    "litecoin": {"leadingChar": "L", 
-		 "version": 48, "p2sh": 5, "keyVersion":121,
-		 "rpcserver": "http://litecoinrpc:3yKMEXdAJeQVpAU25LqzU1fR43VBqkogEZEc4EcBuWth@dev.haobtc.com:28555"
-		},
-    "bitcoin": {"leadingChar": "1", 
-		 "version": 0, "p2sh": 1, "keyVersion":128,
-		 "rpcserver": "http://bitcoinrpc:DfwvKDD2A2nDn747LBTSfq3RTh5SNFr1SA7N3aM35BHq@dev.haobtc.com:28455"
-		}
-};*/
-
-
 module.exports.getNetworkByAddress = function(addressString) {
     var leadingChar = addressString.substr(0, 1);
     for(var network in config.networks) {

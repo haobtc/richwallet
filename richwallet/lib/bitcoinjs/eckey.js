@@ -113,7 +113,6 @@ ECKey.prototype.getBitcoinAddress = function (network) {
 };
 
 ECKey.prototype.getExportedPrivateKey = function (network) {
-  console.info('getExportedPrivateKey', network);
   var hash = this.priv.toByteArrayUnsigned();
   while (hash.length < 32) hash.unshift(0);
   hash.unshift(richwallet.config.networkConfigs[network].keyVersion);

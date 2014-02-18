@@ -1,6 +1,7 @@
 richwallet.Controller = function() {
 };
 
+/*
 richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
   var self = this;
   var query = {addresses: richwallet.wallet.addressHashes()};
@@ -19,11 +20,50 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
     self.mergeUnspent(resp.unspent, callback);
   });
 };
+*/
+
+richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
+  var self = this;
+  var networkAddrs = richwallet.utils.clusterAddresses(richwallet.wallet.addressHashes());
+
+  if(typeof(confirmations) == 'function')
+    callback = confirmations;
+
+  for(var network in networkAddrs) {
+      var addrList = networkAddrs[network];
+      networkAddrs[network] = [0, 99999999999999, addrList];
+  }
+  richwallet.utils.broadcastRPC('listunspent', networkAddrs, function(resp) {
+      var unspent = [];
+      for(var network in resp) {
+	  var r = resp[network];
+	  var err = r[0];
+	  var btcres = r[1];
+	  if(err) {
+	      richwallet.router.route('node_error');
+	      return;
+	  }
+	  for(var i=0;i<btcres.length; i++) {
+	      var addrObj = new Bitcoin.Address(btcres[i].address);
+	      unspent.push({
+		  network:       network,
+		  hash:          btcres[i].txid,
+		  vout:          btcres[i].vout,
+		  address:       btcres[i].address,
+		  scriptPubKey:  btcres[i].scriptPubKey,
+		  amount:        btcres[i].amount,
+		  confirmations: btcres[i].confirmations
+	      });
+	  }
+      }
+      self.mergeUnspent(unspent, callback);
+  });
+};
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
   if(richwallet.wallet.mergeUnspent(unspent) == true)
     this.saveWallet({override: true}, callback);
-  else
+  else if(typeof callback == 'function')
     callback();
 };
 

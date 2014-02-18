@@ -3,7 +3,6 @@ var redis      = require('redis');
 var request    = require('request');
 var config     = require('./server/config');
 var rpcpool    = require('./server/rpcpool')
-//var Bitcoind   = require('./server/bitcoind');
 var RedisDB    = require('./server/db/redis');
 var sockjs     = require('sockjs');
 var http       = require('http');
@@ -18,13 +17,17 @@ db.connect();
 
 var listener = sockjs.createServer({log: function(severity, message) {}});
 
-function listUnspent(addresses, callback) {
-  rpcpool.eachNetwork(function(network, emit){
+function listUnspent(network, addresses, callback) {
+  if(!addresses || addresses.length == 0) {
+      callback(undefined, []);
+      return;
+  }
+  //rpcpool.eachNetwork(function(network, emit){
       var rpcServer = rpcpool.rpcServer(network);
       var networkAddresses = rpcpool.addressesByNetwork(addresses, network);
       rpcServer.rpc('listunspent', [0, 99999999999999, networkAddresses], function(err, btcres) {
 	  if(err) {
-	      emit({'error': err});
+	      callback(err, btcres);
 	      return;
 	  }
 
@@ -41,9 +44,9 @@ function listUnspent(addresses, callback) {
 		  confirmations: btcres[i].confirmations
 	      });
 	  }
-	  emit({'data': unspent});
+	  callback(null, btcres);
       });
-  }, function(r) {
+/*  }, function(r) {
       if(r.error) {
 	  console.error(error);
 	  return;
@@ -58,15 +61,14 @@ function listUnspent(addresses, callback) {
       }
   }, function(res) {
       callback(undefined, res.unspent);
-  });
+  }); */
 };
 
 listener.on('connection', function(conn) {
     conn.on('data', function(message) {
       var req = JSON.parse(message);
-
       if(req.method == 'listUnspent')
-        listUnspent(req.addresses, function(err, unspent) {
+        listUnspent(req.network, req.addresses, function(err, unspent) {
           if(err)
             conn.write(JSON.stringify(err));
           else
@@ -123,12 +125,43 @@ server.post('/api/disableAuthKey', function(req, res) {
 });
 
 server.post('/api/proxy/:network/:command', function(req, res) {
+    if(req.params.command == 'listunspent' && (!req.body.args || req.body.args.length == 0)) {
+	res.send([null, []]);
+	return;
+    }
     var rpcServer = rpcpool.rpcServer(req.params.network);
     rpcServer.rpc(req.params.command, req.body.args, function(err, btcres) {
-      /*console.info('rpc', req.params.network, req.params.command,  req.body.args);
-      console.info('rpc return', err, btcres); */
+      console.info('rpc', req.params.network, req.params.command,  req.body.args);
       res.send([err, btcres]);
     });
+});
+
+
+function callRPC(network, command, args, callback) {
+    var rpcServer = rpcpool.rpcServer(network);
+    rpcServer.rpc(command, args, function(err, btcres) {
+	console.info('rpc', network, command,  args);
+	callback(network, err, btcres);
+    });
+}
+
+server.post('/api/bproxy/:command', function(req, res) {
+    var reducer = [];
+    for(var network in config.networks) {
+	reducer.push(network);
+    }
+    
+    var resObj = {};
+    for(var network in config.networks) {
+	var args = req.body.args[network] || [];
+	callRPC(network, req.params.command, args, function(network, err, rpcres) {
+	    resObj[network] = [err, rpcres];
+	    reducer.pop();
+	    if(reducer.length <= 0) {
+		res.send(resObj);
+	    }
+	});
+    }
 });
 
 server.get('/api/wallet', function(req,res) {
@@ -283,7 +316,7 @@ server.get('/api/weighted_prices', function(req, res) {
   }
 });
 
-server.post('/api/tx/unspent', function(req,res) {
+/*server.post('/api/tx/unspent', function(req,res) {
   listUnspent(req.body.addresses, function(err, unspent) {
     if(err)
       return res.send({error: 'bitcoinNode'});
@@ -291,6 +324,7 @@ server.post('/api/tx/unspent', function(req,res) {
     res.send({unspent: unspent});
   });
 });
+*/
 
 server.post('/api/tx/details', function(req,res) {
     var i = 0;
