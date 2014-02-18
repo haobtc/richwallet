@@ -23,11 +23,16 @@ richwallet.controllers.Tx.prototype.send = function(toaddress) {
   var self = this;
   toaddress = toaddress || '';
   this.getUnspent(function(resp) {
+    var balances = {};
+    for(var network in richwallet.config.networkConfigs) {
+	var b = richwallet.wallet.safeUnspentBalance(network);
+	balances[network] = b;
+    }
     richwallet.router.render(
 	'view',
-	'tx/send',
-	{balance: richwallet.wallet.safeUnspentBalance('bitcoin'),
-	toaddress: toaddress},
+	'tx/send', 
+	{balances:balances,
+	 toaddress:toaddress},
 	function(id) {
 	    $('#'+id+" [rel='tooltip']").tooltip();
 	    if(toaddress) {
@@ -49,7 +54,7 @@ richwallet.controllers.Tx.prototype.create = function() {
   
   this.calculateFee();
   var calculatedFee = $('#calculatedFee').val();
-
+    
   errorsDiv.addClass('hidden');
   errorsDiv.html('');
 
@@ -75,7 +80,7 @@ richwallet.controllers.Tx.prototype.create = function() {
     errors.push('You must have a valid amount to send.');
   else if(/^[0-9]+$|^[0-9]+\.[0-9]+$|^\.[0-9]+$/.exec(amount) === null)
     errors.push('You must have a valid amount to send.');
-  else if(richwallet.wallet.safeUnspentBalance().lessThan(new BigNumber(amount).plus(calculatedFee))) {
+  else if(richwallet.wallet.safeUnspentBalance(toAddress.getNetwork()).lessThan(new BigNumber(amount).plus(calculatedFee))) {
     errors.push('Cannot spend more bitcoins than you currently have.');
   }
 
@@ -90,16 +95,23 @@ richwallet.controllers.Tx.prototype.create = function() {
   if(changeAddress == '')
     changeAddress = richwallet.wallet.createNewAddress(toAddress.getNetwork(), 'change', true);
 
-  var rawtx = richwallet.wallet.createSend(amount, calculatedFee, address, changeAddress);
-
+  var tx = richwallet.wallet.createTx(amount, calculatedFee, address, changeAddress);
   self.saveWallet({override: true, address: changeAddress}, function(response) {
-    $.post('/api/tx/send', {tx: rawtx, network: toAddress.getNetwork()}, function(resp) {
-      richwallet.database.setSuccessMessage("Sent "+amount+" BTC to "+address+".");
-
-      self.getUnspent(function() {
-        richwallet.router.route('dashboard');
-      });
-    });
+      richwallet.utils.callRPC(
+	  toAddress.getNetwork(), 
+	  'sendrawtransaction', 
+	  [tx.raw], 
+	  function(err, btcres) {
+	      if(err) {
+		  console.error('send raw transaction error', err);
+		  return;
+	      }
+	      richwallet.database.setSuccessMessage("Sent "+amount+" BTC to "+address+".");
+	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
+	      self.getUnspent(function() {
+		  richwallet.router.route('dashboard');
+	      });
+	  });
   });
 };
 
@@ -138,7 +150,8 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
 
   var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
   $('#calculatedFee').val(calculatedFee);
-  $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' BTC');
+  $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
+  $('#fee').parents('p').show();
 };
 
 richwallet.controllers.Tx.prototype.calculateUnspentBalance = function() {

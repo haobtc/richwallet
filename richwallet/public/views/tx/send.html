@@ -5,7 +5,7 @@
 </style>
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1>Send Bitcoins</h2>
+    <h1>Send coins</h1>
       <hr>
   </div>
 </div>
@@ -14,6 +14,21 @@
 <div class="row">
   <div class="col-lg-offset-3 col-lg-6">
     <div id="errors" class="alert alert-danger hidden"></div>
+  </div>
+</div>
+
+<div class="row" style="padding-bottom: 20px;ss">
+  <div class="col-lg-12 text-center">
+    <h4>Your have
+    <% var i=0; for(var network in data.balances) { 
+       var delim = i++>0?', ':'';
+       var b = data.balances[network];
+       %>
+<!--   <h4>You have <span id="availableBalance" class="addExchangePrice" style="color: #009933;"><%- b %> <%-  richwallet.config.networkConfigs[network].currency %></span> available to spend.</h4> -->
+      <%- delim %><span id="availableBalance" class="addExchangePrice" style="color: #009933;"><%- b %> <%-  richwallet.config.networkConfigs[network].currency %></span>
+    <% } %>
+    available to spend.
+    </h4>
   </div>
 </div>
 
@@ -31,13 +46,13 @@
       <div class="form-group">
         <label for="address" class="col-lg-5 control-label">To Address</label>
         <div class="col-lg-5">
-          <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="BTC, LTC, and any other supported coin addresses" onchange="richwallet.controllers.tx.calculateFee();richwallet.controllers.tx.calculateUnspentBalance();" value="<%- data.toaddress %>">
+          <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="BTC, LTC, and any other supported coin addresses" onchange="richwallet.controllers.tx.calculateFee();" value="<%- data.toaddress %>">
         </div>
       </div>
       <div class="form-group">
         <label for="amount" class="col-lg-5 control-label">Amount</label>
         <div class="col-lg-5">
-          <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" onchange="richwallet.controllers.tx.calculateFee()"> <span style="padding-left: 30px">
+          <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" onchange="richwallet.controllers.tx.calculateFee();"> <span style="padding-left: 30px">
         </div>
       </div>
       
@@ -47,7 +62,7 @@
           <input id="sendAmount" type="hidden" value="">
           <input id="changeAddress" type="hidden" value="">
           <input id="calculatedFee" type="hidden" value="<%- richwallet.controllers.tx.defaultFee %>">
-          <p>A fee of <span id="fee" class="addExchangePrice" style="color: #009933;"><%- richwallet.controllers.tx.defaultFee %> BTC</span> will be added to ensure timely processing by the Bitcoin network.</p>
+          <p style="display: none;">A fee of <span id="fee" class="addExchangePrice" style="color: #009933;"><%- richwallet.controllers.tx.defaultFee %> BTC</span> will be added to ensure timely processing by the Bitcoin network.</p>
         </div>
       </div>
       <div class="form-group">
@@ -60,11 +75,6 @@
   </div>
 </div>
 
-<div class="row" style="padding-bottom: 20px; display:none;">
-  <div class="col-lg-12 text-center">
-    <h4>You have <span id="availableBalance" class="addExchangePrice" style="color: #009933;"><%- data.balance %> BTC</span> available to spend.</h4>
-  </div>
-</div>
 
 <script>
 	$("#qrcodeinput").on("change", richwallet.controllers.tx.scanQR);

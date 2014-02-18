@@ -64,7 +64,6 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.createNewAddress = function(network, name, isChange) {
-    console.info('create new address', network, name, isChange);
     var eckey      = new Bitcoin.ECKey();
     var newKeyPair = {
       key: eckey.getExportedPrivateKey(network),
@@ -228,6 +227,10 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.getUnspent = function(network, confirmations) {
+    if(!network) {
+	throw 'void network ';
+    }
+
     var confirmations = confirmations || 0;
     var unspentList = [];
     this.filterNetwork(this.unspent, network, function(unspent) {
@@ -281,6 +284,9 @@ richwallet.Wallet = function(walletKey, walletId) {
 
   // Safe to spend unspent txs.
   this.safeUnspent = function(network) {
+    if(!network) {
+	throw "network must be provide";
+    }
     var unspent = this.getUnspent(network);
     var changeAddresses = this.changeAddressHashes(network);
     var safeUnspent = [];
@@ -293,6 +299,9 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.receivedAmountTotal = function(network) {
+    if(!network) {
+	throw "network must be provide";
+    }
     var addresses = this.addresses(network);
     var amount = new BigNumber(0);
 
@@ -331,7 +340,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     var unspent = [];
     var unspentAmt = Bitcoin.BigInteger.ZERO;
 
-    var safeUnspent = this.safeUnspent();
+    var safeUnspent = this.safeUnspent(address.getNetwork());
 
     for(i=0;i<safeUnspent.length;i++) {
       unspent.push(safeUnspent[i]);
@@ -390,13 +399,13 @@ richwallet.Wallet = function(walletKey, walletId) {
 
   this.calculateFee = function(amtString, addressString, changeAddress) {
     var tx = this.createTx(amtString, 0, addressString, changeAddress);
+    var addr = new Bitcoin.Address(addressString);
     var txSize = tx.raw.length / 2;
-    return Math.ceil(txSize/1000)*0.0001;
+    var fee = Math.ceil(txSize/1000)*addr.networkConfig().fee;
+    return fee;    
   };
 
-  this.createSend = function(amtString, feeString, addressString, changeAddress) {
-    var tx = this.createTx(amtString, feeString, addressString, changeAddress);
-
+  this.addTx = function (tx, amtString, feeString, addressString, changeAddress) {
     this.transactions.push({
       network: new Bitcoin.Address(addressString).getNetwork(),
       hash: Bitcoin.convert.bytesToHex(tx.obj.getHash()),
@@ -410,11 +419,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     // Remove unspent elements now that we have a tx that uses them
     for(var i=0;i<tx.unspentsUsed.length;i++)
       this.unspent = _.reject(this.unspentsUsed, function(u) { return u.hash == tx.unspentsUsed[i].hash })
-
-    return tx.raw;
   };
-
-
 
   if(walletKey && walletId)
     this.createServerKey();

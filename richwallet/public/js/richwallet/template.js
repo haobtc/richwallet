@@ -14,7 +14,6 @@ richwallet.Template = {
     'node_error',
     'signin',
     'signup',
-    'buy'
   ],
  
   templateCache: {},
