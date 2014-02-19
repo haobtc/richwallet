@@ -12,10 +12,11 @@ module.exports.getNetworkByAddress = function(addressString) {
     return null;
 }
 
-module.exports.clusterAddresses = function(addressString) {
+module.exports.clusterAddresses = function(addressList) {
     var cluster = {};
-    for(var addr in addressString) {
-	var network = module.exports.getNetworkByAddress();
+    //for(var  addressString in addre) {
+    addressList.forEach(function(addressString) {
+	var network = module.exports.getNetworkByAddress(addressString);
 	var addrList = cluster[network];
 	if(!addrList) {
 	    addrList = [addressString];
@@ -23,7 +24,7 @@ module.exports.clusterAddresses = function(addressString) {
 	} else {
 	    addrList.push(addressString);
 	}
-    }
+    });
     var networkList = [];
     for(var network in cluster) {
 	networkList.push({"network": network, "addresses": cluster[network]});

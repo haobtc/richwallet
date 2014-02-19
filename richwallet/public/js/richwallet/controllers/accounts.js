@@ -118,8 +118,8 @@ richwallet.controllers.Accounts.prototype.create = function() {
 
     var addresses = [];
     for(var network in richwallet.config.networkConfigs) {
-	var address   = wallet.createNewAddress(network, 'Default');
-	addresses.push(addresses);
+	var address = wallet.createNewAddress(network, 'Default');
+	addresses.push(address);
     }
 
     richwallet.wallet = wallet;

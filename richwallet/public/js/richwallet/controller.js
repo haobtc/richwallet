@@ -1,7 +1,7 @@
 richwallet.Controller = function() {
 };
 
-/*
+
 richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
   var self = this;
   var query = {addresses: richwallet.wallet.addressHashes()};
@@ -20,9 +20,9 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
     self.mergeUnspent(resp.unspent, callback);
   });
 };
-*/
 
-richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
+
+/*richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
   var self = this;
   var networkAddrs = richwallet.utils.clusterAddresses(richwallet.wallet.addressHashes());
 
@@ -58,7 +58,7 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
       }
       self.mergeUnspent(unspent, callback);
   });
-};
+}; */
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
   if(richwallet.wallet.mergeUnspent(unspent) == true)
@@ -97,8 +97,9 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
 
       richwallet.wallet.payloadHash = richwallet.wallet.newPayloadHash;
 
-      if(callback)
+      if(callback) {
         callback(response);
+      }
     }
   });
 };

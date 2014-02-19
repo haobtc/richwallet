@@ -16,7 +16,7 @@ richwallet.router.walletRequired = function() {
     richwallet.router.route('signup');
 };
 
-richwallet.router.listener = function() {
+/*richwallet.router.listener33 = function() {
     if(richwallet.router.listenerTimeout) {
 	clearInterval(richwallet.router.listenerTimeout);
     }
@@ -28,13 +28,13 @@ richwallet.router.listener = function() {
 	    }
 	});
     }, 30000);
-};
+};*/
 
-richwallet.router.listener23 = function() {
+richwallet.router.listener = function() {
   var path = window.location.pathname;
   path = path.replace(/[^\/]*$/, '');
   path += 'listener';
-  sock = new SockJS(window.location.protocol + '//' + location.host + path);
+  sock = new SockJS(window.location.protocol + '//' + window.location.host + path);
   var self = this;
 
   window.onbeforeunload = function () {
@@ -45,24 +45,22 @@ richwallet.router.listener23 = function() {
 
   sock.onopen = function() {
     richwallet.router.listenerTimeout = setInterval(function() {
-
-/*      for(var network in richwallet.config.networkConfigs) {
-	  sock.send(JSON.stringify(
-	      {method: 'listUnspent',
-	       network: network,
-	       addresses: richwallet.wallet.addressHashes()}));
-      } */
+	sock.send(JSON.stringify(
+	    {method: 'listUnspent',
+	     addresses: richwallet.wallet.addressHashes()}));
     }, 3000);
   };
   
   sock.onmessage = function(res) {
     var resData = JSON.parse(res.data);
     if(resData.method == 'listUnspent') {
-      richwallet.controllers.dashboard.mergeUnspent(resData.result, function() {
-        var rt = $('#receivedTransactions');
-        if(rt.length == 1)
-          richwallet.controllers.dashboard.renderDashboard();
-      });
+      if(richwallet.controllers.dashboard) {
+	  richwallet.controllers.dashboard.mergeUnspent(resData.result, function() {
+              var rt = $('#receivedTransactions');
+              if(rt.length == 1)
+		  richwallet.controllers.dashboard.renderDashboard();
+	  });
+      }
     }
   };
 
