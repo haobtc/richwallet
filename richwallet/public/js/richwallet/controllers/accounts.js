@@ -65,21 +65,29 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       richwallet.router.route('dashboard');
     }
   });
-}
+};
 
 richwallet.controllers.Accounts.prototype.disableSubmitButton = function() {
   var button = $('#createAccountButton');
   button.attr('disabled', 'disabled');
   button.removeClass('btn-success');
   button.text('Creating account, please wait..');
-}
+};
 
 richwallet.controllers.Accounts.prototype.enableSubmitButton = function() {
   var button = $('#createAccountButton');
   button.removeAttr('disabled');
   button.addClass('btn-success');
   button.html('<i class="fa fa-user"></i> Create Account');
-}
+};
+
+richwallet.controllers.Accounts.prototype.backupToEmail = function() {
+    var button = $('#sendToEmail');
+    button.attr('disabled', 'disabled');
+    $.post('api/backupToEmail', {serverKey:richwallet.wallet.serverKey}, function(res) {
+	$('#sendToEmail').replaceWith($('<span>').html('Wallet sent to email'));
+   });
+};
 
 richwallet.controllers.Accounts.prototype.create = function() {
   var self = this;

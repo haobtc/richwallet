@@ -1,5 +1,6 @@
 var express    = require('express');
 var redis      = require('redis');
+var mailer     = require('nodemailer');
 var request    = require('request');
 var config     = require('./server/config');
 var rpcpool    = require('./server/rpcpool')
@@ -122,6 +123,32 @@ server.post('/api/disableAuthKey', function(req, res) {
         return res.send({result: 'error', message: 'could not update database, please try again later'});
       res.send({result: 'success'});
     });
+  });
+});
+
+
+var smtp = mailer.createTransport('SMTP', config.mailer.option);
+server.post('/api/backupToEmail', function(req, res) {
+  db.getWalletRecord(req.body.serverKey, function(err, payload) {
+      if(err) {
+	  console.error('Wallet Get Error:', err);
+	  res.send({error: err});
+	  return;
+      }
+      var args = {
+	  from: config.mailer.fromAddress,
+	  to: payload.email,
+	  subject: 'Your backup richwallet wallet',
+	  text: 'You have requested to your save encrypted wallet at ' + new Date() + ' to your email, please save this email carefully so that your wallet can be recovered on some failure.',
+	  attachments: [{
+	      fileName: 'richwallet-wallet.txt',
+	      contents: payload.wallet
+	  }],
+      };
+      smtp.sendMail(args, function(err, mailRes) {
+	  console.log('email sent', err, mailRes);
+	  res.send({result: 'success'});
+      });
   });
 });
 

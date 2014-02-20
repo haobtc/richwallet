@@ -18,7 +18,8 @@
     "request": "~2.27.0",
     "browserify": "~2.35.2",
     "sockjs": "~0.3.8",
-    "speakeasy": "~1.0.3"
+    "speakeasy": "~1.0.3",
+    "nodemailer": "~0.4.2"
   },
   "devDependencies": {
     "mocha": "~1.8.1",
