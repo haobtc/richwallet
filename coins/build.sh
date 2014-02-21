@@ -27,7 +27,7 @@ function build_bitcoin() {
     fi
 
     if [ ! -f Makefile ]; then
-	./configure --without-gui
+	./configure --without-gui $BITCOIN_CONFIG
 	check_exit
     fi
 
