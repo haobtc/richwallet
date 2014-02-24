@@ -1,4 +1,5 @@
 var DB = require('../db');
+var config = require('../config');
 
 if(process.env.NODE_ENV == 'test')
   var redis = require('redis-mock');
@@ -15,7 +16,9 @@ ArgumentError.prototype.constructor = ArgumentError;
 
 DB.prototype = {
   connect: function() {
-    this.redis = redis.createClient(null, null);
+    this.redis = redis.createClient(config.redisConnection.port,
+				    config.redisConnection.host,
+				   config.redisConnection.option);
   },
 
   getWalletRecord: function(serverKey, callback) {

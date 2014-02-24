@@ -38,6 +38,7 @@ richwallet.controllers.Tx.prototype.send = function(toaddress) {
 	    if(toaddress) {
 		$('#' + id + ' #address').change();
 	    }
+	    self.calculateFee();
 	});
   });
 };
@@ -92,6 +93,12 @@ richwallet.controllers.Tx.prototype.create = function() {
 
   var changeAddress = $('#changeAddress').val();
 
+  if(changeAddress == '') {
+      var recvAddresses = richwallet.wallet.receiveAddresses(toAddress.getNetwork());
+      if (recvAddresses.length > 0) {
+	  changeAddress = recvAddresses[Math.floor(Math.random() * recvAddresses.length)].address;
+      }
+  }
   if(changeAddress == '')
     changeAddress = richwallet.wallet.createNewAddress(toAddress.getNetwork(), 'change', true);
 
@@ -131,12 +138,15 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
   var amount = $('#amount').val();
   var sendAmount = $('#sendAmount');
 
+  if(amount == '') {
+      amount = '0.0';
+  }
   if(amount == sendAmount.val())
     return;
   else
     sendAmount.val(amount);
 
-  if(address == '' || amount == '')
+  if(address == '')
     return;
 
   var changeAddress = $('#changeAddress').val();
@@ -148,10 +158,20 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
     $('#changeAddress').val(changeAddress);
   }
 
-  var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
-  $('#calculatedFee').val(calculatedFee);
-  $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
-  $('#fee').parents('p').show();
+  var errors = [];
+
+  try {
+      var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
+      $('#calculatedFee').val(calculatedFee);
+      $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
+      $('#fee').parents('p').show();
+  } catch(e) {
+      errors.push(e);
+  }
+
+  if(errors.length > 0) {
+      this.displayErrors(errors, $('#errors'));
+  }
 };
 
 richwallet.controllers.Tx.prototype.calculateUnspentBalance = function() {

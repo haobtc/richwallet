@@ -1,5 +1,4 @@
 var express    = require('express');
-var redis      = require('redis');
 var mailer     = require('nodemailer');
 var request    = require('request');
 var config     = require('./server/config');

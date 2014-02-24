@@ -30,5 +30,6 @@
 	  }
       }
   },
+  "redisConnection": {"port": null, "host": null},
   "httpPort": 8080
 }
