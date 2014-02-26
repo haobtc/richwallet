@@ -16,9 +16,9 @@ ArgumentError.prototype.constructor = ArgumentError;
 
 DB.prototype = {
   connect: function() {
-    this.redis = redis.createClient(config.redisConnection.port,
-				    config.redisConnection.host,
-				   config.redisConnection.option);
+    this.redis = redis.createClient(config.redis.port,
+				    config.redis.host,
+				   config.redis.option);
   },
 
   getWalletRecord: function(serverKey, callback) {
@@ -80,7 +80,6 @@ DB.prototype = {
         self.redis.hmset(serverKey, payload, callback);
       }
     });
-    
   },
 
   delete: function(serverKey, callback) {

@@ -10,6 +10,7 @@ function Bitcoind(href, opts) {
 
 Bitcoind.prototype.rpc = function(method, params, callback) {
   this.request({jsonrpc: '2.0', method: method, params: params}, function(err, body) {
+
       callback(err, body);
   });
 };
@@ -22,7 +23,8 @@ Bitcoind.prototype.batch = function(cmds, callback) {
 };
 
 Bitcoind.prototype.request = function(payload, callback) {
-  request({uri: this.url.href, method: 'POST', json: payload}, function (error, response, body) {
+  request({uri: this.url.href, method: 'POST', json: payload, timeout:5000},
+	  function (error, response, body) {
     if (!error && response.statusCode == 200) {
       if(body.result)
         callback(undefined, body.result);

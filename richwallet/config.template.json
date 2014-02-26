@@ -30,6 +30,8 @@
 	  }
       }
   },
-  "redisConnection": {"port": null, "host": null},
+  "redis": {"port": null, "host": null},
+  "mongo": {"url": "mongodb://localhost:27017/richwallet"},
+  "backend": "mongo",
   "httpPort": 8080
 }

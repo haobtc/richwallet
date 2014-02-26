@@ -3,7 +3,6 @@ var mailer     = require('nodemailer');
 var request    = require('request');
 var config     = require('./server/config');
 var rpcpool    = require('./server/rpcpool')
-var RedisDB    = require('./server/db/redis');
 var sockjs     = require('sockjs');
 var http       = require('http');
 var https      = require('https');
@@ -12,8 +11,16 @@ var speakeasy  = require('speakeasy');
 
 var server     = express();
 
-var db = new RedisDB();
+if(config.backend == "redis") {
+    var RedisDB    = require('./server/db/redis');
+    var db = new RedisDB();
+} else {
+    var MongoDB    = require('./server/db/mongo');
+    var db = new MongoDB();
+}
+
 db.connect();
+console.info('db');
 
 var listener = sockjs.createServer({log: function(severity, message) {}});
 
@@ -159,7 +166,6 @@ server.post('/api/proxy/:network/:command', function(req, res) {
     }
     var rpcServer = rpcpool.rpcServer(req.params.network);
     rpcServer.rpc(req.params.command, req.body.args, function(err, btcres) {
-      console.info('rpc', req.params.network, req.params.command,  req.body.args);
       res.send([err, btcres]);
     });
 });
@@ -168,7 +174,6 @@ server.post('/api/proxy/:network/:command', function(req, res) {
 function callRPC(network, command, args, callback) {
     var rpcServer = rpcpool.rpcServer(network);
     rpcServer.rpc(command, args, function(err, btcres) {
-	console.info('rpc', network, command,  args);
 	callback(network, err, btcres);
     });
 }
@@ -230,7 +235,7 @@ function saveWallet(req, res) {
       if(err == 'outOfSync') {
         return res.send({result: 'outOfSync', wallet: data.wallet});
       } else {
-        return res.send(errorMessage("Database error: "+JSON.stringify(err)));
+        return res.send({error: "Database error: "+JSON.stringify(err)});
       }
     } else {
       res.send({result: 'ok'});
@@ -348,7 +353,7 @@ server.get('/api/weighted_prices', function(req, res) {
 server.post('/api/tx/unspent', function(req,res) {
   listUnspent(req.body.addresses, function(err, unspent) {
     if(err)
-      return res.send({error: 'bitcoinNode'});
+      return res.send({error: 'bitcoin error'});
 
     res.send({unspent: unspent});
   });
