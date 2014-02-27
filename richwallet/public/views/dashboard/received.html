@@ -12,20 +12,20 @@
 
 <% } else { %>
   <div class="visible-xs visible-sm">
-    <% for(var i=0; i<data.tx.length; i++) { %>
+    <% for(var i=0; i<data.tx.length; i++) { var tx=data.tx[i]; %>
       <hr>
       <div class="row" onclick="window.open('#/tx/details/<%- data.tx[i].hash %>','_self')">
         <div class="col-md-6">
-          <strong><%- humaneDate(new Date(data.tx[i].time).toISOString()) %></strong>
-          <span class="receivedExchangePrice addExchangePrice pull-right" style="color: #33CC33; margin-right: 10px; font-size: 12px; font-weight: bold"><%- data.tx[i].amount %> BTC</span>
+          <strong><%- humaneDate(new Date(tx.time).toISOString()) %></strong>
+          <span class="receivedExchangePrice addExchangePrice pull-right" style="color: #33CC33; margin-right: 10px; font-size: 12px; font-weight: bold"><%- tx.amount %> <%- richwallet.config.networkConfigs[tx.network].currency %></span>
         </div>
       </div>
-      <div class="row" onclick="window.open('#/tx/details/<%- data.tx[i].hash %>','_self')">
+      <div class="row" onclick="window.open('#/tx/details/<%- tx.hash %>','_self')">
         <div class="col-md-6">
           <div style="font-size: 10pt">
-            <strong><%- richwallet.wallet.getAddressName(data.tx[i].address) || data.tx[i].address %></strong>
+            <strong><%- richwallet.wallet.getAddressName(tx.address) || tx.address %></strong>
           </div>
-          <div><%- data.tx[i].confirmations %> confirmations</div>
+          <div><%- tx.confirmations %> confirmations</div>
         </div>
       </div>
     <% } %>
@@ -42,25 +42,25 @@
           <th></th>
       </thead>
       <tbody>
-        <% for(var i=0; i<data.tx.length; i++) { %>
+        <% for(var i=0; i<data.tx.length; i++) { var tx=data.tx[i];%>
           <tr>
-            <td><%- richwallet.wallet.getAddressName(data.tx[i].address) || data.tx[i].address %>(<%- data.tx[i].network %>)</td>
-            <td><span class="addExchangePrice"><%- data.tx[i].amount %> <%- richwallet.config.networkConfigs[data.tx[i].network].currency %></span></td>
+            <td><%- richwallet.wallet.getAddressName(tx.address) || tx.address %>(<%- tx.network %>)</td>
+            <td><span class="addExchangePrice"><%- tx.amount %> <%- richwallet.config.networkConfigs[tx.network].currency %></span></td>
             <td>
-              <%- data.tx[i].confirmations %>
+              <%- tx.confirmations %>
 
-              <% if(data.tx[i].confirmations == 0) { %>
+              <% if(tx.confirmations == 0) { %>
                 <span class="label label-warning pull-right" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain.">Pending (Unconfirmed)</span>
-              <% } else if(data.tx[i].confirmations < richwallet.controllers.dashboard.minimumStrongSendConfirmations) { %>
+              <% } else if(tx.confirmations < richwallet.controllers.dashboard.minimumStrongSendConfirmations) { %>
                 <span class="label label-info pull-right" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe.">Soft Confirmed</span>
               <% } else { %>
                 <span class="label label-success pull-right" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers.">Strongly Confirmed</span>
               <% } %>
             </td>
             <td>
-              <%- humaneDate(new Date(data.tx[i].time).toISOString()) %>
+              <%- humaneDate(new Date(tx.time).toISOString()) %>
             </td>
-            <td><a class="btn btn-primary" href="#/tx/details/<%- data.tx[i].network %>/<%- data.tx[i].hash %>"><i class="fa fa-info-circle"></i> Details</a></td>
+            <td><a class="btn btn-primary" href="#/tx/details/<%- tx.network %>/<%- tx.hash %>"><i class="fa fa-info-circle"></i> Details</a></td>
         <% } %>
       </tbody>
     </table>
