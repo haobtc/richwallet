@@ -18,6 +18,7 @@
     <a href="#/backup/download" class="btn btn-lg btn-primary" onclick="#"><i class="fa fa-download"></i> Download</a>
   </div>
 </div>
+<% if(richwallet.config.emailEnabled) { %>
 <div class="row text-center">
   <h2>Or</h2>
 </div>
@@ -27,3 +28,4 @@
     <a id="sendToEmail" onclick="richwallet.controllers.accounts.backupToEmail();" class="btn btn-lg btn-primary" onclick="#">Send email</a>
   </div>
 </div>
+<% } %>

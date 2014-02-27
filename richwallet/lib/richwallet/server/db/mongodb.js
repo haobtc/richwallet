@@ -6,7 +6,7 @@ var MongoClient = require('mongodb').MongoClient;
 DB.prototype = {
     connect: function() {
 	var self = this;
-	MongoClient.connect(config.mongo.url, function(err, conn) {
+	MongoClient.connect(config.mongodb.url, function(err, conn) {
 	    self.conn = conn;
 	    self.col = conn.collection('wallet');
 	    self.col.ensureIndex({serverKey: 1}, {unique: true}, function(err) { if(err) console.error(err)});

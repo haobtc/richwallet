@@ -321,7 +321,7 @@ server.get('/api/config', function(req, res) {
     }
     res.send({
 	networkConfigs: nwConf,
-	transactionFee: 0.00001
+	emailEnabled: config.mailer.enabled
     });
 });
 
