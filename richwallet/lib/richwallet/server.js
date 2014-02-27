@@ -11,7 +11,7 @@ var speakeasy  = require('speakeasy');
 
 var server     = express();
 
-var StorageClass = require('./server/db/' + config.backend);
+var StorageClass = require('./server/db/' + config.backends.uses);
 var db = new StorageClass();
 db.connect();
 
