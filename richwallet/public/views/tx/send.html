@@ -21,8 +21,8 @@
   <div class="col-lg-12 text-center">
     <h4>Your have
     <% var i=0; for(var network in data.balances) { 
-       var delim = i++>0?', ':'';
        var b = data.balances[network];
+       var delim = i++>0?', ':'';
        %>
 <!--   <h4>You have <span id="availableBalance" class="addExchangePrice" style="color: #009933;"><%- b %> <%-  richwallet.config.networkConfigs[network].currency %></span> available to spend.</h4> -->
       <%- delim %><span id="availableBalance" class="addExchangePrice" style="color: #009933;"><%- b %> <%-  richwallet.config.networkConfigs[network].currency %></span>
@@ -57,12 +57,12 @@
       </div>
       
       <div class="form-group">
-        <label for="" class="col-lg-5 control-label"></label>
+        <label for="" class="col-lg-5 control-label">Fee</label>
         <div class="col-lg-5">
           <input id="sendAmount" type="hidden" value="">
           <input id="changeAddress" type="hidden" value="">
           <input id="calculatedFee" type="hidden" value="<%- richwallet.controllers.tx.defaultFee %>">
-          <p style="display: none;">A fee of <span id="fee" class="addExchangePrice" style="color: #009933;"><%- richwallet.controllers.tx.defaultFee %> BTC</span> will be added to ensure timely processing by the Bitcoin network.</p>
+	  <p id="fee" class="form-control" style="width: 100px;">Unknown</p>
         </div>
       </div>
       <div class="form-group">

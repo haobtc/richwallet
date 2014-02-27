@@ -164,7 +164,6 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
       var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
       $('#calculatedFee').val(calculatedFee);
       $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
-      $('#fee').parents('p').show();
   } catch(e) {
       errors.push(e);
   }

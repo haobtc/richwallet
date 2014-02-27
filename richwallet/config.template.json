@@ -31,7 +31,7 @@
       }
   },
   "redis": {"port": null, "host": null},
-  "mongo": {"url": "mongodb://localhost:27017/richwallet"},
-  "backend": "mongo",
+  "mongodb": {"url": "mongodb://localhost:27017/richwallet"},
+  "backend": "mongodb",
   "httpPort": 8080
 }

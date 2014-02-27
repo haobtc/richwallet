@@ -11,16 +11,9 @@ var speakeasy  = require('speakeasy');
 
 var server     = express();
 
-if(config.backend == "redis") {
-    var RedisDB    = require('./server/db/redis');
-    var db = new RedisDB();
-} else {
-    var MongoDB    = require('./server/db/mongo');
-    var db = new MongoDB();
-}
-
+var StorageClass = require('./server/db/' + config.backend);
+var db = new StorageClass();
 db.connect();
-console.info('db');
 
 var listener = sockjs.createServer({log: function(severity, message) {}});
 
@@ -32,9 +25,13 @@ function listUnspent(addresses, callback) {
   rpcpool.eachNetwork(function(network, emit){
       var rpcServer = rpcpool.rpcServer(network);
       var networkAddresses = rpcpool.addressesByNetwork(addresses, network);
+      if(!networkAddresses || networkAddresses.length == 0) {
+	  emit({error: null, data:[]});
+	  return;
+      }
       rpcServer.rpc('listunspent', [0, 99999999999999, networkAddresses], function(err, btcres) {
 	  if(err) {
-	      emit({error: err, data: btcres});
+	      emit({error: err, data: []});
 	      return;
 	  }
 
@@ -51,11 +48,11 @@ function listUnspent(addresses, callback) {
 		  confirmations: btcres[i].confirmations
 	      });
 	  }
-	  emit({error: null, data: btcres});
+	  emit({error: null, data: unspent});
       });
   }, function(r) {
       if(r.error) {
-	  console.error(error);
+	  console.error(r.error);
 	  return;
       }
 
@@ -381,7 +378,8 @@ server.post('/api/tx/details', function(req,res) {
 	var rpcServer = rpcpool.rpcServer(network);
 	rpcServer.batch(queries, function(err, results) {
 	    if(err) console.log(err);
-
+	    
+	    results = results || [];
 	    var txes = [];
 
 	    for(var i=0; i<results.length;i++) {

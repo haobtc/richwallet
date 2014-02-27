@@ -52,8 +52,10 @@ richwallet.controllers.Dashboard.prototype.index = function() {
 
   this.render('dashboard', {}, function() {
     if(!self.firstDashboardLoad) {
+      $('.loading').show();
       self.firstDashboardLoad = true;
       self.getUnspent(function() {
+        $('.loading').remove();
         self.renderDashboard();
       });
     } else {

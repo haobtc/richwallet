@@ -16,7 +16,6 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
       richwallet.router.route('node_error');
       return;
     }
-
     self.mergeUnspent(resp.unspent, callback);
   });
 };
