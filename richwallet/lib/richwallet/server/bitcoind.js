@@ -23,7 +23,7 @@ Bitcoind.prototype.batch = function(cmds, callback) {
 };
 
 Bitcoind.prototype.request = function(payload, callback) {
-  request({uri: this.url.href, method: 'POST', json: payload, timeout:5000},
+  request({uri: this.url.href, method: 'POST', json: payload, timeout:15000},
 	  function (error, response, body) {
     if (!error && response.statusCode == 200) {
       if(body.result)

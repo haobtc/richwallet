@@ -1,9 +1,6 @@
 CACHE MANIFEST
-
-# v14
-NETWORK:
+# v22
 index.html
-config.json
 js/all.js
 js/lib/bitcoinjs.js
 css/all.css
@@ -19,6 +16,7 @@ views/accounts/settings.html
 views/addresses/list.html
 views/addresses/request.html
 views/dashboard/received.html
+views/dashboard/balances.html
 views/dashboard/sent.html
 views/tx/details.html
 views/tx/send.html

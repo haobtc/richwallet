@@ -15,7 +15,7 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
   for(i=0;i<txs.length;i++) {
     txHashes.push({tx:txs[i].hash, network:txs[i].network});
   }
-
+  
   $.post('/api/tx/details', {txHashes: txHashes}, function(resp) {
     for(i=0;i<txs.length;i++) {
       for(var j=0;j<resp.length;j++) {

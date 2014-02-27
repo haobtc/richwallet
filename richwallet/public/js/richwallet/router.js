@@ -48,7 +48,7 @@ richwallet.router.listener = function() {
 	sock.send(JSON.stringify(
 	    {method: 'listUnspent',
 	     addresses: richwallet.wallet.addressHashes()}));
-    }, 3000);
+    }, 30000);
   };
   
   sock.onmessage = function(res) {

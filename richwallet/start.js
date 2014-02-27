@@ -19,5 +19,5 @@ domain.run(function() {
     servers.httpsServer.listen(servers.config.httpsPort || 443);
 
   if(servers.httpServer)
-    servers.httpServer.listen(servers.config.httpPort || argv.p || 80);
+    servers.httpServer.listen(argv.p || servers.config.httpPort || 80);
 });
