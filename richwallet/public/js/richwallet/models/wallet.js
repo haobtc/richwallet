@@ -271,9 +271,9 @@ richwallet.Wallet = function(walletKey, walletId) {
 	  var conf = richwallet.config.networkConfigs[network];
 	  var balance = this.safeUnspentBalance(network);
 	  var pendingBalance = this.pendingUnspentBalance(network);
-	  if (balance.eq(0) && pendingBalance.eq(0)) {
+/*	  if (balance.eq(0) && pendingBalance.eq(0)) {
 	      continue;
-	  }
+	  } */
 	  balances.push({
 	      'network': network,
 	      'currency': conf['currency'],
