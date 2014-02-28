@@ -16,7 +16,7 @@ richwallet.router.walletRequired = function() {
     richwallet.router.route('signup');
 };
 
-/*richwallet.router.listener33 = function() {
+richwallet.router.listener = function() {
     if(richwallet.router.listenerTimeout) {
 	clearInterval(richwallet.router.listenerTimeout);
     }
@@ -28,9 +28,9 @@ richwallet.router.walletRequired = function() {
 	    }
 	});
     }, 30000);
-};*/
+};
 
-richwallet.router.listener = function() {
+richwallet.router.listener1111 = function() {
   var path = window.location.pathname;
   path = path.replace(/[^\/]*$/, '');
   path += 'listener';
