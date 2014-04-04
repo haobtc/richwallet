@@ -67,7 +67,6 @@ module.exports = function(grunt) {
             'public/js/richwallet/controllers/addresses.js',
             'public/js/richwallet/controllers/dashboard.js',
             'public/js/richwallet/controllers/tx.js',
-            'public/js/richwallet/pricing.js',
             'public/js/richwallet/router.js'
           ]
         }

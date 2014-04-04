@@ -36,5 +36,6 @@
       "mongodb": {"url": "mongodb://localhost:27017/richwallet"},
       "indexeddb": {"sqlite3Path": "rw.db"}
   },
-  "httpPort": 8080
+  "httpPort": 8080,
+  "blockInfoServer": "http://block.so"
 }

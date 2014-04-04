@@ -2,7 +2,7 @@ richwallet.Controller = function() {
 };
 
 
-richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
+richwallet.Controller.prototype.getUnspentServer = function(confirmations, callback) {
   var self = this;
   var query = {addresses: richwallet.wallet.addressHashes()};
 
@@ -18,6 +18,49 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
     }
     self.mergeUnspent(resp.unspent, callback);
   });
+};
+
+richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
+  var self = this;
+  var query = {addresses: richwallet.wallet.addressHashes()};
+
+  if(typeof(confirmations) == 'function')
+    callback = confirmations;
+  else
+    query['confirmations'] = confirmations;
+  var jsonpUrl = richwallet.config.blockInfoServer + '/infoapi/v1/unspent?callback=?&addresses=' + query.addresses.join(',');
+
+  $.getJSON(jsonpUrl, function(resp) {
+      for(var i=0; i<resp.length; i++) {
+	  resp[i].hash = resp[i].txid;
+      }
+      self.mergeUnspent(resp, callback);
+  });
+};
+
+richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
+    var txSections = {};
+    for(var i=0; i<txHashes.length; i++) {
+	var txHash = txHashes[i];
+	var arr = txSections[txHash.network];
+	if(arr) {
+	    arr.push(txHash.tx);
+	} else {
+	    arr = [txHash.tx];
+	    txSections[txHash.network] = arr;
+	}
+    }
+    var jsonpUrl = richwallet.config.blockInfoServer + '/infoapi/v1/tx/details?callback=?';
+    for(var network in txSections) {
+	jsonpUrl += '&' + network + '=' + txSections[network].join(',');
+    }
+
+    $.getJSON(jsonpUrl, function(resp) {
+	for(var i=0; i<resp.length; i++) {
+	  resp[i].hash = resp[i].txid;
+	}
+	callback(resp);
+    });
 };
 
 

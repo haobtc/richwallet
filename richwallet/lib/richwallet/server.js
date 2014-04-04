@@ -2,7 +2,6 @@ var express    = require('express');
 var mailer     = require('nodemailer');
 var request    = require('request');
 var config     = require('./server/config');
-var rpcpool    = require('./server/rpcpool')
 var sockjs     = require('sockjs');
 var http       = require('http');
 var https      = require('https');
@@ -17,68 +16,8 @@ db.connect();
 
 var listener = sockjs.createServer({log: function(severity, message) {}});
 
-function listUnspent(addresses, callback) {
-  if(!addresses || addresses.length == 0) {
-      callback(undefined, []);
-      return;
-  }
-  rpcpool.eachNetwork(function(network, emit){
-      var rpcServer = rpcpool.rpcServer(network);
-      var networkAddresses = rpcpool.addressesByNetwork(addresses, network);
-      if(!networkAddresses || networkAddresses.length == 0) {
-	  emit({error: null, data:[]});
-	  return;
-      }
-      rpcServer.rpc('listunspent', [0, 99999999999999, networkAddresses], function(err, btcres) {
-	  if(err) {
-	      emit({error: err, data: []});
-	      return;
-	  }
-
-	  var unspent = [];
-
-	  for(var i=0;i<btcres.length; i++) {
-	      unspent.push({
-		  network:       network,
-		  hash:          btcres[i].txid,
-		  vout:          btcres[i].vout,
-		  address:       btcres[i].address,
-		  scriptPubKey:  btcres[i].scriptPubKey,
-		  amount:        btcres[i].amount,
-		  confirmations: btcres[i].confirmations
-	      });
-	  }
-	  emit({error: null, data: unspent});
-      });
-  }, function(r) {
-      if(r.error) {
-	  console.error(r.error);
-	  return;
-      }
-
-      if(!this.unspent) {
-	  this.unspent = r.data;
-      } else {
-	  for(var i=0; i<r.data.length; i++) {
-	      this.unspent.push(r.data[i]);
-	  }
-      }
-  }, function(res) {
-      callback(undefined, res.unspent);
-  });
-};
-
 listener.on('connection', function(conn) {
     conn.on('data', function(message) {
-      var req = JSON.parse(message);
-      if(req.method == 'listUnspent') {
-        listUnspent(req.addresses, function(err, unspent) {
-          if(err)
-            conn.write(JSON.stringify(err));
-          else
-            conn.write(JSON.stringify({method: 'listUnspent', result: unspent}));
-        });
-      }
     });
 });
 
@@ -155,44 +94,15 @@ server.post('/api/backupToEmail', function(req, res) {
   });
 });
 
-var proxyWhiteList = {"sendrawtransaction": true};
 server.post('/api/proxy/:network/:command', function(req, res) {
-    if(!proxyWhiteList[req.params.command]) {
-	res.send(["rpc not allowed", null]);
-	return;
-    }
-    var rpcServer = rpcpool.rpcServer(req.params.network);
-    rpcServer.rpc(req.params.command, req.body.args, function(err, btcres) {
-      res.send([err, btcres]);
-    });
+    var href = config.blockInfoServer + '/infoapi/v1/proxy/' + req.params.network;
+    var payload = {jsonrpc: "2.0", method: req.params.command, params: req.body.args};
+    request({url: href, method: 'POST', json:payload, timeout:10000},
+	    function(error, response, body) {
+		res.send(body);
+	    });
 });
 
-
-function callRPC(network, command, args, callback) {
-    var rpcServer = rpcpool.rpcServer(network);
-    rpcServer.rpc(command, args, function(err, btcres) {
-	callback(network, err, btcres);
-    });
-}
-
-server.post('/api/bproxy/:command', function(req, res) {
-    var reducer = [];
-    for(var network in config.networks) {
-	reducer.push(network);
-    }
-    
-    var resObj = {};
-    for(var network in config.networks) {
-	var args = req.body.args[network] || [];
-	callRPC(network, req.params.command, args, function(network, err, rpcres) {
-	    resObj[network] = [err, rpcres];
-	    reducer.pop();
-	    if(reducer.length <= 0) {
-		res.send(resObj);
-	    }
-	});
-    }
-});
 
 server.get('/api/wallet', function(req,res) {
   db.getWalletRecord(req.query.serverKey, function(err, payload) {
@@ -241,38 +151,8 @@ function saveWallet(req, res) {
 };
 
 function saveWalletAndAddresses(req, res) {
-  if(req.body.address) {
-    var rpcServer = rpcpool.rpcServerByAddress(req.body.address);
-    rpcServer.rpc('importaddress', [req.body.address, req.body.serverKey, false], function(err, btcres) {
-      if(err)
-        return res.send({messages: [err.message]});
-      saveWallet(req, res);
-    });
-  } else if(req.body.importAddresses) {
-    var batch = [];
-    var cluster = rpcpool.clusterAddresses(req.body.importAddresses);
-    cluster.forEach(function(r) {
-	var rpcServer = rpcpool.rpcServer(r.network);
-	var batch = [];
-	//for(var i=0;i<r.addresses.length;i++) {
-	r.addresses.forEach(function(addr, i) {
-	    batch.push({method: 'importaddress', params: [addr, req.body.serverKey, true], id: i});
-	});
-	rpcServer.batch(batch, function(err, btcres){});
-    });
-/*    for(var i=0;i<req.body.importAddresses.length;i++) {
-	var addr = req.body.importAddresses[i];
-	var rpcServer = rpcpool.rpcServerByAddress(addr);
-	rpcServer.push({method: 'importaddress', params: [addr, req.body.serverKey, true], id: i});
-    }
-
-    // Doing async now because bitcoind takes a while to scan the tx for existing addresses
-    rpcServer.batch(batch, function(err, btcres) {});
-*/
     saveWallet(req, res);
-  } else {
-    saveWallet(req, res);
-  }
+    return;
 }
 
 function errorResponse(errors) {
@@ -321,97 +201,8 @@ server.get('/api/config', function(req, res) {
     }
     res.send({
 	networkConfigs: nwConf,
-	emailEnabled: config.mailer.enabled
-    });
-});
-
-
-server.get('/api/weighted_prices', function(req, res) {
-  /*
-    For testing offline:
-    res.send([{code: 'USD', rate: 40.00}]);
-    return;
-  */
-  try {
-    request({uri: config.pricesUrl, method: 'GET'}, function (error, pricesResponse, body) {
-      if (!error && pricesResponse.statusCode == 200) {
-        res.send(JSON.parse(body));
-      } else {
-        res.send({error: 'cannot connect to the weighted prices API'});
-      }
-      return;
-    });
-  } catch(err)  {
-    console.log(err);
-    res.send({error: 'cannot connect to the weighted prices API'});
-  }
-});
-
-server.post('/api/tx/unspent', function(req,res) {
-  listUnspent(req.body.addresses, function(err, unspent) {
-    if(err)
-      return res.send({error: 'bitcoin error'});
-
-    res.send({unspent: unspent});
-  });
-});
-
-server.post('/api/tx/details', function(req,res) {
-    var i = 0;
-
-    if(!req.body.txHashes) {
-	res.send([]);
-	return;
-    }
-    rpcpool.eachNetwork(function(network, emit) {
-	var queries = [];
-	for(i=0;i<req.body.txHashes.length;i++) {
-	    var txObj = req.body.txHashes[i];
-	    if(!txObj.network || txObj.network == network) {
-		queries.push({method: 'gettransaction', params: [txObj.tx]});
-	    }
-	}
-	if(queries.length == 0) {
-	    emit([]);
-	    return;
-	}
-	var rpcServer = rpcpool.rpcServer(network);
-	rpcServer.batch(queries, function(err, results) {
-	    if(err) console.log(err);
-	    
-	    results = results || [];
-	    var txes = [];
-
-	    for(var i=0; i<results.length;i++) {
-		var result = results[i].result;
-		if(result == null)
-		    continue;
-
-		txes.push({
-                    network: network,
-		    hash: result.txid,
-		    time: result.time,
-		    amount: result.amount,
-		    fee: result.fee,
-		    confirmations: result.confirmations,
-		    blockhash: result.blockhash,
-		    blockindex: result.blockindex,
-		    blocktime: result.blocktime
-		});
-	    }
-	    emit(txes);
-	});
-    }, function(txlist){
-	if(!this.txes) {
-	    this.txes = txlist;
-	} else {
-	    var self = this;
-	    txlist.forEach(function(tx) {
-		self.txes.push(tx);
-	    });
-	}      
-    }, function(resobj) {
-	res.send(resobj.txes);
+	emailEnabled: config.mailer.enabled,
+	blockInfoServer: config.blockInfoServer	
     });
 });
 

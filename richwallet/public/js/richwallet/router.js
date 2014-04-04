@@ -218,7 +218,7 @@ richwallet.router.map('#/').to(function() {
   richwallet.router.initWallet(function(res) {
     if(res == false)
       return;
-    richwallet.route('dashboard');
+    richwallet.router.route('dashboard');
   });
 });
 

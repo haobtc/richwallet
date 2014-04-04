@@ -10,7 +10,8 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
   if(network) {
       reqObj.network = network;
   }
-  $.post('/api/tx/details', {txHashes: [reqObj]}, function(resp) {
+
+  this.getTxDetails([reqObj], function(resp) {
     var tx = resp[0];
     var currency = richwallet.config.networkConfigs[tx.network].currency;
     self.render('tx/details', {tx: tx, currency: currency}, function(id) {
@@ -113,7 +114,8 @@ richwallet.controllers.Tx.prototype.create = function() {
 		  console.error('send raw transaction error', err);
 		  return;
 	      }
-	      richwallet.database.setSuccessMessage("Sent "+amount+" BTC to "+address+".");
+	      var addrObj = new Bitcoin.Address(address);
+	      richwallet.database.setSuccessMessage("Sent "+amount+" " + addrObj.networkConfig().currency + " to "+address+".");
 	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
 	      self.getUnspent(function() {
 		  richwallet.router.route('dashboard');

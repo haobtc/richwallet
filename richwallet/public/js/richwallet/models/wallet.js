@@ -338,12 +338,12 @@ richwallet.Wallet = function(walletKey, walletId) {
     var address = new Bitcoin.Address(addressString);
     var sendTx = new Bitcoin.Transaction();
     var i;
-
+console.info('07');
     var unspent = [];
     var unspentAmt = Bitcoin.BigInteger.ZERO;
 
     var safeUnspent = this.safeUnspent(address.getNetwork());
-
+console.info('08', safeUnspent);
     for(i=0;i<safeUnspent.length;i++) {
       unspent.push(safeUnspent[i]);
 
@@ -356,7 +356,7 @@ richwallet.Wallet = function(walletKey, walletId) {
         break;
       }
     }
-
+console.info('09');
     if(unspentAmt.compareTo(total) < 0) {
       throw "you do not have enough coins to send this amount";
     }
@@ -375,15 +375,17 @@ richwallet.Wallet = function(walletKey, walletId) {
     }
 
     var hashType = 1; // SIGHASH_ALL
+      console.info('11');
 
     // Here will be the beginning of your signing for loop
 
     for(i=0;i<unspent.length;i++) {
+	console.info('unspent ', i, unspent[i]);
       var unspentOutScript = new Bitcoin.Script(Bitcoin.convert.hexToBytes(unspent[i].scriptPubKey));
       var hash = sendTx.hashTransactionForSignature(unspentOutScript, i, hashType);
       var pubKeyHash = unspentOutScript.simpleOutHash();
       var pubKeyHashHex = Bitcoin.convert.bytesToHex(pubKeyHash);
-
+	console.info('12');
       for(var j=0;j<keyPairs.length;j++) {
         if(_.isEqual(keyPairs[j].publicKey, pubKeyHashHex)) {
           var key = new Bitcoin.Key(keyPairs[j].key);
@@ -395,12 +397,13 @@ richwallet.Wallet = function(walletKey, walletId) {
         }
       }
     }
-
+      console.info('13');
     return {unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
   };
 
   this.calculateFee = function(amtString, addressString, changeAddress) {
     var tx = this.createTx(amtString, 0, addressString, changeAddress);
+    console.info('createTx', amtString, 0, addressString, changeAddress, 'as', tx.raw);
     var addr = new Bitcoin.Address(addressString);
     var txSize = tx.raw.length / 2;
     var fee = Math.ceil(txSize/1000)*addr.networkConfig().fee;
