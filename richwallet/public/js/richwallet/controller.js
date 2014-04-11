@@ -23,16 +23,18 @@ richwallet.Controller.prototype.getUnspentServer = function(confirmations, callb
 richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
   var self = this;
   var query = {addresses: richwallet.wallet.addressHashes()};
+  if(!query.addresses || query.addresses.length == 0) {
+	return;
+   }
 
   if(typeof(confirmations) == 'function')
     callback = confirmations;
   else
     query['confirmations'] = confirmations;
-  var jsonpUrl = richwallet.config.blockInfoServer + '/infoapi/v1/unspent?gggcallback=1&addresses=' + query.addresses.join(',');
 
-  $.getJSON(jsonpUrl, {crossDomain: true, xhrFields: {  
-                withCredentials: true  
-            }}, function(resp) {
+  // FIXME: handle query['confirmations']
+  var jsonpUrl = '/api/infoproxy/unspent';
+  $.getJSON(jsonpUrl, {addresses:query.addresses.join(',')}, function(resp) {
       for(var i=0; i<resp.length; i++) {
 	  resp[i].hash = resp[i].txid;
       }
@@ -52,12 +54,13 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
 	    txSections[txHash.network] = arr;
 	}
     }
-    var jsonpUrl = richwallet.config.blockInfoServer + '/infoapi/v1/tx/details?ggcallback=1';
-    for(var network in txSections) {
-	jsonpUrl += '&' + network + '=' + txSections[network].join(',');
+    var jsonpUrl = '/api/infoproxy/tx/details';
+    var query = {};
+     for(var network in txSections) {
+	 query[network] =  txSections[network].join(',');
     }
 
-    $.getJSON(jsonpUrl, {crossDomain: true, xhrFields: {withCredentials: true}}, function(resp) {
+    $.getJSON(jsonpUrl, query, function(resp) {
 	for(var i=0; i<resp.length; i++) {
 	  resp[i].hash = resp[i].txid;
 	}

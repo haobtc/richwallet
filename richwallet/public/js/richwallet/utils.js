@@ -12,8 +12,8 @@ richwallet.utils.stripTags = function(html) {
 
 richwallet.utils.callRPC = function(network, command, args, callback) {
     $.ajax({
-	url: '/api/proxy/' + network + '/' + command,
-	data: JSON.stringify({args: args}),
+        url: '/api/infoproxy/rpc/' + network,
+	data: JSON.stringify({jsonrpc:"2.0", method:command, params: args}),
 	contentType: 'application/json',
 	dataType: 'json',
 	success: function(resp) {

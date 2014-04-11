@@ -1,3 +1,4 @@
+var qs         = require('querystring');
 var express    = require('express');
 var mailer     = require('nodemailer');
 var request    = require('request');
@@ -94,13 +95,21 @@ server.post('/api/backupToEmail', function(req, res) {
   });
 });
 
+server.get(/api\/infoproxy\/(.+)/, function(req, res){
+    var href = config.blockInfoServer + '/infoapi/v1/' + req.params[0] + '?' + qs.stringify(req.query);
+    request.get(href).pipe(res);    
+});
+
+server.post(/api\/infoproxy\/(.+)/, function(req, res){
+    var href = config.blockInfoServer + '/infoapi/v1/' + req.params[0];
+    var rpcRequest = request({url:href, method:'POST', json:req.body, timeout:10000});
+    rpcRequest.pipe(res);
+});
+
 server.post('/api/proxy/:network/:command', function(req, res) {
     var href = config.blockInfoServer + '/infoapi/v1/proxy/' + req.params.network;
     var payload = {jsonrpc: "2.0", method: req.params.command, params: req.body.args};
-    request({url: href, method: 'POST', json:payload, timeout:10000},
-	    function(error, response, body) {
-		res.send(body);
-	    });
+    request({url: href, method: 'POST', json:payload, timeout:10000}).pipe(res);
 });
 
 
@@ -201,8 +210,7 @@ server.get('/api/config', function(req, res) {
     }
     res.send({
 	networkConfigs: nwConf,
-	emailEnabled: config.mailer.enabled,
-	blockInfoServer: config.blockInfoServer	
+	emailEnabled: config.mailer.enabled
     });
 });
 
