@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1>Sign In</h1>
+    <h1><%- T('Sign In') %></h1>
     <hr>
   </div>
 </div>
@@ -18,7 +18,7 @@
       cryptcoins in one single wallet.
       </li>
       <li><strong>Easy</strong> Receive, send coins with a few mouse clicks. </li>
-      <li><strong>Portable</strong> Access your wallet via iPhone, Android phone or PC.</li>
+      <li><strong>Responsive</strong> Access your wallet via iPhone, Android phone or PC.</li>
       <li><strong>Open</strong> Richwallet is
       an <a href="https://github.com/haobtc/richwallet">open source
       service</a>, please feel free to use it and contrib to
@@ -37,23 +37,23 @@
 	</div>
 
 	<div class="form-group">
-          <label for="walletId" class="control-label">Email</label>
-          <input type="email" class="form-control" id="walletId" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Your email">
+          <label for="walletId" class="control-label"><%- T('Email Address') %></label>
+          <input type="email" class="form-control" id="walletId" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="<%- T('Your email') %>">
 	</div>
 	<div class="form-group" id="signinPassword">
-          <label for="password" class="control-label">Password</label>
+          <label for="password" class="control-label"><%- T('Password') %></label>
           <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
 	</div>
 	<div class="form-group">
-          <button type="submit" class="btn btn-lg btn-success"><i class="fa fa-sign-in"></i> Sign in</button>
+          <button type="submit" class="btn btn-lg btn-success"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
           <div style="margin-top:40px">
-            <h2>New User?</h2>
-            <h3><a href="#/signup" class="btn btn-lg btn-primary"><i class="fa fa-user"></i> Sign up</a></h3>
+            <h2><%- T('New User?') %></h2>
+            <h3><a href="#/signup" class="btn btn-lg btn-primary"><i class="fa fa-user"></i> <%- T('Sign up') %></a></h3>
           </div>
           
           <div style="margin-top:30px">
-            <h4>Importing a wallet?</h4>
-            <h4><a href="#/accounts/import" class="btn btn-primary">Import</a></h4>
+            <h4><%- T('Importing a wallet?') %></h4>
+            <h4><a href="#/accounts/import" class="btn btn-primary"><%- T('Import') %></a></h4>
           </div>
 	</div>
       </form>

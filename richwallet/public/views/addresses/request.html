@@ -1,28 +1,28 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1>Request Payment</h2>
+    <h1><%- T('Request Payment') %></h2>
       <hr>
   </div>
 </div>
 
 <div class="row">
   <div class="col-lg-5 col-lg-offset-1">
-    <h4>Address</h4>
+    <h4><%- T('Address') %></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
       <strong><%- richwallet.wallet.getAddressName(data.address) %></strong><br>
       <strong><%- data.address %></strong>
     </div>
     
-    <h4>Amount</h4>
+    <h4><%- T('Amount') %></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
       <input id="amount" type="text" name="amount" class="form-control" autocomplete="off" placeholder="0.00" style="display: inline; width: 100px" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"> <%- richwallet.config.networkConfigs[data.network].currency %> <span style="padding-left: 30px">
     </div>
-    <h4>Label <small>Optional</small></h4>
+    <h4><%- T('Label') %> <small><%- T('Optional') %></small></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
       <input id="label" class="form-control"  onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')" value="<%- richwallet.wallet.getAddressName(data.address) == 'Default' ? '' : richwallet.wallet.getAddressName(data.address) %>" style="width: 300px">
     </div>
     
-    <h4>Message <small>Optional</small></h4>
+    <h4><%- T('Message') %> <small><%- T('Optional') %></small></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
       <textarea id="message" class="form-control" rows="3" cols="50" placeholder="Optional Message" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"></textarea>
     </div>
@@ -34,6 +34,6 @@
 
 <div class="row" style="margin-top: 20px">
   <div class="col-lg-12 text-center">
-    <a href="#/addresses/list" class="btn btn-lg btn-primary"><i class="fa fa-arrow-left"></i> Back<a>
+    <a href="#/addresses/list" class="btn btn-lg btn-primary"><i class="fa fa-arrow-left"></i> <%- T('Back') %><a>
   </div>
 </div>

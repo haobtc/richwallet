@@ -4,11 +4,11 @@
 }
 </style>
 
-<h2>Received</h2>
+<h2><%- T('Received') %></h2>
 
 <% if(data.tx.length == 0) {%>
 
-  <h4>No transactions yet.</h4>
+  <h4><%- T('No transaction yet.') %></h4>
 
 <% } else { %>
   <div class="visible-xs visible-sm">
@@ -35,10 +35,10 @@
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
-          <th>Address</th>
-          <th>Amount</th>
-          <th>Confirmations</th>
-          <th>Discovered</th>
+          <th><%- T('Address') %></th>
+          <th><%- T('Amount') %></th>
+          <th><%- T('Confirmations') %></th>
+          <th><%- T('Discovered')%></th>
           <th></th>
       </thead>
       <tbody>
@@ -60,7 +60,7 @@
             <td>
               <%- humaneDate(new Date(tx.time).toISOString()) %>
             </td>
-            <td><a class="btn btn-primary" href="#/tx/details/<%- tx.network %>/<%- tx.hash %>"><i class="fa fa-info-circle"></i> Details</a></td>
+            <td><a class="btn btn-primary" href="#/tx/details/<%- tx.network %>/<%- tx.hash %>"><i class="fa fa-info-circle"></i> <%- T('Details') %></a></td>
         <% } %>
       </tbody>
     </table>

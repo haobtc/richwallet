@@ -61,8 +61,26 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
     }
 
     $.getJSON(jsonpUrl, query, function(resp) {
+/*	var addresses = richwallet.wallet.addressHashes();
+	var addrObj = {};
+	for(var i=0; i<addresses.length; i++) {
+	    addrObj[addresses[i]] = true;
+	} */
 	for(var i=0; i<resp.length; i++) {
-	  resp[i].hash = resp[i].txid;
+	  var tx = resp[i];
+	  tx.hash = tx.txid;
+/*	  var amount = 0;
+	  for(var i=0; i<tx.inputs.length; i++) {
+	      if(addrObj[tx.inputs[i].address]) {
+		  amount -= tx.inputs[i].value;
+	      }
+	  }
+	  for(var i=0; i<tx.outputs.length; i++) {
+	      if(addrObj[tx.outputs[i].address]) {
+		  amount += tx.outputs[i].value;
+	      }
+	  }
+	  tx.amount = amount; */
 	}
 	callback(resp);
     });

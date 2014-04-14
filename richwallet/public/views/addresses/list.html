@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1>Receive Addresses</h2>
+    <h1><%- T('Receive Addresses') %></h2>
       <hr>
   </div>
 </div>
@@ -11,7 +11,7 @@
 
       <% if(data.addresses.length == 0) {%>
 
-        <h4>No receive addresses yet.</h4>
+        <h4><%- T('No receive address yet.') %></h4>
 
       <% } else { %>
         
@@ -20,7 +20,7 @@
           <div class="row">
             <div class="col-md-6">
               <div>
-                <strong><%- data.addresses[i].name || 'No Label' %></strong>
+                <strong><%- data.addresses[i].name || T('No Label') %></strong>
                 <span class="addExchangePrice pull-right" style="color: #33CC33;">
                   <%- richwallet.wallet.addressReceivedAmount(data.addresses[i].address) %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
                 </span>
@@ -38,12 +38,12 @@
           <table class="table table-bordered table-striped table-hover">
             <thead>
               <tr>
-                <th>Label</th>
-                <th>Address</th>
-                <th>Network</th>
+                <th><%- T('Label') %></th>
+                <th><%- T('Address') %></th>
+                <th><%- T('Network') %></th>
                 <th>
-                  <span class="visible-xs visible-sm">Total</span>
-                  <span class="visible-md visible-lg">Total Received</span>
+                  <span class="visible-xs visible-sm"><%- T('Total') %></span>
+                  <span class="visible-md visible-lg"><%- T('Total Received') %></span>
                 </th>
 		<th>&nbsp;</th>
                 <!--
@@ -65,7 +65,7 @@
                       </span>
                     </td>
                     <td>
-                      <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> Request Payment</a>
+                      <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
                       <!--
                       <a href="#" class="btn btn-info"><i class="fa fa-edit"></i> Edit Label</a>
                       <a href="#" class="btn btn-danger"><i class="fa fa-archive"></i> Archive</a>
@@ -89,16 +89,16 @@
 
 <div class="row">
   <div class="col-lg-6">
-    <h2>New Address</h2>
+    <h2><%- T('New Address') %></h2>
     <form onsubmit="richwallet.controllers.addresses.generateNewAddress($('#addressNetwork').val(), $('#addressLabel').val()); return false;">
       <div>
-        Label <small>(optional)</small>: <input id="addressLabel" type="text" style="width: 200px">
+        <%- T('Label') %> <small>(<%- T('optional') %>)</small>: <input id="addressLabel" type="text" style="width: 200px">
 	<select id="addressNetwork">
 	  <% for(var network in richwallet.config.networkConfigs) { %>
 	  <option value="<%- network %>"><%- network %></option>
 	  <% } %>
 	</select>
-	<button class="btn btn-primary"><i class="fa fa-plus"></i> Generate</button>
+	<button class="btn btn-primary"><i class="fa fa-plus"></i> <%- T('Generate') %></button>
         <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">
           <button type="btn" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
           <span id="newAddressMessage"></span>

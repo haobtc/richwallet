@@ -13,6 +13,14 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
 
   this.getTxDetails([reqObj], function(resp) {
     var tx = resp[0];
+    var txs = richwallet.wallet.transactions;
+    for(var i=0;i<txs.length;i++) {
+	if(txs[i].hash == tx.hash) {
+	    tx.amount = txs[i].amount;
+	    break;
+	}
+    }
+
     var currency = richwallet.config.networkConfigs[tx.network].currency;
     self.render('tx/details', {tx: tx, currency: currency}, function(id) {
       $('#'+id+" [rel='tooltip']").tooltip();
@@ -25,15 +33,19 @@ richwallet.controllers.Tx.prototype.send = function(toaddress) {
   toaddress = toaddress || '';
   this.getUnspent(function(resp) {
     var balances = {};
+    var balanceLiterals = [];
     for(var network in richwallet.config.networkConfigs) {
 	var b = richwallet.wallet.safeUnspentBalance(network);
 	balances[network] = b;
+	balanceLiterals.push(b + ' ' + richwallet.config.networkConfigs[network].currency);
     }
+
     richwallet.router.render(
 	'view',
 	'tx/send', 
 	{balances:balances,
-	 toaddress:toaddress},
+	 toaddress:toaddress,
+	balanceLiterals: balanceLiterals},
 	function(id) {
 	    $('#'+id+" [rel='tooltip']").tooltip();
 	    if(toaddress) {
