@@ -24,18 +24,22 @@ listener.on('connection', function(conn) {
 
 server.use(express.json());
 server.use(express.urlencoded());
-server.use(express.static('public'));
+server.use('/wallet/', express.static('public'));
 server.use(function(err, req, res, next){
   console.error(err.stack);
   res.send({error: true});
 });
 
-server.get('/api/generateAuthKey', function(req, res) {
+server.get('/', function(req, res) {
+    res.redirect('/wallet/');
+});
+
+server.get('/wallet/api/generateAuthKey', function(req, res) {
   var keys = speakeasy.generate_key({length: 20});
   res.send({key: keys.base32});
 });
 
-server.post('/api/setAuthKey', function(req, res) {
+server.post('/wallet/api/setAuthKey', function(req, res) {
   var code = speakeasy.time({key: req.body.key, encoding: 'base32'});
 
   if(code != req.body.code)
@@ -48,7 +52,7 @@ server.post('/api/setAuthKey', function(req, res) {
   });
 });
 
-server.post('/api/disableAuthKey', function(req, res) {
+server.post('/wallet/api/disableAuthKey', function(req, res) {
   db.getWalletRecord(req.body.serverKey, function(err, payload) {
     if(err)
       console.log('Wallet Get Error: '+err);
@@ -71,7 +75,7 @@ server.post('/api/disableAuthKey', function(req, res) {
 
 
 var smtp = mailer.createTransport('SMTP', config.mailer.option);
-server.post('/api/backupToEmail', function(req, res) {
+server.post('/wallet/api/backupToEmail', function(req, res) {
   db.getWalletRecord(req.body.serverKey, function(err, payload) {
       if(err) {
 	  console.error('Wallet Get Error:', err);
@@ -95,25 +99,25 @@ server.post('/api/backupToEmail', function(req, res) {
   });
 });
 
-server.get(/api\/infoproxy\/(.+)/, function(req, res){
+server.get(/wallet\/api\/infoproxy\/(.+)/, function(req, res){
     var href = config.blockInfoServer + '/infoapi/v1/' + req.params[0] + '?' + qs.stringify(req.query);
     request.get(href).pipe(res);    
 });
 
-server.post(/api\/infoproxy\/(.+)/, function(req, res){
+server.post(/wallet\/api\/infoproxy\/(.+)/, function(req, res){
     var href = config.blockInfoServer + '/infoapi/v1/' + req.params[0];
     var rpcRequest = request({url:href, method:'POST', json:req.body, timeout:10000});
     rpcRequest.pipe(res);
 });
 
-server.post('/api/proxy/:network/:command', function(req, res) {
+server.post('/wallet/api/proxy/:network/:command', function(req, res) {
     var href = config.blockInfoServer + '/infoapi/v1/proxy/' + req.params.network;
     var payload = {jsonrpc: "2.0", method: req.params.command, params: req.body.args};
     request({url: href, method: 'POST', json:payload, timeout:10000}).pipe(res);
 });
 
 
-server.get('/api/wallet', function(req,res) {
+server.get('/wallet/api/wallet', function(req,res) {
   db.getWalletRecord(req.query.serverKey, function(err, payload) {
     if(err) {
       console.log('Wallet Get Error: '+err);
@@ -136,7 +140,7 @@ server.get('/api/wallet', function(req,res) {
   });
 });
 
-server.post('/api/wallet/delete', function(req, res) {
+server.post('/wallet/api/wallet/delete', function(req, res) {
   db.delete(req.body.serverKey, function(err, deleted) {
     if(deleted == true)
       res.send({result: 'success'});
@@ -170,7 +174,7 @@ function errorResponse(errors) {
   return {messages: errors};
 }
 
-server.post('/api/wallet', function(req,res) {
+server.post('/wallet/api/wallet', function(req,res) {
   db.getWallet(req.body.serverKey, function(err, wallet) {
     if(err) {
       console.log('Database error: '+err);
@@ -195,7 +199,7 @@ server.post('/api/wallet', function(req,res) {
   });
 });
 
-server.get('/api/config', function(req, res) {
+server.get('/wallet/api/config', function(req, res) {
     var nwConf = {};
     for(var network in config.networks) {
 	var conf = config.networks[network];

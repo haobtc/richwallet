@@ -11,7 +11,7 @@ richwallet.Controller.prototype.getUnspentServer = function(confirmations, callb
   else
     query['confirmations'] = confirmations;
 
-  $.post('/api/tx/unspent', query, function(resp) {
+  $.post('api/tx/unspent', query, function(resp) {
     if(resp.error) {
       richwallet.router.route('node_error');
       return;
@@ -33,7 +33,7 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
     query['confirmations'] = confirmations;
 
   // FIXME: handle query['confirmations']
-  var jsonpUrl = '/api/infoproxy/unspent';
+  var jsonpUrl = 'api/infoproxy/unspent';
   $.getJSON(jsonpUrl, {addresses:query.addresses.join(',')}, function(resp) {
       for(var i=0; i<resp.length; i++) {
 	  resp[i].hash = resp[i].txid;
@@ -54,7 +54,7 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
 	    txSections[txHash.network] = arr;
 	}
     }
-    var jsonpUrl = '/api/infoproxy/tx/details';
+    var jsonpUrl = 'api/infoproxy/tx/details';
     var query = {};
      for(var network in txSections) {
 	 query[network] =  txSections[network].join(',');
@@ -133,7 +133,7 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
 
   $.ajax({
     type: 'POST',
-    url: '/api/wallet',
+    url: 'api/wallet',
     data: data,
     dataType: 'json',
     success: function(response) {
@@ -154,7 +154,7 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
 richwallet.Controller.prototype.deleteWallet = function(serverKey, callback) {
   $.ajax({
     type: 'POST',
-    url: '/api/wallet/delete',
+    url: 'api/wallet/delete',
     data: {serverKey: serverKey},
     dataType: 'json',
     success: function(response) {
