@@ -1,10 +1,13 @@
 <% for(var i=0; i< data.balances.length; i++) { 
    var b = data.balances[i];				 
 %>
-<div class="col-lg-2 text-center" style="float:right">
-  <div class="row">
-    <h3><%- b.balance %> <%- b.currency %></h3>
-    <p><i><small><%- b.pendingBalance %> <%- b.currency %> <%- T('pending') %></small></i></p>
+<div class="col-lg-1 text-center" style="float:right">
+  <div class="row" title="balance">
+    <h4><%- b.balance %></h4>
+    <div><i><small><%- b.currency %></i></small></div>
+<!--
+    <div><i><small><%- b.pendingBalance %> <%- b.currency %> <%- T('pending') %></small></i></div>
+-->
   </div>
 </div>
 <% } %>

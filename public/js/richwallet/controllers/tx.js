@@ -127,7 +127,10 @@ richwallet.controllers.Tx.prototype.create = function() {
 		  return;
 	      }
 	      var addrObj = new Bitcoin.Address(address);
-	      richwallet.database.setSuccessMessage("Sent "+amount+" " + addrObj.networkConfig().currency + " to "+address+".");
+	      richwallet.database.setSuccessMessage(T("Sent %s %s to %s.", amount,
+						      addrObj.networkConfig.currency,
+						      address));
+	      
 	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
 	      self.getUnspent(function() {
 		  richwallet.router.route('dashboard');

@@ -5,7 +5,7 @@ richwallet.controllers.Dashboard.prototype = new richwallet.Controller();
 richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
   var i = 0;
   var self = this;
-  var balances = richwallet.wallet.balances();
+  var balances = richwallet.wallet.balances().sort(function(a, b) {return a.balance - b.balance;});
   /*$('#balance').text(richwallet.wallet.safeUnspentBalance());
   $('#pendingBalance').text(richwallet.wallet.pendingUnspentBalance()); */
 
