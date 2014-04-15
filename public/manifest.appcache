@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v105
+# v108
 index.html
 js/all.js
 js/lib/bitcoinjs.js
@@ -11,6 +11,20 @@ fonts/fontawesome-webfont.svg?v=4.0.3
 fonts/fontawesome-webfont.ttf?v=4.0.3
 fonts/fontawesome-webfont.woff?v=4.0.3
 fonts/FontAwesome.otf
+
+fonts/lato/lato-regular.ttf
+fonts/lato/lato-light.ttf
+fonts/lato/lato-bold.ttf
+fonts/lato/lato-bolditalic.ttf
+fonts/lato/lato-regular.woff
+fonts/lato/lato-light.woff
+fonts/lato/lato-bold.woff
+fonts/lato/lato-bolditalic.woff
+fonts/lato/lato-regular.svg
+fonts/lato/lato-light.svg
+fonts/lato/lato-bold.svg
+fonts/lato/lato-bolditalic.svg
+
 views/accounts/import.html
 views/accounts/settings.html
 views/addresses/list.html
@@ -29,5 +43,5 @@ views/signup.html
 lang/zh-CN.json
 
 NETWORK:
-/wallet/api
-/listener
+api
+listener
