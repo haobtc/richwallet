@@ -1,9 +1,0 @@
-[submodule "coins/litecoin"]
-	path = coins/litecoin
-	url = https://github.com/haobtc/litecoin.git
-[submodule "coins/dogecoin"]
-	path = coins/dogecoin
-	url = https://github.com/haobtc/dogecoin.git
-[submodule "coins/bitcoin"]
-	path = coins/bitcoin
-	url = https://github.com/superisaac/bitcoin.git
