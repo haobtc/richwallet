@@ -1,9 +1,17 @@
 {
+    "bitcoin": "比特币",
+    "litecoin": "莱特币",
+    "dogecoin": "狗币",
+
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
     "Email Address": "邮箱",
     "Password": "密码",
     "Confirm your password": "确认密码",
     "Create Account": "创建账号",
+
+    "Strongly Confirmed": "完全确认",
+    "Soft Confirmed": "部分确认",
+    "Pending (Unconfirmed)": "等待中(未确认)",
 
     "Sign in": "登录",
     "Sign up": "注册",
@@ -43,7 +51,7 @@
     "Label": "标签",
     "optional": "可选",
     "Optional": "可选",
-    "Network": "网络",
+    "Network": "币种",
     "Total": "总额",
     "Total Received": "收到总额",
     "Request Payment": "请求付款",
@@ -51,11 +59,30 @@
     "Generate": "生成",
 
     "Message": "消息",
+    "Optional Message": "可选的消息",
     "Back": "返回",
     
     "Send coins": "发送币",
 
     "Your have <span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> available to spend.": "你有<span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> 可以发送",
     "Fee": "费用",
-    "To Address": "目的地址"
+    "To Address": "目的地址",
+
+    "Blockhash": "块哈希",
+    "Blockindex": "块索引",
+    "Transaction ID (TXID)": "交易ID (TXID)",
+    "Blocktime": "块创建时间",
+    "Time": "时间",
+
+    "Just Now": "刚刚",
+    "%s Months Ago": "%s月前",
+    "%s Month Ago": "%s月前",
+    "%s Year Ago": "%s年前",
+    "%s Year Ago": "%s年前",
+    "%s Days Ago": "%s天前",
+    "%s Day Ago": "%s天前",
+    "%s Hours Ago": "%s小时前",
+    "%s Hour Ago": "%s小时前",
+    "%s Minutes Ago": "%s分钟前",
+    "%s Minute Ago": "%s分钟前"
 }

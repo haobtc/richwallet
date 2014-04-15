@@ -24,7 +24,7 @@
     
     <h4><%- T('Message') %> <small><%- T('Optional') %></small></h4>
     <div style="margin-top: 10px; margin-bottom: 10px">
-      <textarea id="message" class="form-control" rows="3" cols="50" placeholder="Optional Message" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"></textarea>
+      <textarea id="message" class="form-control" rows="3" cols="50" placeholder="<%- T('Optional Message') %>" onchange="richwallet.controllers.addresses.drawRequestQR('<%- data.address %>')"></textarea>
     </div>
   </div>
   <div class="col-lg-4 col-lg-offset-1 text-center">

@@ -58,7 +58,7 @@
                   <tr>
                     <td><%- data.addresses[i].name %></td>
                     <td><%- data.addresses[i].address %></td>
-                    <td><%- data.addresses[i].network  %></td>
+                    <td><%- T(data.addresses[i].network)  %></td>
                     <td>
                       <span class="addExchangePrice">
                         <%- richwallet.wallet.addressReceivedAmount(data.addresses[i].address) %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>

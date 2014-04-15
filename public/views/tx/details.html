@@ -4,44 +4,44 @@
     <table class="table table-bordered table-striped table-hover">
       <tbody>
         <tr>
-          <td>Network</td>
-          <td><%- data.tx.network %></td>
+          <td><%- T('Network') %></td>
+          <td><%- T(data.tx.network) %></td>
         </tr>
         <tr>
-          <td>Transaction ID (TXID)</td>
+          <td><%- T('Transaction ID (TXID)') %></td>
           <td><%- data.tx.hash %></td>
         </tr>
         <tr>
-          <td>Amount</td>
+          <td><%- T('Amount') %></td>
           <td><%- Math.abs(data.tx.amount) %> <%- data.currency %></td>
         </tr>
         <tr>
-          <td>Fee</td>
+          <td><%- T('Fee') %></td>
           <td><%- data.tx.fee ? Math.abs(data.tx.fee)+(' ' + data.currency) : '' %></td>
         </tr>
         <tr>
-          <td>Confirmations</td>
+          <td><%- T('Confirmations') %></td>
           <td>
             <%- data.tx.confirmations %>&nbsp;&nbsp;&nbsp;&nbsp;
             <% if(data.tx.confirmations == 0) { %>              
-              <span class="label label-warning" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain.">Pending (Unconfirmed)</span>
+              <span class="label label-warning" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain."><%- T('Pending (Unconfirmed)') %></span>
             <% } else if(data.tx.confirmations < richwallet.controllers.dashboard.minimumStrongSendConfirmations) { %>
-              <span class="label label-info" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe.">Soft Confirmed</span>
+              <span class="label label-info" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe."><%- T('Soft Confirmed') %></span>
             <% } else { %>
-              <span class="label label-success" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers.">Strongly Confirmed</span>
+              <span class="label label-success" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers."><%- T('Strongly Confirmed') %></span>
             <% } %>
           </td>
         </tr>
         <tr>
-          <td>Blockhash</td>
+          <td><%- T('Blockhash') %></td>
           <td><%- data.tx.blockhash %></td>
         </tr>
         <tr>
-          <td>Blockindex</td>
+          <td><%- T('Blockindex') %></td>
           <td><%- data.tx.blockindex %></td>
         </tr>
         <tr>
-          <td>Blocktime</td>
+          <td><%- T('Blocktime') %></td>
           <td>
             <% if(data.tx.blocktime) { %>
               <%- richwallet.controllers.tx.friendlyTimeString(data.tx.blocktime*1000) %>
@@ -49,7 +49,7 @@
           </td>
         </tr>
         <tr>
-          <td>Time</td>
+          <td><%- T('Time') %></td>
           <td><%- richwallet.controllers.tx.friendlyTimeString(data.tx.time*1000) %></td>
         </tr>
     </table>
