@@ -7,10 +7,11 @@ $.ajax('api/config', {
   }
 });
 
-var supportedLangs = {'zh-CN': true};
+var supportedLangs = {'zh-cn': true};
 richwallet.trans = {};
-if(supportedLangs[navigator.language]) {
-    $.ajax('lang/' + navigator.language + '.json', {
+var language = navigator.language.toLowerCase();
+if(supportedLangs[language]) {
+    $.ajax('lang/' + language + '.json', {
 	async: false,
 	success: function(resp) {
 	    richwallet.trans = resp;

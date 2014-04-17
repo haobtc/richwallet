@@ -20,7 +20,7 @@
     <ul class="nav navbar-nav navbar-right">
       <% if(richwallet.wallet) { %>
         <li><a href="#/account/settings"><strong><i class="fa fa-user"></i> <%- richwallet.wallet.walletId %></strong></a></li>
-        <li><a href="#/signout"><i class="fa fa-sign-out"></i> <%- T('Signout') %></a></li>
+        <li><a href="#/signout" onclick="if(!confirm('Realy quit?')){ return false;}"><i class="fa fa-sign-out"></i> <%- T('Signout') %></a></li>
       <% } else { %>
         <li><a href="#/signup"><i class="fa fa-sign-in"></i> <%- T('Signup') %></a></li>
       <% } %>

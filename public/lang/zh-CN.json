@@ -5,7 +5,10 @@
 
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
     "Email Address": "邮箱",
+    "Your email": "你的邮箱",
     "Password": "密码",
+    "Password for wallet": "钱包的密码",
+    "Create a password": "创建密码",
     "Confirm your password": "确认密码",
     "Create Account": "创建账号",
 
@@ -18,7 +21,7 @@
     "Sign in": "登录",
     "Sign up": "注册",
     "New User?": "新用户?",
-    "Importing a wallet?": "导入钱包",
+    "Import a wallet?": "导入钱包?",
     "Import": "导入",
 
     "Transactions": "交易",

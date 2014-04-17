@@ -1,20 +1,20 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1><%- T('Signup - Create a New Wallet') %></h1>
+    <h3><%- T('Signup - Create a New Wallet') %></h3>
     <hr>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-lg-6">
-    <h2><font color="red">IMPORTANT</font> password information:</h2>
-    <p class="lead">Your data is being encrypted in a way that the server cannot spend your coin wallet money. If you lose your password, there is no way to reset it.</p>
-    <h3><strong>Losing your password is like losing your real-life wallet. You will lose your bitcoins, <u>forever</u></strong>.<br><u>Remember your password</u>.<h3>
-    <p class="lead">Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>
+  <div class="col-lg-6" style="padding-top: 0">
+    <h3><font color="red">IMPORTANT</font> password information:</h3>
+    <p>Your data is being encrypted in a way that the server cannot spend your coin wallet money. If you lose your password, there is no way to reset it.</p>
+    <h4><strong>Losing your password is like losing your real-life wallet. You will lose your bitcoins, <u>forever</u></strong>.<br/><u>Remember your password</u>.</h4>
+    <p>Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>
   </div>
   
-  <div class="row" style="padding-top: 20px">
-    <div class="col-lg-4 col-lg-offset-1">
+  <div class="col-lg-6" style="padding-top: 10px">
+    <div class="col-lg-8 col-lg-offset-2">
       <form action="#" onsubmit="return false;" autocorrect="off" autocomplete="off" autocapitalize="off" class="form-horizontal" role="form">
     
         <div class="form-group">
@@ -23,12 +23,12 @@
     
         <div class="form-group">
           <label for="email" class="control-label"><%- T('Email Address') %></label>
-          <input id="email" type="email" placeholder="Your email" class="form-control">
+          <input id="email" type="email" placeholder="<%- T('Your email') %>" class="form-control">
         </div>
 
         <div class="form-group">
           <label for="password" class="control-label"><%- T('Password') %></label>
-          <input id="password" name="password" type="password" placeholder="Create a password" autocomplete="off" onfocus="richwallet.controllers.accounts.passwordStrength.enable()" class="form-control">
+          <input id="password" name="password" type="password" placeholder="<%- T('Create a password') %>" autocomplete="off" onfocus="richwallet.controllers.accounts.passwordStrength.enable()" class="form-control">
         </div>
     
         <div class="progress progress-striped">

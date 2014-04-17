@@ -1,62 +1,124 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1><%- T('Sign In') %></h1>
+    <h3><%- T('Sign In') %></h3>
     <hr>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-lg-6">
+  <div class="col-lg-4 col-lg-offset-4 col-xs-10 col-xs-offset-1 clearfix">
+    <form class="form-horizontal" action="#" onsubmit="richwallet.controllers.accounts.signin(); return false;" autocomplete="off" autocapitalize="off">
+      <div id="errors" class="form-group alert alert-error hidden"></div>
+
+      <div class="form-group" style="margin-bottom: 10px">
+        <label for="walletId" class="control-label" style="padding-top:0;"><%- T('Email Address') %></label>
+        <input type="email" class="form-control" id="walletId" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="<%- T('Your email') %>">
+      </div>
+      <div class="form-group" id="signinPassword">
+        <label for="password" class="control-label" style="padding-top:0"><%- T('Password') %></label>
+        <input type="password" class="form-control" id="password" placeholder="<%- T('Password for wallet') %>" autocomplete="off">
+      </div>
+
+      <div class="row form-group">
+          <button type="submit" class="btn btn-lg btn-success col-lg-12 col-xs-12"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
+      </div>
+
+      <div class="row form-group">
+	  <span style="margin-right:30px;"><%- T('New User?') %></span>
+	  <a href="#/signup" class="btn btn-md btn-primary"><%- T('Signup') %></a>
+      </div>
+
+      <div class="row form-group">
+	<span style="margin-right: 30px;"><%- T('Import a wallet?') %></span>
+	<a href="#/accounts/import" class="btn btn-md btn-primary"><%- T('Import') %></a>
+      </div>
+<!--
+      <div class="row form-group">
+	<div class="col-lg-6">
+	  <h4>
+          <button type="submit" class="btn btn-lg btn-success col-lg-12"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
+	  </h4>
+	</div>
+      </div>
+
+
+      <div class="row form-group">
+	<div class="col-lg-6">
+	  <h4>
+          <button type="submit" class="btn btn-lg btn-success col-lg-12"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
+	  </h4>
+	</div>
+
+	<div class="col-lg-3 col-xs-6">
+	  <h4>
+	  <a href="#/signup" class="btn btn-lg btn-primary"><%- T('New User?') %></a>
+	  </h4>
+	</div>
+
+	<div class="col-lg-3 col-xs-6">
+          <h4><a href="#/accounts/import" class="btn btn-primary"><%- T('Import a wallet') %></a></h4>
+	</div>
+-->
+<!--
+        <div style="margin-top:40px">
+          <h2><%- T('New User?') %></h2>
+          <h3><a href="#/signup" class="btn btn-lg btn-primary"><i class="fa fa-user"></i> <%- T('Sign up') %></a></h3>
+        </div>
+        
+        <div style="margin-top:30px">
+          <h4><%- T('Importing a wallet?') %></h4>
+          <h4><a href="#/accounts/import" class="btn btn-primary"><%- T('Import') %></a></h4>
+        </div>
+	-->
+      </div>
+    </form>
+  </div>
+</div>
+
+<hr/>
+<div class="row">
+  <div class="col-lg-12">
+    <h3 class="text-center">RichWallet</h3>
+    <p>Secure DIY wallet service for multiple cryptcoins such as bitcoin, litecoin, dogecoin, ...</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4">
+    <h4>Secure</h4>
+    <p>Your wallet data is encrypted, nobody can steal it, even if our service is down, you can restore your wallet and all the money using your backup.</p>
+  </div>
+  <div class="col-lg-4">
+    <h4>Secure</h4>
+    <p>Your wallet data is encrypted, nobody can steal it, even if our service is down, you can restore your wallet and all the money using your backup.</p>
+  </div>
+
+  <div class="col-lg-4">
+    <h4>Secure</h4>
+    <p>Your wallet data is encrypted, nobody can steal it, even if our service is down, you can restore your wallet and all the money using your backup.</p>
+  </div>
+
+<!--
     <h1>RichWallet</h1>
-    <p class="lead">Secure DIY wallet service for multiple coins, such as bitcoin, litecoin, dogecoin</p>
-    <ul class="lead">
+    <p>Secure DIY wallet service for multiple coins, such as bitcoin, litecoin, dogecoin</p>
+    <ul>
       <li><strong>Secure</strong> Your wallet data is encrypted,
-      nobody can steal it, even if our service is down, you can
-      restore your wallet and all the money using your backup.</li>
+	nobody can steal it, even if our service is down, you can
+	restore your wallet and all the money using your backup.</li>
       <li><strong>Rich</strong> USD and Euro can be put within one wallet since
-      they are pieces of sheet. Here, we can put BTC, LTC and any other
-      cryptcoins in one single wallet.
+	they are pieces of sheet. Here, we can put BTC, LTC and any other
+	cryptcoins in one single wallet.
       </li>
       <li><strong>Easy</strong> Receive, send coins with a few mouse clicks. </li>
       <li><strong>Responsive</strong> Access your wallet via iPhone, Android phone or PC.</li>
       <li><strong>Open</strong> Richwallet is
-      an <a href="https://github.com/haobtc/richwallet">open source
-      service</a>, please feel free to use it and contrib to
-      it. Richwallet is also benifit from other open source
-      project <a href="https://github.com/kyledrake/coinpunk">coinpunk</a>
-      thanks to open source community.</li>
+	an <a href="https://github.com/haobtc/richwallet">open source
+	  service</a>, please feel free to use it and contrib to
+	it. Richwallet is also benifit from other open source
+	project <a href="https://github.com/kyledrake/coinpunk">coinpunk</a>
+	thanks to open source community.</li>
     </ul>
-  </div>
-  
-  <div class="row" style="padding-top:20px">
-    <div class="col-lg-4 col-lg-offset-1">
-      <form class="form-horizontal" action="#" onsubmit="richwallet.controllers.accounts.signin(); return false;" autocomplete="off" autocapitalize="off">
-
-	<div class="form-group">
-	  <div id="errors" class="alert alert-error hidden"></div>
-	</div>
-
-	<div class="form-group">
-          <label for="walletId" class="control-label"><%- T('Email Address') %></label>
-          <input type="email" class="form-control" id="walletId" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="<%- T('Your email') %>">
-	</div>
-	<div class="form-group" id="signinPassword">
-          <label for="password" class="control-label"><%- T('Password') %></label>
-          <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
-	</div>
-	<div class="form-group">
-          <button type="submit" class="btn btn-lg btn-success"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
-          <div style="margin-top:40px">
-            <h2><%- T('New User?') %></h2>
-            <h3><a href="#/signup" class="btn btn-lg btn-primary"><i class="fa fa-user"></i> <%- T('Sign up') %></a></h3>
-          </div>
-          
-          <div style="margin-top:30px">
-            <h4><%- T('Importing a wallet?') %></h4>
-            <h4><a href="#/accounts/import" class="btn btn-primary"><%- T('Import') %></a></h4>
-          </div>
-	</div>
-      </form>
-    </div>
+-->
   </div>
 </div>
+
