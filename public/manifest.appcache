@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v109
+# v111
 index.html
 js/all.js
 js/lib/bitcoinjs.js
@@ -40,7 +40,7 @@ views/header.html
 views/node_error.html
 views/signin.html
 views/signup.html
-lang/zh-CN.json
+lang/zh-cn.json
 
 NETWORK:
 api
