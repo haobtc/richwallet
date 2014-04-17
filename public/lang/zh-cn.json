@@ -9,6 +9,7 @@
     "Password": "密码",
     "Password for wallet": "钱包的密码",
     "Create a password": "创建密码",
+    "Change password": "修改密码",
     "Confirm your password": "确认密码",
     "Create Account": "创建账号",
 
@@ -91,6 +92,10 @@
     "%s Day Ago": "%s天前",
     "%s Hours Ago": "%s小时前",
     "%s Hour Ago": "%s小时前",
+    "%s Weeks Ago": "%s星期前",
+    "%s Week Ago": "%s星期前",
     "%s Minutes Ago": "%s分钟前",
-    "%s Minute Ago": "%s分钟前"
+    "%s Minute Ago": "%s分钟前",
+    
+    "Settings": "设置"
 }

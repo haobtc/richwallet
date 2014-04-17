@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1>Backup</h1>
+    <h3><%- T('Backup') %></h3>
     <hr>
   </div>
 </div>
@@ -14,17 +14,17 @@
 
 <div class="row text-center">
   <div class="col-lg-12">
-    <h2><%- T('Backup Wallet') %></h2>
+    <h4><%- T('Backup Wallet') %></h4>
     <a href="#/backup/download" class="btn btn-lg btn-primary" onclick="#"><i class="fa fa-download"></i> <%- T('Download') %></a>
   </div>
 </div>
 <% if(richwallet.config.emailEnabled) { %>
 <div class="row text-center">
-  <h2><%- T('Or') %></h2>
+  <h4><%- T('Or') %></h4>
 </div>
 <div class="row text-center">
   <div class="col-lg-12">
-    <h2><%- T('Save to email %s', richwallet.wallet.walletId) %></h2>
+    <h4><%- T('Save to email %s', richwallet.wallet.walletId) %></h4>
     <a id="sendToEmail" onclick="richwallet.controllers.accounts.backupToEmail();" class="btn btn-lg btn-primary" onclick="#"><%- T('Send email') %></a>
   </div>
 </div>
