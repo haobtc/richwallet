@@ -17,6 +17,9 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
     for(var i=0;i<txs.length;i++) {
 	if(txs[i].hash == tx.hash) {
 	    tx.amount = txs[i].amount;
+	    if(!tx.fee) {
+		tx.fee = txs[i].fee;
+	    }
 	    break;
 	}
     }
@@ -104,38 +107,33 @@ richwallet.controllers.Tx.prototype.create = function() {
     return;
   }
 
-  var changeAddress = $('#changeAddress').val();
-
-  if(changeAddress == '') {
-      var recvAddresses = richwallet.wallet.receiveAddresses(toAddress.getNetwork());
-      if (recvAddresses.length > 0) {
-	  changeAddress = recvAddresses[Math.floor(Math.random() * recvAddresses.length)].address;
-      }
-  }
-  if(changeAddress == '')
-    changeAddress = richwallet.wallet.createNewAddress(toAddress.getNetwork(), 'change', true);
-
+  var changeAddress = this.ensureChangeAddress(toAddress);
   var tx = richwallet.wallet.createTx(amount, calculatedFee, address, changeAddress);
   self.saveWallet({override: true, address: changeAddress}, function(response) {
-      richwallet.utils.callRPC(
-	  toAddress.getNetwork(), 
-	  'sendrawtransaction', 
-	  [tx.raw], 
-	  function(err, btcres) {
-	      if(err) {
-		  console.error('send raw transaction error', err);
+      $.ajax({
+	  url: 'api/infoproxy/sendtx/' + toAddress.getNetwork(),
+	  data: JSON.stringify({rawtx: tx.raw}),
+	  contentType: 'application/json',
+	  dataType: 'json',
+	  type: 'POST',
+	  processData: false,
+	  success: function(resp) {
+	      if(resp.error) {
+		  console.error('send raw transaction error', resp.error);
 		  return;
 	      }
 	      var addrObj = new Bitcoin.Address(address);
 	      richwallet.database.setSuccessMessage(T("Sent %s %s to %s.", amount,
-						      addrObj.networkConfig.currency,
+						      addrObj.networkConfig().currency,
 						      address));
 	      
 	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
 	      self.getUnspent(function() {
 		  richwallet.router.route('dashboard');
 	      });
-	  });
+	  }
+      });
+      return;
   });
 };
 
@@ -148,6 +146,23 @@ richwallet.controllers.Tx.prototype.displayErrors = function(errors, errorsDiv) 
     }
     return;
   }
+};
+
+richwallet.controllers.Tx.prototype.ensureChangeAddress = function(addrObj) {
+   // Currently isChange is in fact disabled
+  var changeAddress = $('#changeAddress').val();
+/*  if(changeAddress == '') {
+      var recvAddresses = richwallet.wallet.receiveAddresses(addrObj.getNetwork());
+      if (recvAddresses.length > 0) {
+	  changeAddress = recvAddresses[0].address;
+      }
+  }
+  if(changeAddress == '') {
+
+    changeAddress = richwallet.wallet.createNewAddress(addrObj.getNetwork(), 'Default', false);
+  }
+  $('#changeAddress').val(changeAddress); */
+  return changeAddress;
 };
 
 richwallet.controllers.Tx.prototype.calculateFee = function() {
@@ -166,14 +181,9 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
   if(address == '')
     return;
 
-  var changeAddress = $('#changeAddress').val();
-  var calculatedFee = $('#calculatedFee').val();
-
+  var calculatedFee = $('#calculatedFee').val();  
   var addrObj = new Bitcoin.Address(address);
-  if(changeAddress == '') {
-    changeAddress = richwallet.wallet.createNewAddress(addrObj.getNetwork(), 'change', true);
-    $('#changeAddress').val(changeAddress);
-  }
+  var changeAddress = this.ensureChangeAddress(addrObj);
 
   var errors = [];
 

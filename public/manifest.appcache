@@ -1,5 +1,6 @@
 CACHE MANIFEST
 # v112
+
 index.html
 js/all.js
 js/lib/bitcoinjs.js
@@ -16,14 +17,19 @@ fonts/lato/lato-regular.ttf
 fonts/lato/lato-light.ttf
 fonts/lato/lato-bold.ttf
 fonts/lato/lato-bolditalic.ttf
+fonts/lato/lato-italic.ttf
+
 fonts/lato/lato-regular.woff
 fonts/lato/lato-light.woff
 fonts/lato/lato-bold.woff
 fonts/lato/lato-bolditalic.woff
+fonts/lato/lato-italic.woff
+
 fonts/lato/lato-regular.svg
 fonts/lato/lato-light.svg
 fonts/lato/lato-bold.svg
 fonts/lato/lato-bolditalic.svg
+fonts/lato/lato-italic.svg
 
 views/accounts/import.html
 views/accounts/settings.html

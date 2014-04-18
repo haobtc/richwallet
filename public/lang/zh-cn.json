@@ -2,6 +2,12 @@
     "bitcoin": "比特币",
     "litecoin": "莱特币",
     "dogecoin": "狗币",
+    
+
+    "Open": "开放",
+    "Secure": "安全",
+    "One wallet": "统一的钱包",
+    "Balance": "余额",
 
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
     "Email Address": "邮箱",
@@ -79,7 +85,7 @@
 
     "Blockhash": "块哈希",
     "Blockindex": "块索引",
-    "Transaction ID (TXID)": "交易ID (TXID)",
+    "Transaction ID": "交易ID",
     "Blocktime": "块创建时间",
     "Time": "时间",
 
@@ -97,5 +103,11 @@
     "%s Minutes Ago": "%s分钟前",
     "%s Minute Ago": "%s分钟前",
     
-    "Settings": "设置"
+    "Settings": "设置",
+
+    "propaganda.intro": "ONE钱包是一个开放免费的线上加密货币钱包，你可以使用ONE钱包在全世界范围内自有付款。我们不是银行，你自己完全控制自己的钱。我们不能查看你的余额，我们不能查看你的交易，自己的钱自己做主！",
+    "intro.secure": "钱包文件会在本地浏览器用只有你知道的密码加密，所有人包括我们无法访问使用你的钱包",
+    "intro.onewallet": "BTC，LTC，DOGCOIN各种加密货币都可以在这个钱包使用。",
+    "intro.open": " One钱包是<a href=\"https://github.com/haobtc/richwallet\" target=\"_blank\">开放源代码的服务</a>，欢迎大家使用贡献源代码。ONE钱包也来自于开源项目 <a href=\"https://github.com/kyledrake/coinpunk\" target=\"\">coinpunk</a>，非常感谢开源社区对我们生活和工作的影响！"
+
 }

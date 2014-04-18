@@ -3,7 +3,8 @@ richwallet.controllers.Addresses.prototype = new richwallet.Controller();
 
 richwallet.controllers.Addresses.prototype.list = function() {
   var self = this;
-  this.render('addresses/list', {addresses: richwallet.wallet.receiveAddresses()}, function(id) {
+  this.render('addresses/list', {addresses: richwallet.wallet.addresses(),
+				balances: richwallet.wallet.balanceForAddresses()}, function(id) {
   });
 }
 
@@ -14,7 +15,8 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
   var address = richwallet.wallet.createNewAddress(network, label, false);
 
   this.saveWallet({address: address, override: true}, function() {
-    self.render('addresses/list', {addresses: richwallet.wallet.addresses()}, function(id) {
+    self.render('addresses/list', {addresses: richwallet.wallet.addresses(),
+				  balances: richwallet.wallet.balanceForAddresses()}, function(id) {
     });
     $('#newAddressDialog').removeClass('hidden');
     var message = 'Created new address '+address;

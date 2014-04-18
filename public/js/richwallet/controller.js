@@ -1,25 +1,6 @@
 richwallet.Controller = function() {
 };
 
-
-richwallet.Controller.prototype.getUnspentServer = function(confirmations, callback) {
-  var self = this;
-  var query = {addresses: richwallet.wallet.addressHashes()};
-
-  if(typeof(confirmations) == 'function')
-    callback = confirmations;
-  else
-    query['confirmations'] = confirmations;
-
-  $.post('api/tx/unspent', query, function(resp) {
-    if(resp.error) {
-      richwallet.router.route('node_error');
-      return;
-    }
-    self.mergeUnspent(resp.unspent, callback);
-  });
-};
-
 richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
   var self = this;
   var query = {addresses: richwallet.wallet.addressHashes()};
@@ -61,69 +42,13 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
     }
 
     $.getJSON(jsonpUrl, query, function(resp) {
-/*	var addresses = richwallet.wallet.addressHashes();
-	var addrObj = {};
-	for(var i=0; i<addresses.length; i++) {
-	    addrObj[addresses[i]] = true;
-	} */
 	for(var i=0; i<resp.length; i++) {
 	  var tx = resp[i];
 	  tx.hash = tx.txid;
-/*	  var amount = 0;
-	  for(var i=0; i<tx.inputs.length; i++) {
-	      if(addrObj[tx.inputs[i].address]) {
-		  amount -= tx.inputs[i].value;
-	      }
-	  }
-	  for(var i=0; i<tx.outputs.length; i++) {
-	      if(addrObj[tx.outputs[i].address]) {
-		  amount += tx.outputs[i].value;
-	      }
-	  }
-	  tx.amount = amount; */
 	}
 	callback(resp);
     });
 };
-
-
-/*richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
-  var self = this;
-  var networkAddrs = richwallet.utils.clusterAddresses(richwallet.wallet.addressHashes());
-
-  if(typeof(confirmations) == 'function')
-    callback = confirmations;
-
-  for(var network in networkAddrs) {
-      var addrList = networkAddrs[network];
-      networkAddrs[network] = [0, 99999999999999, addrList];
-  }
-  richwallet.utils.broadcastRPC('listunspent', networkAddrs, function(resp) {
-      var unspent = [];
-      for(var network in resp) {
-	  var r = resp[network];
-	  var err = r[0];
-	  var btcres = r[1];
-	  if(err) {
-	      richwallet.router.route('node_error');
-	      return;
-	  }
-	  for(var i=0;i<btcres.length; i++) {
-	      var addrObj = new Bitcoin.Address(btcres[i].address);
-	      unspent.push({
-		  network:       network,
-		  hash:          btcres[i].txid,
-		  vout:          btcres[i].vout,
-		  address:       btcres[i].address,
-		  scriptPubKey:  btcres[i].scriptPubKey,
-		  amount:        btcres[i].amount,
-		  confirmations: btcres[i].confirmations
-	      });
-	  }
-      }
-      self.mergeUnspent(unspent, callback);
-  });
-}; */
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
   if(richwallet.wallet.mergeUnspent(unspent) == true)
@@ -140,8 +65,8 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
   if(!data.payload)
     data.payload = {};
 
-  //if(!data.payload.email)
-  //  data.payload.email = richwallet.wallet.walletId;
+  if(!data.payload.email)
+    data.payload.email = richwallet.wallet.walletId;
 
   if(!data.payload.wallet)
     data.payload.wallet = richwallet.wallet.encryptPayload();

@@ -165,16 +165,61 @@ richwallet.Wallet = function(walletKey, walletId) {
     return sjcl.encrypt(this.walletKey, payloadJSON);
   };
 
-  this.mergeUnspent = function(newUnspent) {
-    var changed = false;
-    this.unspentConfirmations = this.unspentConfirmations || {};
+  this.mergeUnspent = function(newUnspent, opts) {
+      opts = opts || {};
+      var changed = false;
+      this.unspentConfirmations = this.unspentConfirmations || {};
 
-    for(var i=0;i<newUnspent.length;i++) {
+      var oldHashList = {};
+      for(var j=0;j<this.unspent.length;j++) {
+	  oldHashList[this.unspent[j].hash] = true;
+      }
+
+      for(var i=0;i<newUnspent.length;i++) {
+	  var uspt = newUnspent[i];
+	  this.unspentConfirmations[newUnspent[i].hash] = uspt.confirmations;
+	  if(!oldHashList[uspt.hash]) {
+	      changed = true;
+	  }
+
+      // todo: time should probably not be generated here
+	  var txMatch = false;
+
+	  for(var k=0;k<this.transactions.length;k++) {
+              if(this.transactions[k].hash == uspt.hash) {
+		  txMatch = true;
+		  this.transactions[k].confirmations = uspt.confirmations;
+	      }
+	  }
+
+	  if(txMatch == false) {
+              this.transactions.push({
+		  network: uspt.network,
+		  hash: uspt.hash,
+		  type: 'receive',
+		  address: uspt.address,
+		  amount: uspt.amount,
+		  confirmations: uspt.confirmations,
+		  time: new Date().getTime()
+              });
+	  }
+      }
+      this.unspent = newUnspent;
+
+/*    for(var i=0;i<newUnspent.length;i++) {
       var match = false;
 
       for(var j=0;j<this.unspent.length;j++) {
         if(this.unspent[j].hash == newUnspent[i].hash) {
             match = true;
+	    this.unspent[j] = {
+		network: newUnspent[i].network,
+		hash: newUnspent[i].hash,
+		vout: newUnspent[i].vout,
+		address: newUnspent[i].address,
+		scriptPubKey: newUnspent[i].scriptPubKey,
+		amount: newUnspent[i].amount
+	    };	    
 	    break;
 	}
       }
@@ -214,7 +259,7 @@ richwallet.Wallet = function(walletKey, walletId) {
           time: new Date().getTime()
         });
       }
-    }
+    } */
 
     return changed;
   };
@@ -278,10 +323,21 @@ richwallet.Wallet = function(walletKey, walletId) {
 	      'network': network,
 	      'currency': conf['currency'],
 	      'balance': balance,
-	      'pendingBalance': pendingBalance
+	      'pendingBalance': pendingBalance,
+	      'totalBalance': balance.plus(pendingBalance)
 	  });
       }
       return balances;
+  };
+
+  this.balanceForAddresses = function() {
+      var addrBalances = {};
+      for(var i=0; i<this.unspent.length; i++) {
+	  var uspt = this.unspent[i];
+	  var amount = addrBalances[uspt.address] || 0;
+	  addrBalances[uspt.address] = amount + uspt.amount;
+      }
+      return addrBalances;
   };
 
   // Safe to spend unspent txs.
@@ -328,9 +384,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     if(amt == Bitcoin.BigInteger.ZERO)
       throw "spend amount must be greater than zero";
-
-    if(!changeAddress)
-      throw "change address was not provided";
+      
 
     var fee = Bitcoin.util.parseValue(feeString || '0');
     var total = Bitcoin.BigInteger.ZERO.add(amt).add(fee);
@@ -358,6 +412,13 @@ richwallet.Wallet = function(walletKey, walletId) {
       throw "you do not have enough coins to send this amount";
     }
 
+    if(!changeAddress && unspent.length > 0) {
+	changeAddress = unspent[0].address;
+    }
+    if(!changeAddress)
+      throw "change address was not provided";
+
+
     for(i=0;i<unspent.length;i++) {
       sendTx.addInput({hash: unspent[i].hash}, unspent[i].vout);
     }
@@ -367,8 +428,9 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     var remainder = unspentAmt.subtract(total);
 
+
     if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
-      sendTx.addOutput(changeAddress, remainder);
+	sendTx.addOutput(changeAddress, remainder);
     }
 
     var hashType = 1; // SIGHASH_ALL

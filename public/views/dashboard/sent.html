@@ -1,23 +1,21 @@
 <h3><%- T('Sent') %></h3>
 
 <% if(data.tx.length == 0) {%>
-
   <h4><%- T('No transaction yet.') %></h4>
-
 <% } else { %>
-  <div class="visible-xs visible-sm">
+  <div class="visible-xs visible-sm col-lg-12">
     <% for(var i=0; i<data.tx.length; i++) { var tx=data.tx[i]; %>
       <hr>
       <div class="row" onclick="window.open('#/tx/details/<%- tx.network %>/<%- tx.hash %>','_self')">
-        <div class="col-md-6">
+        <div class="col-xs-12">
           <strong><%- humaneDate(new Date(tx.time).toISOString()) %></strong>
           <span class="receivedExchangePrice addExchangePrice pull-right" style="color: #FE2E2E; margin-right: 10px; font-size: 12px; font-weight: bold"><%- tx.amount %> <%- richwallet.config.networkConfigs[tx.network].currency %></span>
         </div>
       </div>
       <div class="row" onclick="window.open('#/tx/details/<%- tx.network %>/<%- tx.hash %>','_self')">
-        <div class="col-md-6">
+        <div class="col-xs-12">
           <div style="font-size: 10pt">
-            <strong><%- richwallet.wallet.getAddressName(tx.address) || tx.address %></strong>
+            <strong><%- richwallet.wallet.getAddressName(tx.address) || richwallet.utils.shortText(tx.address) %></strong>
           </div>
           <div><%- tx.confirmations%> confirmations</div>
         </div>

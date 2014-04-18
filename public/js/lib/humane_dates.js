@@ -99,7 +99,7 @@
 			if(seconds < format[0]) {
 				if(i === 0) {
 					// Now
-					return format[1];
+					return T(format[1]);
 				}
 
 				var val = Math.ceil(normalize(seconds, format[3]) / (format[3]));

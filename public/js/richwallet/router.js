@@ -30,47 +30,6 @@ richwallet.router.listener = function() {
     }, 30000);
 };
 
-richwallet.router.listener1111 = function() {
-  var path = window.location.pathname;
-  path = path.replace(/[^\/]*$/, '');
-  path += 'listener';
-  sock = new SockJS(window.location.protocol + '//' + window.location.host + path);
-  var self = this;
-
-  window.onbeforeunload = function () {
-    if(sock) {
-      sock.close();
-    }
-  }
-
-  sock.onopen = function() {
-    richwallet.router.listenerTimeout = setInterval(function() {
-	sock.send(JSON.stringify(
-	    {method: 'listUnspent',
-	     addresses: richwallet.wallet.addressHashes()}));
-    }, 30000);
-  };
-  
-  sock.onmessage = function(res) {
-    var resData = JSON.parse(res.data);
-    if(resData.method == 'listUnspent') {
-      if(richwallet.controllers.dashboard) {
-	  richwallet.controllers.dashboard.mergeUnspent(resData.result, function() {
-              var rt = $('#receivedTransactions');
-              if(rt.length == 1)
-		  richwallet.controllers.dashboard.renderDashboard();
-	  });
-      }
-    }
-  };
-
-  sock.onclose = function() {
-    clearInterval(richwallet.router.listenerTimeout);
-    if(richwallet.wallet)
-      setTimeout("richwallet.router.listener()", 5000);
-  };
-};
-
 richwallet.router.initWallet = function(callback) {
   if(richwallet.wallet)
     return callback(true);

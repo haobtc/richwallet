@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     uglify: {
       richwallet: {
         options: {
-          "beautify": false,
+          "beautify": true,
           "screw-ie8": true
         },
         files: {
