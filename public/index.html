@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" manifest="manifest.appcache">
-<html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +17,22 @@
           color: gray;
       }
     </style>
+    <script>
+          window.addEventListener('load', function(e) {
+	  window.applicationCache.addEventListener('updateready', function(e) {
+              if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+		  window.applicationCache.swapCache();
+	          var text = 'A new version of onewallet is available. Load it?';
+	          if(T != undefined) {
+                      text = T(text);
+           	  }
+		  if (confirm(text)) {
+		      window.location.reload();
+		  }
+	      }
+	  }, false);
+      }, false);
+</script>
   </head>
   <body>
     <div id="header" style="margin-bottom: 50px"></div>

@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v115
+# v123
 
 index.html
 js/all.js
@@ -43,6 +43,7 @@ views/backup.html
 views/dashboard.html
 views/header.html
 views/node_error.html
+
 views/signin.html
 views/signup.html
 lang/zh-cn.json
