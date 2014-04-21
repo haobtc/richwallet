@@ -302,6 +302,22 @@ richwallet.Wallet = function(walletKey, walletId) {
     return balance;
   };
 
+  this.balanceObject = function() {
+      var bs = {};
+      for(var i =0; i<this.unspent.length; i++) {
+	  var uspt = this.unspent[i];
+	  var amount = bs[uspt.network];
+	  if(amount == undefined) {
+	      amount = uspt.amount;
+	  } else {
+	      amount = amount.plus(uspt.amount);
+	  }
+	  bs[uspt.network] = amount;
+      }
+      return bs;
+  };
+
+
   this.safeUnspentBalance = function(network) {
     var safeUnspentList = this.safeUnspent(network);
     var amount = new BigNumber(0);

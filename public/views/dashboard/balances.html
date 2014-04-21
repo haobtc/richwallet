@@ -1,13 +1,27 @@
+<style type="text/css">
+  .balance-box {
+     padding: 10px 16px;
+     margin: 6px 6px 6px 6px;
+     float: left;
+  }
+  .balance-box .network {
+     margin-top: 6px;
+     font-size: 16px;
+     color:gray;
+  }
+
+  .balance-box .amount {
+     margin-top: 10px;
+  }
+</style>
+<div class="clearfix">
+  <h3 class="m-header col-lg-12 col-xs-12"><%- T("Balances") %></h3>
 <% for(var i=0; i< data.balances.length; i++) { 
    var b = data.balances[i];				 
 %>
-<div class="col-lg-1 text-center" style="float:right">
-  <div class="row" title="balance">
-    <h4><%- b.totalBalance %></h4>
-    <div><i><small><%- b.currency %></i></small></div>
-<!--
-    <div><i><small><%- b.pendingBalance %> <%- b.currency %> <%- T('pending') %></small></i></div>
--->
-  </div>
+<div class="balance-box text-center tile">
+  <h4 class="network"><%- T(b.network) %></h4>
+  <h4 class="amount"><%- b.totalBalance %></h4>
 </div>
 <% } %>
+</div>

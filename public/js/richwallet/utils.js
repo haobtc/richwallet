@@ -11,7 +11,7 @@ richwallet.utils.stripTags = function(html) {
 };
 
 richwallet.utils.shortText = function(text, secLength) {
-    secLength = secLength || 4;
+    secLength = secLength || 10;
     if(text.length > 2 * secLength + 1) {
 	return text.substr(0, secLength) + '...' + text.substr(text.length - secLength);
     } else {

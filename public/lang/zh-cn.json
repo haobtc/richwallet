@@ -2,12 +2,13 @@
     "bitcoin": "比特币",
     "litecoin": "莱特币",
     "dogecoin": "狗币",
-    
 
+    "OneWallet": "壹钱包",
     "Open": "开放",
     "Secure": "安全",
     "One wallet": "统一的钱包",
     "Balance": "余额",
+    "Balances": "余额",
 
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
     "Email Address": "邮箱",
@@ -52,6 +53,9 @@
     "No transaction yet.": "还没有交易",
     "Address": "地址",
     "Amount": "数量",
+    "From/To Address": "接收／发送地址",
+    "Received from %s(%s)": "从 %s(%s) 收到",
+    "Sent to <a href=\"#/tx/sendto/%s\">%s</a>(%s)": "发送到 <a href=\"#/tx/sendto/%s\">%s</a>(%s)",
     "Confirmations": "确认数量",
     "Discovered": "发现时间",
     "Details": "详情",
@@ -79,7 +83,8 @@
     
     "Send coins": "发送币",
 
-    "Your have <span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> available to spend.": "你有<span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> 可以发送",
+    "You have <span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> available to spend.": "你有<span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> 可以发送",
+    "You have no money available to spend.": "你没有可以足够的币.",
     "Fee": "费用",
     "To Address": "目的地址",
 
@@ -105,10 +110,10 @@
     
     "Settings": "设置",
 
-    "propaganda.intro": "ONE钱包是一个开放免费的线上加密货币钱包，你可以使用ONE钱包在全世界范围内自有付款。我们不是银行，你自己完全控制自己的钱。我们不能查看你的余额，我们不能查看你的交易，自己的钱自己做主！",
-    "intro.secure": "钱包文件会在本地浏览器用只有你知道的密码加密，所有人包括我们无法访问使用你的钱包",
-    "intro.onewallet": "BTC，LTC，DOGCOIN各种加密货币都可以在这个钱包使用。",
-    "intro.open": " One钱包是<a href=\"https://github.com/haobtc/richwallet\" target=\"_blank\">开放源代码的服务</a>，欢迎大家使用贡献源代码。ONE钱包也来自于开源项目 <a href=\"https://github.com/kyledrake/coinpunk\" target=\"\">coinpunk</a>，非常感谢开源社区对我们生活和工作的影响！",
+    "propaganda.intro": "壹钱包是一个开放免费的线上加密货币钱包，你可以使用壹钱包在全世界范围内自由付款。我们不是银行，你自己完全控制自己的钱。我们不能查看你的余额，我们不能查看你的交易，自己的钱自己做主！",
+    "intro.secure": "钱包文件会在本地浏览器用只有你知道的密码加密，所有人包括我们无法访问使用你的钱包, 我们所作的只是把加密后的钱包数据存放在服务器.",
+    "intro.onewallet": "比特币,莱特币和狗币等多种加密货币都可以在这个钱包使用。支持的钱币种类将会持续增加.",
+    "intro.open": " 壹钱包是<a href=\"https://github.com/haobtc/richwallet\" target=\"_blank\">开放源代码的服务</a>，欢迎大家使用贡献源代码。ONE钱包也来自于开源项目 <a href=\"https://github.com/kyledrake/coinpunk\" target=\"\">coinpunk</a>，非常感谢开源社区对我们生活和工作的影响！",
 
     "signup.alert": "<h3><font color=\"red\">重要密码信息</font>:</h3><p>你的数据是在本地加密，服务器没有记录使用你的密码，如果你丢失密码，密码将无法找回，也无法重置你的密码。</p><h4><strong>如果丢失密码就会像现实生活中丢失钱包一样。网站无法帮你找回，请大家一定要记住钱包密码</strong>.<br/><u>记住你的密码</u>.</h4><p>密码必须至少有<b>是个字符</b>. 如果造了一个新密码，请把它保存再某地，比如evernote里. 密码易失去, 妥善保存.</p>"
 

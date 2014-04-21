@@ -5,7 +5,7 @@
 </style>
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h1><%- T('Send coins') %></h1>
+    <h2><%- T('Send coins') %></h2>
       <hr>
   </div>
 </div>
@@ -19,7 +19,11 @@
 
 <div class="row" style="padding-bottom: 20px;ss">
   <div class="col-lg-12 text-center">
-    <h4><%= T('Your have <span id="availableBalance" class="addExchangePrice" style="color: #009933;">%s</span> available to spend.', data.balanceLiterals.join(',')) %><h4>
+<% if(data.balanceLiterals.length > 0) { %>
+    <h4><%= T('You have <span id="availableBalance" class="addExchangePrice" style="color: #009933;">%s</span> available to spend.', data.balanceLiterals.join(',')) %></h4>
+<% } else { %>
+    <h4><%= T('You have no money available to spend.') %></h4>
+<% } %>
   </div>
 </div>
 

@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v113
+# v115
 
 index.html
 js/all.js
@@ -35,9 +35,8 @@ views/accounts/import.html
 views/accounts/settings.html
 views/addresses/list.html
 views/addresses/request.html
-views/dashboard/received.html
 views/dashboard/balances.html
-views/dashboard/sent.html
+views/dashboard/transactions.html
 views/tx/details.html
 views/tx/send.html
 views/backup.html

@@ -35,12 +35,14 @@ richwallet.controllers.Tx.prototype.send = function(toaddress) {
   var self = this;
   toaddress = toaddress || '';
   this.getUnspent(function(resp) {
-    var balances = {};
+    var balances = richwallet.wallet.balanceObject();
     var balanceLiterals = [];
     for(var network in richwallet.config.networkConfigs) {
-	var b = richwallet.wallet.safeUnspentBalance(network);
-	balances[network] = b;
-	balanceLiterals.push(b + ' ' + richwallet.config.networkConfigs[network].currency);
+	//var b = richwallet.wallet.safeUnspentBalance(network);
+	var b = balances[network];
+	if(b) {
+	    balanceLiterals.push(b + ' ' + richwallet.config.networkConfigs[network].currency);
+	}
     }
 
     richwallet.router.render(
