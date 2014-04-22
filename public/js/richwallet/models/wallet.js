@@ -308,7 +308,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 	  var uspt = this.unspent[i];
 	  var amount = bs[uspt.network];
 	  if(amount == undefined) {
-	      amount = uspt.amount;
+	      amount = new BigNumber(uspt.amount);
 	  } else {
 	      amount = amount.plus(uspt.amount);
 	  }
