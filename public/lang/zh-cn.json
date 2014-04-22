@@ -12,8 +12,8 @@
     "Balances": "余额",
 
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
-    "Email Address": "邮箱",
-    "Your email": "你的邮箱",
+    "Email Address": "Email地址",
+    "Your email": "你的Email",
     "Password": "密码",
     "Password for wallet": "钱包的密码",
     "Create a password": "创建密码",
@@ -33,6 +33,9 @@
     "New User?": "新用户?",
     "Import a wallet?": "导入钱包?",
     "Import": "导入",
+
+    "Two factor authentication code needed": "需要两步身份验证代码",
+    "Auth Code": "验证码",
 
     "Transactions": "交易",
     "Receive": "收币",
@@ -111,11 +114,34 @@
     "%s Minute Ago": "%s分钟前",
     
     "Settings": "设置",
+    "Warning": "警告",
+    "YOU MUST REMEMBER ANY CHANGES YOU MAKE HERE. If you forget your email or changed password, you will not be able to access your coin wallet, and the server admin <strong>WILL NOT</strong> be able to reset it. If you lose your login, you will lose your money, forever. Write it down if you have to. <strong>Don't forget it.</strong>": "请务必记住你作的修改，如果忘记了Email地址和修改过的密码，就再也不能访问你的钱包了，管理员也<strong>没有办法</strong>重置这些信息. 丢失了登录信息就表示永远丢失了所有的币. 把这些信息保存在哪里. <strong>千万别忘记</strong>",
+    "It is also strongly recommended that you make a <a href=\"#/backup\">backup of your current wallet</a> before making any changes to prevent possible loss of data.": "强烈建议在任何可能导致丢失数据的操作之前对钱包作备份",
+    "Change Email": "修改Email",
+    "Change Password": "修改密码",
+    "Confirm password": "确认密码",
+    "New email address": "新的Email地址",
+    "Your new email": "新Email",
+    "Current password": "当前密码",
+    "New password": "新的密码",
+    "Confirm new password": "确认新密码",
+    "Re-enter new password": "重新输入新密码",
+    "Disable": "禁用",
+    "Enter code to disable": "输入代码禁用",
+    "Two Factor Auth": "两步验证",
+    "You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it": "你正在使用两步验证, 如果想禁用它，请在下方输入验证码",
+    "Two factor authentication allows you to require a code from your phone from Login. Onewallet uses Google Authenticator, which you will need to download to use this.": "两步验证让你在登录的时候输入手机上的一个验证码，一钱包使用Google Authenticator, 你需要在手机上先下载.",
+    "Confirm Auth Code": "确认验证码",
+    "Enter code shown on Google Authenticator": "输入Google Authenticator上显示的数字",
+    "Confirm": "确认",
+    "Generate QR Code to Scan": "生成二维码",
+    "Code save failed. Please reload and try again.": "保存代码失败, 请刷新重试",
+    "Successfully saved! You will now need your device to login.": "成功保存! 请重新登录",
 
     "propaganda.intro": "一钱包是一个开放免费的线上加密货币钱包，你可以使用一钱包在全世界范围内自由付款。我们不是银行，你自己完全控制自己的钱。我们不能查看你的余额，我们不能查看你的交易，自己的钱自己做主！",
     "intro.secure": "钱包文件会在本地浏览器用只有你知道的密码加密，所有人包括我们无法访问使用你的钱包, 我们所作的只是把加密后的钱包数据存放在服务器.",
     "intro.onewallet": "比特币,莱特币和狗币等多种加密货币都可以在这个钱包使用。支持的钱币种类将会持续增加.",
     "intro.open": "一钱包是<a href=\"https://github.com/haobtc/richwallet\" target=\"_blank\">开放源代码的服务</a>，欢迎大家使用贡献源代码。一钱包也来自于开源项目 <a href=\"https://github.com/kyledrake/coinpunk\" target=\"\">coinpunk</a>，非常感谢开源社区对我们生活和工作的影响！",
     "signup.alert": "<h3><font color=\"red\">重要密码信息</font>:</h3><p>你的数据是在本地加密，服务器没有记录使用你的密码，如果你丢失密码，密码将无法找回，也无法重置你的密码。</p><h4><strong>如果丢失密码就会像现实生活中丢失钱包一样。网站无法帮你找回，请大家一定要记住钱包密码</strong>.<br/><u>记住你的密码</u>.</h4><p>密码必须至少有<b>10个字符</b>. 如果造了一个新密码，请把它保存再某地，比如evernote或者邮件里. 密码易失去, 务必妥善保存.</p>"
-
+    
 }

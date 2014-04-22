@@ -51,13 +51,11 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       errorDiv.text(response.message);
     } else if(response.result == 'authCodeNeeded') {
       errorDiv.removeClass('hidden');
-      errorDiv.text(response.message);
+      errorDiv.text(T(response.message));
       $('#signinPassword').after('
         <div class="form-group">
-          <label for="authCode" class="col-lg-2 control-label">Auth Code</label>
-          <div class="col-lg-4">
-            <input id="authCode" type="password" class="form-control" placeholder="">
-          </div>
+          <label for="authCode" class="control-label" styile="padding-top:0">' + T('Auth Code') + '</label>
+          <input id="authCode" type="password" class="form-control" placeholder="">
         </div>
       ');
       $('#authCode').focus();
@@ -327,18 +325,18 @@ $('body').on('click', '#generateAuthQR', function() {
       hostname: 'totp',
       path: 'Richwallet:'+richwallet.wallet.walletId
     });
-    authURI.setSearch({issuer: 'Richwallet', secret: resp.key});
+    authURI.setSearch({issuer: 'OneWallet', secret: resp.key});
 
     new QRCode(document.getElementById('authQR'), authURI.toString());
     $('#authQR').after('
       <form role="form" id="submitAuth">
-        <p>Enter code shown on Google Authenticator:</p>
+        <p>' + T('Enter code shown on Google Authenticator') + ':</p>
         <input type="hidden" id="authKeyValue" value="'+resp.key+'">
         <div class="form-group">
-          <label for="confirmAuthCode">Confirm Auth Code</label>
+          <label for="confirmAuthCode">' + T('Confirm Auth Code') + '</label>
           <input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">
         </div>
-        <button type="submit" class="btn btn-primary">Confirm</button>
+        <button type="submit" class="btn btn-primary">' + T('Confirm') + '</button>
       </form>
     ');
     $('#confirmAuthCode').focus();
@@ -349,10 +347,10 @@ $('body').on('submit', '#submitAuth', function() {
   var e = $('#submitAuth #confirmAuthCode');
   $.post('api/setAuthKey', {serverKey: richwallet.wallet.serverKey, key: $('#authKeyValue').val(), code: e.val()}, function(res) {
     if(res.set != true) {
-      $('#authKey').text('Code save failed. Please reload and try again.');
+      $('#authKey').text(T('Code save failed. Please reload and try again.'));
     } else {
       richwallet.usingAuthKey = true;
-      $('#authKey').text('Successfully saved! You will now need your device to login.');
+      $('#authKey').text(T('Successfully saved! You will now need your device to login.'));
     }
   });
 });
