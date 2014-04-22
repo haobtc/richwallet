@@ -5,7 +5,7 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.serverKey = undefined;
   this.transactions = [];
   this.unspent = [];
-  this.minimumConfirmations = 1;
+  this.minimumConfirmations = 0;
   this.unspentConfirmations = [];
   var keyPairs = [];
 
