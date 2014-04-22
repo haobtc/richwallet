@@ -18,7 +18,13 @@ richwallet.controllers.Accounts.prototype.passwordStrength = {
       $('#passwordStrengthStatus').text(status);
     });
   }
-}
+};
+
+richwallet.controllers.Accounts.prototype.backupDownload = function() {
+    var payload = richwallet.wallet.encryptPayload();
+    var blob = new Blob([payload], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "richwallet-wallet.txt");
+};
 
 richwallet.controllers.Accounts.prototype.signin = function() {
   var self = this;
@@ -370,3 +376,4 @@ $('body').on('submit', '#disableAuth', function() {
 });
 
 richwallet.controllers.accounts = new richwallet.controllers.Accounts();
+

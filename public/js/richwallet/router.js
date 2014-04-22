@@ -37,7 +37,7 @@ richwallet.router.initWallet = function(callback) {
   richwallet.router.route('signin');
 };
 
-richwallet.router.map('#/backup/download').to(function() {
+/*richwallet.router.map('#/backup/download').to(function() {
   richwallet.router.initWallet(function(res) {
     if(res == false)
       return;
@@ -46,7 +46,7 @@ richwallet.router.map('#/backup/download').to(function() {
     saveAs(blob, "richwallet-wallet.txt");
     richwallet.router.route('backup');
   });
-});
+}); */
 
 richwallet.router.map('#/backup').to(function() {
   richwallet.router.initWallet(function(res) {

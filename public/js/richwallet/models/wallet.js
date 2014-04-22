@@ -492,7 +492,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     // Remove unspent elements now that we have a tx that uses them
     for(var i=0;i<tx.unspentsUsed.length;i++)
-      this.unspent = _.reject(this.unspentsUsed, function(u) { return u.hash == tx.unspentsUsed[i].hash })
+      this.unspent = _.reject(this.unspent, function(u) { return u.hash == tx.unspentsUsed[i].hash })
   };
 
   if(walletKey && walletId)
