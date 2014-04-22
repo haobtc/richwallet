@@ -411,11 +411,12 @@ richwallet.Wallet = function(walletKey, walletId) {
     var unspent = [];
     var unspentAmt = Bitcoin.BigInteger.ZERO;
 
-    var safeUnspent = this.safeUnspent(address.getNetwork());
-    for(i=0;i<safeUnspent.length;i++) {
-      unspent.push(safeUnspent[i]);
+    //var safeUnspent = this.safeUnspent(address.getNetwork());
+    var almostSafeUnspent = this.getUnspent(address.getNetwork());
+    for(i=0;i<almostSafeUnspent.length;i++) {
+      unspent.push(almostSafeUnspent[i]);
 
-      var amountSatoshiString = new BigNumber(safeUnspent[i].amount).times(Math.pow(10,8)).toString();
+      var amountSatoshiString = new BigNumber(almostSafeUnspent[i].amount).times(Math.pow(10,8)).toString();
 
       unspentAmt = unspentAmt.add(new Bitcoin.BigInteger(amountSatoshiString));
 
