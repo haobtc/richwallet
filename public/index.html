@@ -36,12 +36,48 @@
   <body>
     <div id="header" style="margin-bottom: 50px"></div>
     <div id="container" class="container" style="margin-bottom: 30px">
-      <div id="view">Loading, Please wait....</div>
+      <div id="view">
+	<div style="width:640px; max-width: 100%; margin:0 auto; padding-top:40px; padding-bottom:40px; font-family: Curier; font-size:24px;" id="loadingApp">
+        <!-- [if IE]>
+         <p>IE users, please use other browsers, such as Chrome, Safari, Firefox.</p>
+	 <p>IE用户无法使用此网站，建议使用更新的浏览器，如Chrome, Safari, Firefox.</p>
+        <![endif]-->
+	<script>
+         //<!--
+	  if(!/MSIE/.test(navigator.userAgent)) {
+	     var word = 'The loading HTML5 app, OneWallet, is a secure, on-the-chain wallet service that contains multiple kinds of cryptalcoins, such as bitcoin, litecoin and dogecoin. its size is really big at first, please wait while it\'s loading.........................';
+	     window.loadingText = '';
+	     window.renderLoadingText = function() {
+	        var loading = document.getElementById('loadingApp');
+                if(loading) {
+                   if(window.loadingText.length >= word.length) {
+		       window.loadingText = '';
+                   } else {
+		       window.loadingText = word.substr(0, window.loadingText.length + 1);
+		   }
+                   loading.innerHTML = window.loadingText;
+		   setTimeout(window.renderLoadingText, 80);
+	        } else {
+                   window.renderLoadingText = undefined;
+		}
+             };
+	     setTimeout(window.renderLoadingText, 1000);
+	  }
+         //-->
+	</script>
+	</div>
+      </div>
     </div>
     <script src="js/lib/bitcoinjs.js"></script>
     <script src="js/all.js"></script>
     <script>
-      var Bitcoin = require('./lib/bitcoinjs/index.js');
+     var Bitcoin = require('./lib/bitcoinjs/index.js');
     </script>
+    <div class="container">
+      <div class="row text-center">
+	<hr/>
+	2014 @block.so
+      </div>
+    </div>
   </body>
 </html>
