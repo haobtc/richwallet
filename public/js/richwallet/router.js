@@ -22,7 +22,7 @@ richwallet.router.listener = function() {
     }
     richwallet.router.listenerTimeout = setInterval(function() {
 	richwallet.controllers.dashboard.getUnspent(function() {
-            var rt = $('#receivedTransactions');
+            var rt = $('#allTransactions');
             if(rt.length == 1) {
 		richwallet.controllers.dashboard.renderDashboard();
 	    }

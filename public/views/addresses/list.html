@@ -19,7 +19,7 @@
               <div>
                 <strong><%- data.addresses[i].name || T('No Label') %></strong>
                 <span class="addExchangePrice pull-right" style="color: #33CC33;">
-                  <%- data.balances[data.addresses[i]] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                  <%- data.balances[data.addresses[i].address] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
                 </span>
               </div>
               <div><%- data.addresses[i].address %></div>

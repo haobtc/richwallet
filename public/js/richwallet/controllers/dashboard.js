@@ -12,7 +12,7 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
     var txHashes = [];
 
     function drawDashboard() {
-	var balances = richwallet.wallet.balances().sort(function(a, b) {return b.balance - a.balance;});
+	var balances = richwallet.wallet.balanceForNetworks().sort(function(a, b) {return b.amount.comparedTo(a.amount);});
 	txs = txs.sort(function(a, b) {return a.time - b.time;});
       
 	self.template('currencyBalances', 'dashboard/balances', {balances:balances}, function(id) {

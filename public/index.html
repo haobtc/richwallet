@@ -38,14 +38,16 @@
     <div id="container" class="container" style="margin-bottom: 30px">
       <div id="view">
 	<div style="width:640px; max-width: 100%; margin:0 auto; padding-top:40px; padding-bottom:40px; font-family: Curier; font-size:24px;" id="loadingApp">
-        <!-- [if IE]>
-         <p>IE users, please use other browsers, such as Chrome, Safari, Firefox.</p>
-	 <p>IE用户无法使用此网站，建议使用更新的浏览器，如Chrome, Safari, Firefox.</p>
-        <![endif]-->
+	</div>
+	<h4 style="text-align: center;">SPECIAL NOTICES</h4>
+	<p style="width:640px; max-width: 100%; margin:0 auto; padding-top:20px; padding-bottom:20px; font-family: Curier; font-size:18px;" id="browserWarning">
+         IE users may not use this site properly, <a href="https://www.google.com/intl/en-US/chrome/browser/">Chrome</a> is recommended</br>
+	 IE用户无法使用此网站，建议使用<a href="https://www.google.com/intl/zh-CN/chrome/browser/">Chrome</a>.
+	</p>
 	<script>
          //<!--
-	  if(!/MSIE/.test(navigator.userAgent)) {
-	     var word = 'The loading HTML5 app, OneWallet, is a secure, on-the-chain wallet service that contains multiple kinds of cryptalcoins, such as bitcoin, litecoin and dogecoin. its size is really big at first, please wait while it\'s loading.........................';
+	  if(navigator.appName !== 'Microsoft Internet Explorer') {
+	     var word = 'Onewallet is a secure, on-chain, html5  wallet service that contains multiple kinds of cryptalcurrencies, such as bitcoin, litecoin and dogecoin. its size is really big at first, please wait while it\'s loading.........................';
 	     window.loadingText = '';
 	     window.renderLoadingText = function() {
 	        var loading = document.getElementById('loadingApp');
@@ -65,7 +67,6 @@
 	  }
          //-->
 	</script>
-	</div>
       </div>
     </div>
     <script src="js/lib/bitcoinjs.js"></script>
@@ -76,7 +77,13 @@
     <div class="container">
       <div class="row text-center">
 	<hr/>
-	2014 @block.so
+	2014 @block.so<br/>
+	<small>
+	If you think onewallet is interesting and useful, please make a donation.<br>
+	Dogecoin  DCHLKMzfCVew4H1JPPQF9nmpVdxXQ6zGTF<br/>
+	Bitcoin   1iC4YAyAxBq5JnTpboLcfXXb11NHs4RfF<br/>
+	Litecoin  LRBtzAb2bccBKRZa445ynXcoMAt48LhB8m
+	</small>
       </div>
     </div>
   </body>

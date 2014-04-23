@@ -326,22 +326,17 @@ richwallet.Wallet = function(walletKey, walletId) {
     return amount;
   };
 
-  this.balances = function() {
+  this.balanceForNetworks = function() {
+      var balanceMap = {};
+      for(var i=0; i<this.unspent.length; i++) {
+	  var uspt = this.unspent[i];
+	  var amount = balanceMap[uspt.network] || new BigNumber(0);
+	  balanceMap[uspt.network] = amount.plus(new BigNumber(uspt.amount));
+      }
       var balances = [];
       for(var network in richwallet.config.networkConfigs) {
-	  var conf = richwallet.config.networkConfigs[network];
-	  var balance = this.safeUnspentBalance(network);
-	  var pendingBalance = this.pendingUnspentBalance(network);
-/*	  if (balance.eq(0) && pendingBalance.eq(0)) {
-	      continue;
-	  } */
-	  balances.push({
-	      'network': network,
-	      'currency': conf['currency'],
-	      'balance': balance,
-	      'pendingBalance': pendingBalance,
-	      'totalBalance': balance.plus(pendingBalance)
-	  });
+	  var amount = balanceMap[network] || new BigNumber(0);
+	  balances.push({network: network, amount: amount});
       }
       return balances;
   };
