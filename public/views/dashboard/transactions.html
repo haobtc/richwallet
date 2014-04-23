@@ -36,7 +36,7 @@
 	      <%= t %>
 	    </strong>
           </div>
-          <div><%- tx.confirmations %> confirmations</div>
+          <div><%- tx.confirmations > 100? "100+":tx.confirmations %> confirmations</div>
         </div>
       </div>
     <% } %>
@@ -68,7 +68,7 @@
 	      <%= t %></td>
             <td><span class="addExchangePrice"><%- tx.amount %> <%- richwallet.config.networkConfigs[tx.network].currency %></span></td>
             <td>
-              <%- tx.confirmations %>
+              <%- tx.confirmations >100?"100+":tx.confirmations %>
 
               <% if(tx.confirmations == 0) { %>
                 <span class="label label-warning pull-right" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain."><%- T('Pending (Unconfirmed)') %></span>

@@ -8,18 +8,18 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
 
     /*$('#balance').text(richwallet.wallet.safeUnspentBalance());
       $('#pendingBalance').text(richwallet.wallet.pendingUnspentBalance()); */
-    var txs = richwallet.wallet.transactions;
+    var txs = _.filter(richwallet.wallet.transactions, function(tx){return tx.confirmations <= 100});
     var txHashes = [];
 
     function drawDashboard() {
 	var balances = richwallet.wallet.balanceForNetworks().sort(function(a, b) {return b.amount.comparedTo(a.amount);});
-	txs = txs.sort(function(a, b) {return a.time - b.time;});
+	var sortedTxs = richwallet.wallet.transactions.sort(function(a, b) {return b.time - a.time;});
       
 	self.template('currencyBalances', 'dashboard/balances', {balances:balances}, function(id) {
 	    $('#'+id+" [rel='tooltip']").tooltip();
 	});
 
-	self.template('allTransactions', 'dashboard/transactions', {tx: txs.reverse()}, function(id) {
+	self.template('allTransactions', 'dashboard/transactions', {tx:sortedTxs}, function(id) {
 	    $('#'+id+" [rel='tooltip']").tooltip();
 	});
     }
@@ -31,11 +31,24 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
     }
   
     this.getTxDetails(txHashes, function(resp) {
+	var removableTxes = {};
+	var hasRemovable = false;
 	for(i=0;i<txs.length;i++) {
-	    for(var j=0;j<resp.length;j++) {
-		if(txs[i].hash == resp[j].hash)
+	    var j=0;
+	    for(;j<resp.length;j++) {
+		if(txs[i].hash == resp[j].hash) {
 		    txs[i].confirmations = resp[j].confirmations;
+		    break;
+		}
 	    }
+	    if(j >= resp.length && txs[i].confirmations == 0) {
+		// Not found
+		removableTxes[txs[i].hash] = true;
+		hasRemovable = true;
+	    }
+	}
+	if(hasRemovable) {
+	    richwallet.wallet.transactions = _.reject(richwallet.wallet.transactions, function(tx) {return removableTxes[tx.hash]});
 	}
 	drawDashboard();
   });
