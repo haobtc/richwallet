@@ -1,5 +1,10 @@
 <div class="row">
   <div class="col-lg-9 col-lg-offset-1">
+  <% if(!richwallet.usingAuthKey) { %>
+  <div class="alert alert-info hidden-xs hidden-sm" style="margin-top:10px;"><%= T('Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href="#/account/settings">two factor authenticaton</a> is highly recommended.') %></div>
+  <% } %>
+
+
     <% var successMessage = richwallet.database.getSuccessMessage(); %>
     <% if(successMessage) { %>
     <div class="alert alert-success alert-dismissable" style="margin-top: 20px">

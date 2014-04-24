@@ -3,7 +3,6 @@
   margin-left: 5px;
 }
 </style>
-
 <h3 class="m-header col-lg-12"><%- T('Transactions') %></h3>
 
 <% if(data.tx.length == 0) {%>
@@ -36,7 +35,7 @@
 	      <%= t %>
 	    </strong>
           </div>
-          <div><%- tx.confirmations > 100? "":tx.confirmations %> confirmations</div>
+          <div><%- T('%s confirmations', tx.confirmations>100? "100+":tx.confirmations) %></div>
         </div>
       </div>
     <% } %>
@@ -86,5 +85,4 @@
       </tbody>
     </table>
   </div>
-
 <% } %>

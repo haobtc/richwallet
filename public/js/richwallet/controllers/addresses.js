@@ -35,7 +35,8 @@ richwallet.controllers.Addresses.prototype.request = function(address) {
 }
 
 richwallet.controllers.Addresses.prototype.drawRequestQR = function(address) {
-  var uri = URI({protocol: 'bitcoin', path: address});
+  var addr = new Bitcoin.Address(address);
+  var uri = URI({protocol: addr.getNetwork(), path: address});
   
   var amount = $('#amount').val();
   var label = $('#label').val();
