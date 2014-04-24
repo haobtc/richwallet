@@ -20,6 +20,8 @@
     "Change password": "修改密码",
     "Confirm your password": "确认密码",
     "Create Account": "创建账号",
+    "Wallet not found or invalid password": "无法找到钱包或者密码错误",
+    "Error retreiving wallet": "获取钱包时发生错误",
 
     "Strongly Confirmed": "完全确认",
     "Soft Confirmed": "部分确认",
@@ -35,6 +37,7 @@
     "Import": "导入",
 
     "Two factor authentication code needed": "需要两步身份验证代码",
+    "Two factor authentication code was invalid": "两步身份验证代码错误",
     "Auth Code": "验证码",
 
     "Transactions": "交易",
@@ -51,6 +54,7 @@
     "Or": "或者",
     "Send email": "发送电子邮件",
     "Save to email %s": "保存到邮件%s",
+    "Wallet sent to email": "钱包数据已经发送到邮箱里",
     "To backup your entire wallet, you can download it here.": "要备份整个钱包，可以在这下载钱包数据文件",
     "<h5>This wallet is encrypted and requires your password to unlock. <strong style=\"color: #FF0000\">Do not forget your password.</strong> Write it down somewhere if you have to.</h5>": "<h5>钱包已被加密，需要密码才能解开. <strong style=\"color: #FF0000\">请勿忘记密码.</strong> 如果需要请把密码写在某处.</h5>",
     "pending": "等待",
@@ -132,7 +136,7 @@
     "Two Factor Auth": "两步验证",
     "You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it": "你正在使用两步验证, 如果想禁用它，请在下方输入验证码",
     "Two factor authentication allows you to require a code from your phone from Login. Onewallet uses Google Authenticator, which you will need to download to use this.": "两步验证让你在登录的时候输入手机上的一个验证码，壹钱包使用Google Authenticator, 你需要在手机上先下载.",
-    "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\">two factor authenticaton</a> is highly recommended.": "两步验证让你再登录的时候输入一个验证码，能很大程度提升账户的安全性。强烈建议 <a href=\"#/account/settings\">两步验证</a>.",
+    "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\">two factor authenticaton</a> is highly recommended.": "两步验证让你在登录的时候输入手机上的一个验证码，能很大程度提升账户的安全性。强烈建议进行 <a href=\"#/account/settings\">两步验证</a>.",
     "Confirm Auth Code": "确认验证码",
     "Enter code shown on Google Authenticator": "输入Google Authenticator上显示的数字",
     "Confirm": "确认",

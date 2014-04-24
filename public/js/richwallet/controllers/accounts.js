@@ -48,7 +48,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
   $.get('api/wallet', body, function(response) {
     if(response.result == 'error') {
       errorDiv.removeClass('hidden');
-      errorDiv.text(response.message);
+      errorDiv.text(T(response.message));
     } else if(response.result == 'authCodeNeeded') {
       errorDiv.removeClass('hidden');
       errorDiv.text(T(response.message));
@@ -89,7 +89,7 @@ richwallet.controllers.Accounts.prototype.backupToEmail = function() {
     var button = $('#sendToEmail');
     button.attr('disabled', 'disabled');
     $.post('api/backupToEmail', {serverKey:richwallet.wallet.serverKey}, function(res) {
-	$('#sendToEmail').replaceWith($('<span>').html('Wallet sent to email'));
+	$('#sendToEmail').replaceWith($('<span>').html(T('Wallet sent to email')));
    });
 };
 
