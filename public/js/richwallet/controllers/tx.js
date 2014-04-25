@@ -184,7 +184,12 @@ richwallet.controllers.Tx.prototype.calculateFee = function() {
     return;
 
   var calculatedFee = $('#calculatedFee').val();  
-  var addrObj = new Bitcoin.Address(address);
+  try {
+      var addrObj = new Bitcoin.Address(address);
+  } catch(e) {
+      console.error(e);
+      return;
+  }
   var changeAddress = this.ensureChangeAddress(addrObj);
 
   var errors = [];
