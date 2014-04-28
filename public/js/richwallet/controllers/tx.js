@@ -15,11 +15,12 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
     var tx = resp[0];
     var txs = richwallet.wallet.transactions;
     for(var i=0;i<txs.length;i++) {
-	if(txs[i].hash == tx.hash) {
+	if(txs[i].network == tx.network && txs[i].hash == tx.hash) {
 	    tx.amount = txs[i].amount;
 	    if(!tx.fee) {
 		tx.fee = txs[i].fee;
 	    }
+	    txs[i].confirmations = tx.confirmations;
 	    break;
 	}
     }
@@ -112,6 +113,7 @@ richwallet.controllers.Tx.prototype.create = function() {
   var changeAddress = this.ensureChangeAddress(toAddress);
   var tx = richwallet.wallet.createTx(amount, calculatedFee, address, changeAddress);
   self.saveWallet({override: true, address: changeAddress}, function(response) {
+      richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
       $.ajax({
 	  url: 'api/infoproxy/sendtx/' + toAddress.getNetwork(),
 	  data: JSON.stringify({rawtx: tx.raw}),
@@ -130,6 +132,7 @@ richwallet.controllers.Tx.prototype.create = function() {
 						      address));
 	      
 	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
+	      delete richwallet.wallet.sendingTXIDs[tx.obj.getHash()];
 	      self.getUnspent(function() {
 		  richwallet.router.route('dashboard');
 	      });

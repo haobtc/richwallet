@@ -15,12 +15,12 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
 
   // FIXME: handle query['confirmations']
   var jsonpUrl = 'api/infoproxy/unspent';
-  $.getJSON(jsonpUrl, {addresses:query.addresses.join(',')}, function(resp) {
+  $.post(jsonpUrl, {addresses:query.addresses.join(',')}, function(resp) {
       for(var i=0; i<resp.length; i++) {
 	  resp[i].hash = resp[i].txid;
       }
       self.mergeUnspent(resp, callback);
-  });
+  }, 'json');
 };
 
 richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
@@ -41,13 +41,13 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
 	 query[network] =  txSections[network].join(',');
     }
 
-    $.getJSON(jsonpUrl, query, function(resp) {
+    $.post(jsonpUrl, query, function(resp) {
 	for(var i=0; i<resp.length; i++) {
 	  var tx = resp[i];
 	  tx.hash = tx.txid;
 	}
 	callback(resp);
-    });
+    }, 'json');
 };
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {

@@ -7,6 +7,7 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.unspent = [];
   this.minimumConfirmations = 0;
   this.unspentConfirmations = [];
+  this.sendingTXIDs = {};
   var keyPairs = [];
 
   this.loadPayloadWithLogin = function(id, password, payload) {
@@ -192,7 +193,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 	      }
 	  }
 
-	  if(txMatch == false) {
+	  if(txMatch == false && !this.sendingTXIDs[uspt.hash]) {
               this.transactions.push({
 		  network: uspt.network,
 		  hash: uspt.hash,
