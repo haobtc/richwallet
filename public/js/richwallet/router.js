@@ -104,6 +104,15 @@ richwallet.router.map('#/tx/details/:network/:hash').to(function() {
   });
 });
 
+richwallet.router.map('#/tx/advsend/:network').to(function() {
+  var network = this.params.network;
+  richwallet.router.initWallet(function(res) {
+    if(res == false)
+      return;
+    richwallet.controllers.tx.advsend(network);
+  });
+});
+
 richwallet.router.map('#/tx/send').to(function() {
   richwallet.router.initWallet(function(res) {
     if(res == false)
@@ -111,6 +120,7 @@ richwallet.router.map('#/tx/send').to(function() {
     richwallet.controllers.tx.send();
   });
 });
+
 
 richwallet.router.map('#/tx/sendto/:address').to(function() {
   var address = this.params.address;

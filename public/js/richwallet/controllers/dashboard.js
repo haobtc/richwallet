@@ -8,7 +8,7 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
 
     /*$('#balance').text(richwallet.wallet.safeUnspentBalance());
       $('#pendingBalance').text(richwallet.wallet.pendingUnspentBalance()); */
-    var txs = _.filter(richwallet.wallet.transactions, function(tx){return tx.confirmations <= 100});
+    var txs = _.filter(richwallet.wallet.transactions, function(tx){return tx.confirmations == undefined || tx.confirmations <= 100});
     var txHashes = [];
 
     function drawDashboard() {

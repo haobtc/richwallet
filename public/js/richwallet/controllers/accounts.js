@@ -52,12 +52,11 @@ richwallet.controllers.Accounts.prototype.signin = function() {
     } else if(response.result == 'authCodeNeeded') {
       errorDiv.removeClass('hidden');
       errorDiv.text(T(response.message));
-      $('#signinPassword').after('
-        <div class="form-group">
-          <label for="authCode" class="control-label" styile="padding-top:0">' + T('Auth Code') + '</label>
-          <input id="authCode" type="password" class="form-control" placeholder="">
-        </div>
-      ');
+      $('#signinPassword').after(
+        '<div class="form-group">' +
+          '<label for="authCode" class="control-label" styile="padding-top:0">' + T('Auth Code') + '</label>' +
+          '<input id="authCode" type="password" class="form-control" placeholder="">' +
+        '</div>');
       $('#authCode').focus();
       richwallet.usingAuthKey = true;
 
@@ -128,15 +127,9 @@ richwallet.controllers.Accounts.prototype.create = function() {
     var wallet = new richwallet.Wallet();
     var walletKey = wallet.createWalletKey(email, password);
 
-    var addresses = [];
-    for(var network in richwallet.config.networkConfigs) {
-	var address = wallet.createNewAddress(network, 'Default');
-	addresses.push(address);
-    }
-
     richwallet.wallet = wallet;
 
-    this.saveWallet({importAddresses: addresses, payload: {email: email}}, function(response) {
+    this.saveWallet({payload: {email: email}}, function(response) {
       if(response.result == 'ok') {
         richwallet.router.listener();
         richwallet.router.route('dashboard');
@@ -181,7 +174,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
 
       richwallet.wallet = wallet;
 
-      self.saveWallet({importAddresses: richwallet.wallet.addressHashes()}, function(resp) {
+      self.saveWallet({}, function(resp) {
         if(resp.result == 'exists') {
           $('#importErrorDialog').removeClass('hidden');
           $('#importErrorMessage').text('Cannot import your wallet, because the wallet already exists on this server.');
@@ -190,7 +183,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
         } else {
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
-          richwallet.database.setSuccessMessage(msg);
+          self.showSuccessMessage(msg);
           richwallet.router.route('dashboard');
         }
       });
@@ -328,17 +321,16 @@ $('body').on('click', '#generateAuthQR', function() {
     authURI.setSearch({issuer: 'OneWallet', secret: resp.key});
 
     new QRCode(document.getElementById('authQR'), authURI.toString());
-    $('#authQR').after('
-      <form role="form" id="submitAuth">
-        <p>' + T('Enter code shown on Google Authenticator') + ':</p>
-        <input type="hidden" id="authKeyValue" value="'+resp.key+'">
-        <div class="form-group">
-          <label for="confirmAuthCode">' + T('Confirm Auth Code') + '</label>
-          <input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">
-        </div>
-        <button type="submit" class="btn btn-primary">' + T('Confirm') + '</button>
-      </form>
-    ');
+    $('#authQR').after(
+      '<form role="form" id="submitAuth">' +
+        '<p>' + T('Enter code shown on Google Authenticator') + ':</p>' +
+        '<input type="hidden" id="authKeyValue" value="'+resp.key+'">' +
+        '<div class="form-group">' +
+          '<label for="confirmAuthCode">' + T('Confirm Auth Code') + '</label>' +
+          '<input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">' +
+        '</div>' +
+        '<button type="submit" class="btn btn-primary">' + T('Confirm') + '</button>' +
+      '</form>');
     $('#confirmAuthCode').focus();
   });
 });
@@ -368,7 +360,7 @@ $('body').on('submit', '#disableAuth', function() {
     }
 
     richwallet.usingAuthKey = false;
-    richwallet.database.setSuccessMessage('Two factor authentication has been disabled.');
+    richwallet.controllers.accounts.showSuccessMessage('Two factor authentication has been disabled.');
     richwallet.router.route('dashboard', 'settings');
   });
 });

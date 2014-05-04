@@ -13,7 +13,17 @@
       <% if(richwallet.wallet) { %>
         <li><a href="#/dashboard"><i class="fa fa-bars"></i> <%- T('Transactions') %></a></li>
         <li><a href="#/addresses/list"><i class="fa fa-arrow-down"></i> <%- T('Receive') %></a></li>
-        <li><a href="#/tx/send"><i class="fa fa-arrow-up"></i> <%- T('Send') %></a></li>
+        <li><a href="javascript:richwallet.controllers.tx.showQuickSend();"><i class="fa fa-arrow-up"></i> <%- T('Quick Send') %></a></li>
+	<li class="dropdown">
+	  <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+	    <i class="fa fa-arrow-up"></i> 
+	    <%- T('Custom Send') %></a>
+	  <ul class="dropdown-menu">
+	    <% for(var network in richwallet.config.networkConfigs) {%>
+	    <li><a href="#/tx/advsend/<%- network %>"><%- T(network) %></a></li>
+	    <% } %>
+	  </ul>
+	</li>
         <li class="hidden-xs hidden-sm"><a href="#/backup"><i class="fa fa-download"></i> <%- T('Backup') %></a></li>
       <% } %>
     </ul>
@@ -26,4 +36,37 @@
       <% } %>
     </ul>
   </nav>
+  <% if(richwallet.wallet) { %>
+  <div class="modal fade" id="quickSend" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+	<div class="modal-header">
+	  <h4 class="text-center"><%- T('Quick Send') %></h4>
+	</div>
+	<form action="#" onsubmit="richwallet.controllers.tx.quickCreate(); return false;">
+	<div class="modal-body">
+	  <div class="form-group clearfix">
+	    <label for="address" class="col-lg-2 control-label"><%- T('Send to') %></label>
+	    <div class="col-lg-9">
+	      <input type="text" name="address" class="form-control" onchange="richwallet.controllers.tx.quickCheckValues();"/>
+	    </div>
+	  </div>
+	  <div class="form-group clearfix">
+	    <label for="amount" class="col-lg-2 control-label"><%- T('Amount') %></label>
+	    <div class="col-lg-4">
+	      <input type="number" step="any" name="amount" class="form-control" onchange="richwallet.controllers.tx.quickCheckValues();"/>
+	    </div>
+	    <div class="col-lg-5" id="balance">
+	    </div>
+	  </div>
+	</div>
+	<div class="modal-footer">
+	   <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+           <button type="submit" id="quickSendButton" class="btn btn-primary"><%- T('Send') %></button>
+	</div>
+	</form>
+      </div>
+    </div>
+  </div>
+  <% } %>
 </header>

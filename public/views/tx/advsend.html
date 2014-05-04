@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-lg-12 text-center">
+    <h3><%- T('Send %s', T(data.network)) %></h3>
+      <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-offset-3 col-lg-6">
+    <div id="errors" class="alert alert-danger hidden"></div>
+  </div>
+</div>
+
+<div class="row" id="sendBlock" rel="<%- data.network %>">
+  <div class="col-lg-10 col-lg-offset-1">
+    <form id="createSendForm" action="#" onsubmit="richwallet.controllers.tx.advCreate(); return false;" class="form-horizontal" role="form">
+
+      <div class="form-group" id="fromAddresses">
+        <label for="address" class="col-lg-4 control-label"><%- T('From Addresses') %></label>
+        <div class="col-lg-6">
+	  <ul class="list-group">
+	    <% _.map(data.addresses, function(address) {
+	       if(data.balance4Addresses[address]) { %>
+	    <li class="list-group-item clearfix">
+		 <input type="checkbox" checked="checked" id="checkbox_<%- address %>" rel="<%- address %>" value="<%- data.balance4Addresses[address] %>" class="col-lg-1"
+			onchange="richwallet.controllers.tx.advCheckValues();">
+		 <span class="pull-right"><%- data.balance4Addresses[address] + ' ' +  richwallet.config.networkConfigs[data.network].currency %></span>
+		 <span ><%- richwallet.wallet.getAddressName(address) || richwallet.utils.shortText(address) %> </span>
+	    </li>
+	    <% }
+	    }); %>
+	    <li class="list-group-item clearfix">
+	      <a href="javascript:richwallet.controllers.tx.advSelectAllAddresses();richwallet.controllers.tx.advCheckValues();"><%- T('Select All') %></a>
+	      <span class="pull-right">
+		Total = <span id="totalBalance"><%- data.balance %></span> <%- richwallet.config.networkConfigs[data.network].currency %>
+	      </span>
+	    </li>
+	  </ul>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="address" class="col-lg-4 control-label"><%- T('Send to') %></label>
+	<div class="sendtoRow clearfix">
+	  <div class="outputAddress col-lg-4" style="margin-bottom: 6px;">
+            <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="<%- T(data.network) + ' ' + T('Address') %>" value="<%- data.toaddress %>" onchange="richwallet.controllers.tx.advCheckValues();">
+	  </div>
+	  <div class="col-lg-2 col-xs-5"style="margin-bottom: 6px;">
+            <input id="amount" type="number" step="any" name="amount" placeholder="<%- T('Amount') %>" class="sendtoAmount form-control" autocomplete="off" placeholder="0.00" onchange="richwallet.controllers.tx.advCheckValues();">
+	  </div>
+	</div>
+      </div>
+
+      <div class="form-group">
+	<div class="col-lg-6 col-lg-offset-4 text-right">
+	  <a id="removeSendto" style="display:none;"  href="javascript:richwallet.controllers.tx.advRemoveSendTo();"><span class="fui-cross"></span></a>
+	  <a href="javascript:richwallet.controllers.tx.advAddSendTo()" style="margin-left:36px;"><span class="fui-plus"></span></a>
+	</div>
+      </div>
+
+      <div class="form-group">
+        <label for="" class="col-lg-4 control-label"><%- T('Fee') %></label>
+        <div class="col-lg-2" id="fee">
+          <input id="calculatedFee" class="form-control col-lg-4"
+		 type="text" value="<%- richwallet.config.networkConfigs[data.network].fee %>" onchange="richwallet.controllers.tx.advCheckValues();">
+        </div>
+	<div class="col-lg-4 col-xs-5">
+	  <p style="font-size:15px;line-height:40px;"><%- richwallet.config.networkConfigs[data.network].currency %></p>
+	</div>
+      </div>
+      <div class="form-group">
+        <label for="submit" class="col-lg-4 control-label hidden-sm hidden-xs"></label>
+        <div class="col-lg-4 text-center">
+          <button id="sendButton" type="submit" class="btn btn-default btn-lg btn-primary disabled"><i class="fa fa-bitcoin"></i> <%- T('Send') %></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+	$("#qrcodeinput").on("change", richwallet.controllers.tx.scanQR);
+</script>

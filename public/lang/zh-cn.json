@@ -22,12 +22,13 @@
     "Create Account": "创建账号",
     "Wallet not found or invalid password": "无法找到钱包或者密码错误",
     "Error retreiving wallet": "获取钱包时发生错误",
+    "Send to": "发送到",
 
     "Strongly Confirmed": "完全确认",
     "Soft Confirmed": "部分确认",
     "Pending (Unconfirmed)": "等待中(未确认)",
 
-    "Sent %s %s to %s.": "发送了%s %s到%s.",
+    "Sent %s %s to %s": "发送了%s %s到%s",
 
     "Sign in": "登录",
     "Sign up": "注册",
@@ -43,6 +44,9 @@
     "Transactions": "交易",
     "Receive": "收币",
     "Send": "发送",
+    "Quick Send": "快捷发送",
+    "Custom Send": "定制发送",
+    "Close": "关闭",
     "Backup": "备份",
     "Signout": "退出",
     "Signup": "注册",
@@ -63,6 +67,7 @@
     "Address": "地址",
     "Amount": "数量",
     "From/To Address": "接收／发送地址",
+    "From Addresses": "发送的地址",
     "Received from %s(%s)": "从 %s(%s) 收到",
     "Sent to <a href=\"#/tx/sendto/%s\">%s</a>(%s)": "发送到 <a href=\"#/tx/sendto/%s\">%s</a>(%s)",
     "Confirmations": "确认数量",
@@ -91,7 +96,7 @@
     "Optional Message": "可选的消息",
     "Back": "返回",
     
-    "Send coins": "发送币",
+    "Send %s": "发送%s",
 
     "You have <span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> available to spend.": "你有<span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> 可以发送",
     "You have no money available to spend.": "你没有可以足够的币.",

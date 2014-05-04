@@ -7,6 +7,7 @@ richwallet.Template = {
     'dashboard/transactions',
     'tx/details',
     'tx/send',
+    'tx/advsend',
     'backup',
     'dashboard',
     'header',

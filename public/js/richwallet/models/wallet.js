@@ -185,18 +185,33 @@ richwallet.Wallet = function(walletKey, walletId) {
 
       // todo: time should probably not be generated here
 	  var txMatch = false;
+	  if(this.sendingTXIDs[uspt.hash]){
+	      continue;
+	  }
 
 	  for(var k=0;k<this.transactions.length;k++) {
-              if(this.transactions[k].hash == uspt.hash) {
-		  txMatch = true;
-		  this.transactions[k].confirmations = uspt.confirmations;
+	      var rtx = this.transactions[k];
+              if(rtx.hash == uspt.hash) {
+		  var vout = rtx.vout;
+		  if(vout == undefined) {
+		      vout = uspt.vout;
+		  }
+		  if(rtx.type == 'send') {
+		      txMatch = true;
+		      rtx.confirmations = uspt.confirmations;
+		  } else if(vout == uspt.vout) {
+		      txMatch = true;
+		      rtx.confirmations = uspt.confirmations;
+		      rtx.vout = vout;
+		  }
 	      }
 	  }
 
-	  if(txMatch == false && !this.sendingTXIDs[uspt.hash]) {
+	  if(txMatch == false) {
               this.transactions.push({
 		  network: uspt.network,
 		  hash: uspt.hash,
+		  vout: uspt.vout,
 		  type: 'receive',
 		  address: uspt.address,
 		  amount: uspt.amount,
@@ -342,13 +357,12 @@ richwallet.Wallet = function(walletKey, walletId) {
       return balances;
   };
 
-  this.balanceForAddresses = function() {
+  this.balanceForAddresses = function(network) {
       var addrBalances = {};
-      for(var i=0; i<this.unspent.length; i++) {
-	  var uspt = this.unspent[i];
+      this.filterNetwork(this.unspent, network, function(uspt) {
 	  var amount = addrBalances[uspt.address] || 0;
 	  addrBalances[uspt.address] = amount + uspt.amount;
-      }
+      });
       return addrBalances;
   };
 
@@ -459,13 +473,91 @@ richwallet.Wallet = function(walletKey, walletId) {
           var key = new Bitcoin.Key(keyPairs[j].key);
           var signature = key.sign(hash);
           signature.push(parseInt(hashType, 10));
-
+	    
           sendTx.ins[i].script = Bitcoin.Script.createInputScript(signature, key.getPub());
           break;
         }
       }
     }
     return {unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
+  };
+
+  this.createAdvTx = function(network, inputAddresses, outputs, fee) {
+      var sendTx = new Bitcoin.Transaction();
+      var unspent = [];
+      var unspentAmt = Bitcoin.BigInteger.ZERO;
+      var total = Bitcoin.BigInteger.ZERO;
+      _.map(outputs, function(output) {
+	  total = total.add(richwallet.utils.amountToSatoshi(output.amount));
+      });
+      total = total.add(richwallet.utils.amountToSatoshi(fee));
+
+      var almostSafeUnspent = this.getUnspent(network);
+      for(var i=0;i<almostSafeUnspent.length;i++) {
+	  var uspt = almostSafeUnspent[i];
+
+	  var found = false;
+	  for(var j=0; j<inputAddresses.length; j++) {
+	      if(inputAddresses[j] == uspt.address) {
+		  found = true;
+		  break;
+	      }
+	  }
+	  if(!found) {
+	      continue;
+	  }
+	  unspent.push(uspt);
+
+	  unspentAmt = unspentAmt.add(richwallet.utils.amountToSatoshi(uspt.amount));
+
+	  // If > -1, we have enough to send the requested amount
+	  if(unspentAmt.compareTo(total) > -1) {
+              break;
+	  }
+      }
+
+      if(unspentAmt.compareTo(total) < 0) {
+	  throw T("you do not have enough coins to send this amount");
+      }
+      var changeAddress = unspent[0].address;
+      if(!changeAddress)
+	  throw "change address was not provided";
+      
+      for(var i=0;i<unspent.length;i++) {
+	  sendTx.addInput({hash: unspent[i].hash}, unspent[i].vout);
+      }
+      // The address you are sending to, and the amount:
+      _.map(outputs, function(output) {
+	  sendTx.addOutput(new Bitcoin.Address(output.address),
+			  richwallet.utils.amountToSatoshi(output.amount));
+      });
+
+      var remainder = unspentAmt.subtract(total);
+      
+      if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
+	  sendTx.addOutput(changeAddress, remainder);
+      }
+
+      var hashType = 1; // SIGHASH_ALL
+      // Here will be the beginning of your signing for loop
+
+      //for(var i=0;i<unspent.length;i++) {
+      _.map(unspent, function(uspt, i) {
+	  var unspentOutScript = new Bitcoin.Script(Bitcoin.convert.hexToBytes(uspt.scriptPubKey));
+	  var hash = sendTx.hashTransactionForSignature(unspentOutScript, i, hashType);
+	  var pubKeyHash = unspentOutScript.simpleOutHash();
+	  var pubKeyHashHex = Bitcoin.convert.bytesToHex(pubKeyHash);
+	  for(var j=0;j<keyPairs.length;j++) {
+              if(_.isEqual(keyPairs[j].publicKey, pubKeyHashHex)) {
+		  var key = new Bitcoin.Key(keyPairs[j].key);
+		  var signature = key.sign(hash);
+		  signature.push(parseInt(hashType, 10));
+		  sendTx.ins[i].script = Bitcoin.Script.createInputScript(signature, key.getPub());
+		  break;
+              }
+	  }
+      });
+      return {network: network, unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
   };
 
   this.calculateFee = function(amtString, addressString, changeAddress) {
@@ -476,9 +568,15 @@ richwallet.Wallet = function(walletKey, walletId) {
     return fee;    
   };
 
+  this.feeOfTx = function(network, tx) {
+      var txSize = tx.raw.length / 2;
+      var fee = Math.ceil(txSize/1000)*richwallet.config.networkConfigs[network].fee;
+      return fee;
+  };
+
   this.addTx = function (tx, amtString, feeString, addressString, changeAddress) {
     this.transactions.push({
-      network: new Bitcoin.Address(addressString).getNetwork(),
+      network: tx.network,
       hash: Bitcoin.convert.bytesToHex(tx.obj.getHash()),
       type: 'send',
       address: addressString,

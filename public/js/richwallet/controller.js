@@ -121,6 +121,20 @@ richwallet.Controller.prototype.friendlyTimeString = function(timestamp) {
   return date.toLocaleString();
 };
 
+richwallet.Controller.prototype.showSuccessMessage = function(text) {
+    var msgDom = $('<div class="alert alert-success alert-dismissable" id="successMessage" style="margin-top: 20px;">' +
+	'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+      '<span id="messageContent"></span></div>');
+    $('#messageContent', msgDom).html(text);
+    //$('#view').prepand(msgDom);
+    msgDom.insertBefore($('#view'));
+    setTimeout(function() {
+	$('#successMessage').fadeOut(function() {
+	    $(this).remove();
+	});
+    }, 5000);
+};
+
 richwallet.Controller.prototype.minimumSendConfirmations = 1;
 richwallet.Controller.prototype.minimumStrongSendConfirmations = 6;
 
