@@ -69,7 +69,7 @@
     "From/To Address": "接收／发送地址",
     "From Addresses": "发送的地址",
     "Received from %s(%s)": "从 %s(%s) 收到",
-    "Sent to <a href=\"#/tx/sendto/%s\">%s</a>(%s)": "发送到 <a href=\"#/tx/sendto/%s\">%s</a>(%s)",
+    "Sent to %s(%s)": "发送到 %s(%s)",
     "Confirmations": "确认数量",
     "Discovered": "发现时间",
     "Details": "详情",
