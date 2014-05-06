@@ -68,7 +68,7 @@
       <div id="disableAuthDialog" class="alert hidden">
       </div>
 
-      <form id="disableAuth" role="form">
+      <form id="disableAuth" role="form" onsubmit="richwallet.controllers.accounts.disableAuth(); return false;">
         <div class="form-group">
           <label for="authCode"><%- T('Enter code to disable') %></label>
           <input class="form-control" type="password" id="disableAuthCode" autocomplete="off">
@@ -78,7 +78,7 @@
     <% } else { %>
       <p><%- T('Two factor authentication allows you to require a code from your phone from Login. Onewallet uses Google Authenticator, which you will need to download to use this.') %></p>
 
-      <a class="btn btn-primary" id="generateAuthQR"><%- T('Generate QR Code to Scan') %></a>
+      <a class="btn btn-primary" href="javascript:richwallet.controllers.accounts.generateAuthQR();" id="generateAuthQR"><%- T('Generate QR Code to Scan') %></a>
     <% } %>
   </div>
 </div>

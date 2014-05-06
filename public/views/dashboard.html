@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-10 col-lg-offset-1">
-  <% if(false && !richwallet.usingAuthKey) { %>
+  <% if(!richwallet.usingAuthKey) { %>
   <div class="alert alert-info hidden-xs hidden-sm" style="margin-top:10px;"><%= T('twofactor.alert') %></div>
   <% } %>
 

@@ -306,7 +306,7 @@ richwallet.controllers.Accounts.prototype.changeDialog = function(type, message)
   $('#changeMessage').text(message);
 };
 
-$('body').on('click', '#generateAuthQR', function() {
+richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
   var e = $('#generateAuthQR');
   e.addClass('hidden');
 
@@ -322,7 +322,7 @@ $('body').on('click', '#generateAuthQR', function() {
 
     new QRCode(document.getElementById('authQR'), authURI.toString());
     $('#authQR').after(
-      '<form role="form" id="submitAuth">' +
+      '<form role="form" id="submitAuth" onsubmit="richwallet.controllers.accounts.submitAuth(); return false;">' +
         '<p>' + T('Enter code shown on Google Authenticator') + ':</p>' +
         '<input type="hidden" id="authKeyValue" value="'+resp.key+'">' +
         '<div class="form-group">' +
@@ -333,10 +333,11 @@ $('body').on('click', '#generateAuthQR', function() {
       '</form>');
     $('#confirmAuthCode').focus();
   });
-});
+};
 
-$('body').on('submit', '#submitAuth', function() {
+richwallet.controllers.Accounts.prototype.submitAuth = function() {
   var e = $('#submitAuth #confirmAuthCode');
+       console.info($('#authKeyValue').val());
   $.post('api/setAuthKey', {serverKey: richwallet.wallet.serverKey, key: $('#authKeyValue').val(), code: e.val()}, function(res) {
     if(res.set != true) {
       $('#authKey').text(T('Code save failed. Please reload and try again.'));
@@ -345,9 +346,9 @@ $('body').on('submit', '#submitAuth', function() {
       $('#authKey').text(T('Successfully saved! You will now need your device to login.'));
     }
   });
-});
+};
 
-$('body').on('submit', '#disableAuth', function() {
+richwallet.controllers.Accounts.prototype.disableAuth = function() {
   var dialog = $('#disableAuthDialog');
   dialog.addClass('hidden');
   var authCode = $('#disableAuth #disableAuthCode').val();
@@ -363,7 +364,7 @@ $('body').on('submit', '#disableAuth', function() {
     richwallet.controllers.accounts.showSuccessMessage('Two factor authentication has been disabled.');
     richwallet.router.route('dashboard', 'settings');
   });
-});
+};
 
 richwallet.controllers.accounts = new richwallet.controllers.Accounts();
 
