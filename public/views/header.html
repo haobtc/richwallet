@@ -54,7 +54,7 @@
 	  <div class="form-group clearfix">
 	    <label for="amount" class="col-lg-2 control-label"><%- T('Amount') %></label>
 	    <div class="col-lg-4">
-	      <input type="number" step="any" name="amount" class="form-control" onchange="richwallet.controllers.tx.quickCheckValues();"/>
+	      <input type="number" step="any" name="amount" class="form-control" onchange="richwallet.controllers.tx.quickCheckValues();" onkeyup="richwallet.controllers.tx.quickCheckValues();"/>
 	    </div>
 	    <div class="col-lg-5" id="balance">
 	    </div>

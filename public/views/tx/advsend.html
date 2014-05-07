@@ -46,7 +46,7 @@
             <input id="address" type="text" name="address" autocomplete="off" class="form-control" placeholder="<%- T(data.network) + ' ' + T('Address') %>" value="<%- data.toaddress %>" onchange="richwallet.controllers.tx.advCheckValues();">
 	  </div>
 	  <div class="col-lg-2 col-xs-5"style="margin-bottom: 6px;">
-            <input id="amount" type="number" step="any" name="amount" placeholder="<%- T('Amount') %>" class="sendtoAmount form-control" autocomplete="off" placeholder="0.00" onchange="richwallet.controllers.tx.advCheckValues();">
+            <input id="amount" type="number" step="any" name="amount" placeholder="<%- T('Amount') %>" class="sendtoAmount form-control" autocomplete="off" placeholder="0.00" onchange="richwallet.controllers.tx.advCheckValues();" onkeyup="richwallet.controllers.tx.advCheckValues();">
 	  </div>
 	</div>
       </div>

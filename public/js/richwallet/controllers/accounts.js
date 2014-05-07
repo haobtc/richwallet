@@ -45,7 +45,6 @@ richwallet.controllers.Accounts.prototype.signin = function() {
     body.authCode = authCode.val();
 
   $.get('api/wallet', body, function(response) {
-     console.info('response', response);
     if(response.result == 'error') {
       errorDiv.removeClass('hidden');
       errorDiv.text(T(response.message));
