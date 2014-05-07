@@ -6,7 +6,6 @@ richwallet.controllers.Accounts.prototype.requiredPasswordLength = 10;
 
 richwallet.controllers.Accounts.prototype.passwordStrength = {
   enabled: false,
-
   enable: function() {
     if(this.enabled === true)
       return;
@@ -46,6 +45,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
     body.authCode = authCode.val();
 
   $.get('api/wallet', body, function(response) {
+     console.info('response', response);
     if(response.result == 'error') {
       errorDiv.removeClass('hidden');
       errorDiv.text(T(response.message));
@@ -128,7 +128,12 @@ richwallet.controllers.Accounts.prototype.create = function() {
     var walletKey = wallet.createWalletKey(email, password);
 
     richwallet.wallet = wallet;
-
+    var addresses = [];
+    for(var network in richwallet.config.networkConfigs) {
+	 var address = wallet.createNewAddress(network, 'Default');
+	 addresses.push(address);
+     }
+ 
     this.saveWallet({payload: {email: email}}, function(response) {
       if(response.result == 'ok') {
         richwallet.router.listener();
@@ -367,4 +372,3 @@ richwallet.controllers.Accounts.prototype.disableAuth = function() {
 };
 
 richwallet.controllers.accounts = new richwallet.controllers.Accounts();
-
