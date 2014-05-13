@@ -128,6 +128,7 @@
     "YOU MUST REMEMBER ANY CHANGES YOU MAKE HERE. If you forget your email or changed password, you will not be able to access your coin wallet, and the server admin <strong>WILL NOT</strong> be able to reset it. If you lose your login, you will lose your money, forever. Write it down if you have to. <strong>Don't forget it.</strong>": "请务必记住你作的修改，如果忘记了Email地址和修改过的密码，就再也不能访问你的钱包了，管理员也<strong>没有办法</strong>重置这些信息. 丢失了登录信息就表示永远丢失了所有的币. 把这些信息保存在哪里. <strong>千万别忘记</strong>",
     "It is also strongly recommended that you make a <a href=\"#/backup\">backup of your current wallet</a> before making any changes to prevent possible loss of data.": "强烈建议在任何可能导致丢失数据的操作之前对钱包作备份",
     "Change Email": "修改Email",
+    "Wallet was changed elsewhere, reload required!": "钱包在别处被修改，需要重载!",
     "Change Password": "修改密码",
     "Confirm password": "确认密码",
     "New email address": "新的Email地址",

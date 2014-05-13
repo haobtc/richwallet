@@ -62,7 +62,7 @@
         <label for="" class="col-lg-4 control-label"><%- T('Fee') %></label>
         <div class="col-lg-2" id="fee">
           <input id="calculatedFee" class="form-control col-lg-4"
-		 type="text" value="<%- richwallet.config.networkConfigs[data.network].fee %>" onchange="richwallet.controllers.tx.advCheckValues();">
+		 type="number" step="any" value="<%- richwallet.config.networkConfigs[data.network].fee %>" onchange="richwallet.controllers.tx.advCheckValues();">
         </div>
 	<div class="col-lg-4 col-xs-5">
 	  <p style="font-size:15px;line-height:40px;"><%- richwallet.config.networkConfigs[data.network].currency %></p>

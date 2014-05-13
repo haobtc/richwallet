@@ -7,6 +7,7 @@ richwallet.router.render = function(id, path, data, callback) {
 
 richwallet.router.route = function(path) {
   window.location.href = '#/'+path;
+  $(window).scrollTop(0);
 };
 
 var sock = null;
@@ -113,21 +114,18 @@ richwallet.router.map('#/tx/advsend/:network').to(function() {
   });
 });
 
-richwallet.router.map('#/tx/send').to(function() {
-  richwallet.router.initWallet(function(res) {
-    if(res == false)
-      return;
-    richwallet.controllers.tx.send();
-  });
-});
-
-
 richwallet.router.map('#/tx/sendto/:address').to(function() {
   var address = this.params.address;
+
   richwallet.router.initWallet(function(res) {
     if(res == false)
       return;
-    richwallet.controllers.tx.send(address);
+    try {
+	var addr = new Bitcoin.Address(address);
+	richwallet.controllers.tx.advsend(addr.getNetwork(), address);
+    } catch(e) {
+	console.error(e);
+    }
   });
 });
 

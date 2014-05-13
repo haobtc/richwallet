@@ -341,7 +341,6 @@ richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
 
 richwallet.controllers.Accounts.prototype.submitAuth = function() {
   var e = $('#submitAuth #confirmAuthCode');
-       console.info($('#authKeyValue').val());
   $.post('api/setAuthKey', {serverKey: richwallet.wallet.serverKey, key: $('#authKeyValue').val(), code: e.val()}, function(res) {
     if(res.set != true) {
       $('#authKey').text(T('Code save failed. Please reload and try again.'));

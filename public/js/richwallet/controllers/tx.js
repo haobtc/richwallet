@@ -32,36 +32,6 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
   });
 };
 
-richwallet.controllers.Tx.prototype.send = function(toaddress) {
-  var self = this;
-  toaddress = toaddress || '';
-  this.getUnspent(function(resp) {
-    var balances = richwallet.wallet.balanceObject();
-    var balanceLiterals = [];
-    for(var network in richwallet.config.networkConfigs) {
-	//var b = richwallet.wallet.safeUnspentBalance(network);
-	var b = balances[network];
-	if(b) {
-	    balanceLiterals.push(b + ' ' + richwallet.config.networkConfigs[network].currency);
-	}
-    }
-
-    richwallet.router.render(
-	'view',
-	'tx/send', 
-	{balances:balances,
-	 toaddress:toaddress,
-	balanceLiterals: balanceLiterals},
-	function(id) {
-	    $('#'+id+" [rel='tooltip']").tooltip();
-	    if(toaddress) {
-		$('#' + id + ' #address').change();
-	    }
-	    self.calculateFee();
-	});
-  });
-};
-
 richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
   var self = this;
   toaddress = toaddress || '';
@@ -80,88 +50,7 @@ richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
 	    if(toaddress) {
 		$('#' + id + ' #address').change();
 	    }
-	    self.calculateFee();
 	});
-  });
-};
-
-richwallet.controllers.Tx.prototype.create = function() {
-  var self = this;
-  var sendButton = $('#sendButton');
-  sendButton.addClass('disabled');
-  var address = $('#createSendForm #address').val();
-  var amount = $('#createSendForm #amount').val();
-  var errors = [];
-  var errorsDiv = $('#errors');
-  var toAddress;
-  
-  this.calculateFee();
-  var calculatedFee = $('#calculatedFee').val();
-    
-  errorsDiv.addClass('hidden');
-  errorsDiv.html('');
-
-  if(address == '')
-    errors.push('You cannot have a blank sending address.');
-  else {
-    try {
-      toAddress = new Bitcoin.Address(address);
-    } catch (e) {
-	console.error('addr', address, e);
-      errors.push('The provided bitcoin address is not valid.');
-    }
-  }
-
-  var myAddresses = richwallet.wallet.addresses(toAddress.getNetwork());
-  
-  for(var i=0; i<myAddresses.length;i++) {
-    if(myAddresses[i].address == address)
-      errors.push('You cannot send to your own bitcoin wallet.');
-  }
-
-  if(amount == '' || parseFloat(amount) == 0)
-    errors.push('You must have a valid amount to send.');
-  else if(/^[0-9]+$|^[0-9]+\.[0-9]+$|^\.[0-9]+$/.exec(amount) === null)
-    errors.push('You must have a valid amount to send.');
-  else if(richwallet.wallet.safeUnspentBalance(toAddress.getNetwork()).lessThan(new BigNumber(amount).plus(calculatedFee))) {
-    errors.push('Cannot spend more bitcoins than you currently have.');
-  }
-
-  if(errors.length > 0) {
-    this.displayErrors(errors, errorsDiv);
-    sendButton.removeClass('disabled');
-    return;
-  }
-
-  var changeAddress = this.ensureChangeAddress(toAddress);
-  var tx = richwallet.wallet.createTx(amount, calculatedFee, address, changeAddress);
-  self.saveWallet({override: true, address: changeAddress}, function(response) {
-      richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
-      $.ajax({
-	  url: 'api/infoproxy/sendtx/' + toAddress.getNetwork(),
-	  data: JSON.stringify({rawtx: tx.raw}),
-	  contentType: 'application/json',
-	  dataType: 'json',
-	  type: 'POST',
-	  processData: false,
-	  success: function(resp) {
-	      if(resp.error) {
-		  console.error('send raw transaction error', resp.error);
-		  return;
-	      }
-	      var addrObj = new Bitcoin.Address(address);
-	      self.showSuccessMessage(T("Sent %s %s to %s", amount,
-					addrObj.networkConfig().currency,
-					address));
-	      
-	      richwallet.wallet.addTx(tx, amount, calculatedFee, address, changeAddress);
-	      delete richwallet.wallet.sendingTXIDs[tx.obj.getHash()];
-	      self.getUnspent(function() {
-		  richwallet.router.route('dashboard');
-	      });
-	  }
-      });
-      return;
   });
 };
 
@@ -174,83 +63,6 @@ richwallet.controllers.Tx.prototype.displayErrors = function(errors, errorsDiv) 
     }
     return;
   }
-};
-
-richwallet.controllers.Tx.prototype.ensureChangeAddress = function(addrObj) {
-   // Currently isChange is in fact disabled
-  var changeAddress = $('#changeAddress').val();
-/*  if(changeAddress == '') {
-      var recvAddresses = richwallet.wallet.receiveAddresses(addrObj.getNetwork());
-      if (recvAddresses.length > 0) {
-	  changeAddress = recvAddresses[0].address;
-      }
-  }
-  if(changeAddress == '') {
-
-    changeAddress = richwallet.wallet.createNewAddress(addrObj.getNetwork(), 'Default', false);
-  }
-  $('#changeAddress').val(changeAddress); */
-  return changeAddress;
-};
-
-richwallet.controllers.Tx.prototype.calculateFee = function() {
-  var address = $('#address').val();
-  var amount = $('#amount').val();
-  var sendAmount = $('#sendAmount');
-
-  if(amount == '') {
-      amount = '0.0';
-  }
-  if(amount == sendAmount.val())
-    return;
-  else
-    sendAmount.val(amount);
-
-  if(address == '')
-    return;
-
-  var calculatedFee = $('#calculatedFee').val();  
-  try {
-      var addrObj = new Bitcoin.Address(address);
-  } catch(e) {
-      console.error(e);
-      return;
-  }
-  var changeAddress = this.ensureChangeAddress(addrObj);
-
-  var errors = [];
-
-  try {
-      var calculatedFee = richwallet.wallet.calculateFee(amount, address, changeAddress);
-      $('#calculatedFee').val(calculatedFee);
-      $('#fee').text(richwallet.wallet.calculateFee(amount, address, changeAddress)+' ' + addrObj.networkConfig().currency);
-  } catch(e) {
-      errors.push(e);
-  }
-
-  if(errors.length > 0) {
-      this.displayErrors(errors, $('#errors'));
-  }
-};
-
-richwallet.controllers.Tx.prototype.calculateUnspentBalance = function() {
-    var network = '';
-    var address = $('#address').val();
-    try{
-	var addr = new Bitcoin.Address(address);
-	network = addr.getNetwork();
-    }catch(e) {
-	network = '';
-    }
-    if(network) {
-	var balance = richwallet.wallet.safeUnspentBalance(network);
-	var currency = richwallet.config.networkConfigs[network].currency;
-	$('#availableBalance').html('' + balance + ' ' + currency);
-	$('#availableBalance').parents('.row').show();
-    } else {
-	$('#availableBalance').html('');
-	$('#availableBalance').parents('.row').hide();
-    }
 };
 
 richwallet.controllers.Tx.prototype.scanQR = function(event) {
@@ -400,7 +212,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
 	    enableButton = false;
 	}
 	if(hasError) {
-	    console.info('error on sending', errorMessages);
+	    console.error('error on sending', errorMessages);
 	    $(this).parent().addClass('has-error');
 	    if(enableButton) {
 		enableButton = false;
@@ -534,6 +346,12 @@ richwallet.controllers.Tx.prototype.quickCheckValues = function() {
     } else {
 	addressDom.parent().removeClass('has-error');
     }
+    if(network) {
+	$('#quickToCustomSend').removeClass('disabled');
+    } else {
+	$('#quickToCustomSend').addClass('disabled');
+    }
+
     if(balance) {
 	$('#quickSend #balance').html(
 	    T("Balance %s %s", balance.toString(),
@@ -627,6 +445,22 @@ richwallet.controllers.Tx.prototype.quickCreate = function() {
 	    }
 	});
     });
+};
+
+richwallet.controllers.Tx.prototype.quickToCustom = function() {
+    var addressDom = $('#quickSend input[name=address]');
+    var addressString = addressDom.val();
+
+    if(addressString) {
+	try {
+	    var addr = new Bitcoin.Address(addressString);
+	    var network = addr.getNetwork();
+	    richwallet.router.route('tx/sendto/' + addressString);
+	} catch(e) {
+	    console.error(e);
+	}
+    }
+    $('#quickSend').modal('toggle');
 };
 
 richwallet.controllers.tx = new richwallet.controllers.Tx();

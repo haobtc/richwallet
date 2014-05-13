@@ -13,11 +13,11 @@
       <% if(richwallet.wallet) { %>
         <li><a href="#/dashboard"><i class="fa fa-bars"></i> <%- T('Transactions') %></a></li>
         <li><a href="#/addresses/list"><i class="fa fa-arrow-down"></i> <%- T('Receive') %></a></li>
-        <li><a href="javascript:richwallet.controllers.tx.showQuickSend();"><i class="fa fa-arrow-up"></i> <%- T('Quick Send') %></a></li>
+<!--        <li><a href="javascript:richwallet.controllers.tx.showQuickSend();"><i class="fa fa-arrow-up"></i> <%- T('Quick Send') %></a></li> -->
 	<li class="dropdown">
 	  <a class="dropdown-toggle" href="#" data-toggle="dropdown">
 	    <i class="fa fa-arrow-up"></i> 
-	    <%- T('Custom Send') %></a>
+	    <%- T('Send') %></a>
 	  <ul class="dropdown-menu">
 	    <% for(var network in richwallet.config.networkConfigs) {%>
 	    <li><a href="#/tx/advsend/<%- network %>"><%- T(network) %></a></li>
@@ -29,8 +29,16 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <% if(richwallet.wallet) { %>
-        <li><a href="#/account/settings"><strong><i class="fa fa-user"></i> <%- richwallet.wallet.walletId %></strong></a></li>
-        <li><a href="#/signout" onclick="if(!confirm(T('Really quit?'))){ return false;}"><i class="fa fa-sign-out"></i> <%- T('Signout') %></a></li>
+	<li class="dropdown">
+	  <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+	    <strong><i class="fa fa-user"></i>
+	    <%- richwallet.wallet.walletId %></strong></a>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><a href="#/account/settings"><i class="fa fa-cog"></i> <%- T('Settings') %></a></li>
+	    <li><a href="#/signout" onclick="if(!confirm(T('Really quit?'))){ return false;}"><i class="fa fa-sign-out"></i><%- T('Signout') %></a></li>
+	  </ul>
+	</li>
       <% } else { %>
         <li><a href="#/signup"><i class="fa fa-sign-in"></i> <%- T('Signup') %></a></li>
       <% } %>
@@ -62,6 +70,7 @@
 	</div>
 	<div class="modal-footer">
 	   <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+	   <button type="button" id="quickToCustomSend" class="btn btn-primary disabled" onclick="richwallet.controllers.tx.quickToCustom();" data-dismiss="modal"><%- T('Custom Send') %></button>
            <button type="submit" id="quickSendButton" class="btn btn-primary"><%- T('Send') %></button>
 	</div>
 	</form>

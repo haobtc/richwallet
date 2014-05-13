@@ -560,13 +560,14 @@ richwallet.Wallet = function(walletKey, walletId) {
       return {network: network, unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
   };
 
-  this.calculateFee = function(amtString, addressString, changeAddress) {
+/*  this.calculateFee = function(amtString, addressString, changeAddress) {
     var tx = this.createTx(amtString, 0, addressString, changeAddress);
     var addr = new Bitcoin.Address(addressString);
     var txSize = tx.raw.length / 2;
     var fee = Math.ceil(txSize/1000)*addr.networkConfig().fee;
     return fee;    
   };
+*/
 
   this.feeOfTx = function(network, tx) {
       var txSize = tx.raw.length / 2;
