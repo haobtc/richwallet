@@ -320,11 +320,14 @@ richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
     var authURI = new URI({
       protocol: 'otpauth',
       hostname: 'totp',
-      path: 'Richwallet:'+richwallet.wallet.walletId
+      path: richwallet.wallet.walletId
     });
     authURI.setSearch({issuer: 'OneWallet', secret: resp.key});
 
-    new QRCode(document.getElementById('authQR'), authURI.toString());
+    new QRCode(document.getElementById('authQR'), {
+	text: authURI.toString(),
+	correctLevel: QRCode.CorrectLevel.M
+    });
     $('#authQR').after(
       '<form role="form" id="submitAuth" onsubmit="richwallet.controllers.accounts.submitAuth(); return false;">' +
         '<p>' + T('Enter code shown on Google Authenticator') + ':</p>' +
@@ -364,7 +367,7 @@ richwallet.controllers.Accounts.prototype.disableAuth = function() {
     }
 
     richwallet.usingAuthKey = false;
-    richwallet.controllers.accounts.showSuccessMessage('Two factor authentication has been disabled.');
+    richwallet.controllers.accounts.showSuccessMessage(T('Two factor authentication has been disabled.'));
     richwallet.router.route('dashboard', 'settings');
   });
 };

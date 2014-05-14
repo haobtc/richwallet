@@ -52,7 +52,10 @@ richwallet.controllers.Addresses.prototype.drawRequestQR = function(address) {
     uri.addQuery('message', message);
 
   $('#qrcode').html('');
-  new QRCode(document.getElementById('qrcode'), uri.toString().replace('://', ':'));
+  new QRCode(document.getElementById('qrcode'), {
+      text: uri.toString().replace('://', ':'),
+      correctLevel: QRCode.CorrectLevel.M
+  });
 }
 
 richwallet.controllers.addresses = new richwallet.controllers.Addresses();
