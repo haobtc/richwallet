@@ -38,6 +38,11 @@
           <label for="password_confirm" class="control-label"><%- T('Confirm your password') %></label>
           <input id="password_confirm" type="password" placeholder="<%- T('Confirm your password') %>" autocomplete="off" onfocus="richwallet.controllers.accounts.passwordStrength.enable()" class="form-control">
         </div>
+
+        <div class="form-group hidden">
+          <label for="password_confirm" class="control-label"><%- T('Email Activation Code') %></label>
+          <input id="email_active_code" type="text" placeholder="<%- T('Input the activate code to ensure a real email.') %>" autocomplete="off" class="form-control">
+        </div>
     
         <div>
           <button id="createAccountButton" class="btn btn-large btn-success" href="#" style="margin-top: 10px" onclick="richwallet.controllers.accounts.create(); return false"><i class="fa fa-user"></i> <%- T('Create Account') %></button>

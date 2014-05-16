@@ -70,7 +70,7 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
 
   if(!data.payload.wallet)
     data.payload.wallet = richwallet.wallet.encryptPayload();
-
+  data.payload.addresses = richwallet.wallet.addressHashes();
   data.payload.originalPayloadHash = richwallet.wallet.payloadHash;
   data.payload.newPayloadHash = richwallet.wallet.newPayloadHash;
 

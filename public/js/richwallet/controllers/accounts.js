@@ -96,9 +96,10 @@ richwallet.controllers.Accounts.prototype.create = function() {
   var email = $('#email').val();
   var password = $('#password').val();
   var passwordConfirm = $('#password_confirm').val();
+  var emailActiveCode = $('#email_active_code').val();
   var errors = [];
 
-  if(/.+@.+\..+/.exec(email) === null)
+  if(/.+@[\w\-\.]+\.[\w\-]+$/.exec(email) === null)
     errors.push('Email is not valid.');
 
   if(password === '')
@@ -109,6 +110,8 @@ richwallet.controllers.Accounts.prototype.create = function() {
 
   if(password.length < this.requiredPasswordLength)
     errors.push('Password must be at least 10 characters.');
+
+  
 
   var errorsDiv = $('#errors');
 
@@ -125,26 +128,32 @@ richwallet.controllers.Accounts.prototype.create = function() {
 
     var wallet = new richwallet.Wallet();
     var walletKey = wallet.createWalletKey(email, password);
-
-    richwallet.wallet = wallet;
     var addresses = [];
     for(var network in richwallet.config.networkConfigs) {
 	 var address = wallet.createNewAddress(network, 'Default');
 	 addresses.push(address);
      }
- 
-    this.saveWallet({payload: {email: email}}, function(response) {
+    richwallet.wallet = wallet;
+
+    this.saveWallet({
+	payload: {email: email, 
+		  emailActiveCode:emailActiveCode}}, function(response) {
       if(response.result == 'ok') {
         richwallet.router.listener();
         richwallet.router.route('dashboard');
       } else if(response.result == 'exists'){
-        richwallet.wallet.loadPayload(response.wallet);
-        richwallet.router.listener();
-        richwallet.router.route('dashboard');
+	delete richwallet.wallet;
+        errorsDiv.html(T('Wallet already exists, you want to <a href="#/signin">sign in</a> instead.'));
+        errorsDiv.removeClass('hidden');
+        self.enableSubmitButton();
+      } else if(response.result == 'requireAuthCode') {
+	  $('#email_active_code').parents('.form-group').removeClass('hidden');
+	  self.enableSubmitButton();
       } else {
+	delete richwallet.wallet;
         errorsDiv.html('');
         for(var i=0;i<response.messages.length;i++) {
-          errorsDiv.html(errorsDiv.html() + richwallet.utils.stripTags(response.messages[i]) + '<br>');
+          errorsDiv.html(errorsDiv.html() + richwallet.utils.stripTags(T(response.messages[i])) + '<br>');
         }
         $('#errors').removeClass('hidden');
         self.enableSubmitButton();

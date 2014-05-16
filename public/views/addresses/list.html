@@ -90,9 +90,9 @@
       <div>
         <%- T('Label') %> <small>(<%- T('optional') %>)</small>: <input id="addressLabel" type="text" style="width: 200px">
 	<select id="addressNetwork">
-	  <% for(var network in richwallet.config.networkConfigs) { %>
+	  <% _.map(richwallet.config.sortedNetworks, function(network){ %>
 	  <option value="<%- network %>"><%- T(network) %></option>
-	  <% } %>
+	  <% }); %>
 	</select>
 	<button class="btn btn-primary"><i class="fa fa-plus"></i> <%- T('Generate') %></button>
         <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">

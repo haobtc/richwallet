@@ -3,17 +3,20 @@
 	"litecoin": {"leadingChar": "L", 
 		     "version": 48, "p2sh": 5, "keyVersion":121,
 		     "currency": "LTC",		     
-		    "fee": 0.001
+		    "fee": 0.001,
+		     "sortIndex": 1
 		    },
 	"bitcoin": {"leadingChar": "1", 
 		    "version": 0, "p2sh": 1, "keyVersion":128,
 		    "currency": "BTC",
-		    "fee": 0.0001
+		    "fee": 0.0001,
+		    "sortIndex": 10
 		   },
 	"dogecoin": {"leadingChar": "D", 
 		    "version": 30, "p2sh": 4, "keyVersion":126,
 		    "currency": "DOG",
-		    "fee": 1.0
+		    "fee": 1.0,
+		     "sortIndex": 100
 		   }
     },
   "mailer": {
@@ -34,5 +37,6 @@
       "indexeddb": {"sqlite3Path": "rw.db"}
   },
   "httpPort": 8080,
+  "authCodeSalt": "werNiosWE@#s8",
   "blockInfoServer": "http://block.so"
 }

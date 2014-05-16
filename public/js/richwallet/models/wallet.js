@@ -350,10 +350,10 @@ richwallet.Wallet = function(walletKey, walletId) {
 	  balanceMap[uspt.network] = amount.plus(new BigNumber(uspt.amount));
       }
       var balances = [];
-      for(var network in richwallet.config.networkConfigs) {
+      _.map(richwallet.config.sortedNetworks, function(network) {
 	  var amount = balanceMap[network] || new BigNumber(0);
 	  balances.push({network: network, amount: amount});
-      }
+      });
       return balances;
   };
 

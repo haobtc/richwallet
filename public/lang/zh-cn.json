@@ -23,6 +23,9 @@
     "Wallet not found or invalid password": "无法找到钱包或者密码错误",
     "Error retreiving wallet": "获取钱包时发生错误",
     "Send to": "发送到",
+    "Input the activate code to ensure a real email.": "输入邮件中的激活码确认Email的真实性.",
+    "Email Activation Code": "发送到Email的激活码",
+    "Email address already exists": "Email地址已经存在",
 
     "Strongly Confirmed": "完全确认",
     "Soft Confirmed": "部分确认",
@@ -36,6 +39,7 @@
     "New User?": "新用户?",
     "Import a wallet?": "导入钱包?",
     "Import": "导入",
+    "Wallet already exists, you want to <a href=\"#/signin\">sign in</a> instead.": "钱包已经存在，请<a href=\"#/signin\">登录</a>进入.",
 
     "Two factor authentication code needed": "需要两步身份验证代码",
     "Two factor authentication code was invalid": "两步身份验证代码错误",
