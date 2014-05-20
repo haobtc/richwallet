@@ -187,10 +187,15 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
 
       richwallet.wallet = wallet;
 
-      self.saveWallet({}, function(resp) {
+      self.saveWallet({email:id}, function(resp) {
         if(resp.result == 'exists') {
           $('#importErrorDialog').removeClass('hidden');
           $('#importErrorMessage').text('Cannot import your wallet, because the wallet already exists on this server.');
+          button.removeAttr('disabled');
+          return;
+	} else if (resp.result == 'error') {
+          $('#importErrorDialog').removeClass('hidden');
+          $('#importErrorMessage').html(resp.messages.join('<br/>'));
           button.removeAttr('disabled');
           return;
         } else {
