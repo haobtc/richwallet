@@ -1,7 +1,7 @@
 {
   "name": "richwallet",
   "description": "DIY Multi Encryptcoin Wallet Service",
-  "version": "0.2.1",
+  "version": "0.2.17",
   "directories": {
     "lib": "./lib"
   },
@@ -43,6 +43,7 @@
   },
   "scripts": {
     "test": "NODE_ENV=test istanbul test ./node_modules/.bin/_mocha -- --reporter list test/coinpunk/*",
-    "browsertest": "./node_modules/.bin/_mocha --reporter list test/browser/functional.js"
+    "browsertest": "./node_modules/.bin/_mocha --reporter list test/browser/functional.js",
+    "grunt": "./node_modules/.bin/grunt"
   }
 }

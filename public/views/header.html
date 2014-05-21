@@ -19,9 +19,10 @@
 	    <i class="fa fa-arrow-up"></i> 
 	    <%- T('Send') %></a>
 	  <ul class="dropdown-menu">
-	    <% for(var network in richwallet.config.networkConfigs) {%>
+	    <% _.map(richwallet.config.sortedNetworks, function(network) {%>
 	    <li><a href="#/tx/advsend/<%- network %>"><%- T(network) %></a></li>
-	    <% } %>
+	    <% }); %>
+	    <li><a href="javascript:richwallet.controllers.tx.showQuickSend();"><%- T('Quick Send') %></a></li>
 	  </ul>
 	</li>
         <li class="hidden-xs hidden-sm"><a href="#/backup"><i class="fa fa-download"></i> <%- T('Backup') %></a></li>

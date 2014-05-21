@@ -1,3 +1,5 @@
+var minAmount = new BigNumber('0.00000001');
+
 richwallet.controllers.Tx = function() {};
 richwallet.controllers.Tx.prototype = new richwallet.Controller();
 
@@ -156,13 +158,15 @@ richwallet.controllers.Tx.prototype.advSelectAllAddresses = function() {
      $('#fromAddresses input[type=checkbox]').prop('checked', 'checked');
 };
 
+
 richwallet.controllers.Tx.prototype.advCheckValues = function() {
     var network = $('#sendBlock').attr('rel');
     var sumInputAmount = new BigNumber(0);
     var sumOutputAmount = new BigNumber(0);
     var enableButton = true;
     var errorMessages = [];
-    
+
+
     $('#fromAddresses input:checked').each(function() {
 	//var amount = parseFloat($(this).val());
 	var amount = richwallet.utils.parseBigNumber($(this).val());
@@ -198,7 +202,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
 	var hasError = false;
 	if(amountString) {
 	    var amount = richwallet.utils.parseBigNumber(amountString);
-	    if(isNaN(amount) || amount.comparedTo(0) <= 0) {
+	    if(isNaN(amount) || amount.comparedTo(minAmount) <= 0) {
 		errorMessages.push('illegal amount');
 		hasError = true;
 	    }
@@ -227,7 +231,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
     var hasError = false;
     if(feeString) {
 	var fee = richwallet.utils.parseBigNumber(feeString);
-	if(isNaN(fee) || fee.comparedTo(0) < 0 ||
+	if(isNaN(fee) || fee.comparedTo(minAmount) < 0 ||
 	   sumOutputAmount.plus(fee).comparedTo(sumInputAmount) > 0) {
 	    hasError = true;
 	}
@@ -365,7 +369,7 @@ richwallet.controllers.Tx.prototype.quickCheckValues = function() {
     if(!hasError) {
 	if(amountString) {
 	    var amount = richwallet.utils.parseBigNumber(amountString);
-	    if(isNaN(amount) || amount.comparedTo(0) <= 0) {
+	    if(isNaN(amount) || amount.comparedTo(minAmount) <= 0) {
 		errorMessages.push('Illegal amount');
 		hasError = true;
 	    } else {
