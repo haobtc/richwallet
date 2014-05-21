@@ -1,10 +1,14 @@
 CACHE MANIFEST
-# v0.2.20
+# v0.2.21
 
 index.html
 js/all.js
 js/lib/bitcoinjs.js
 css/all.css
+
+images/switch/mask.png
+images/switch/mask-square.png
+
 fonts/droidsans-bold.ttf
 fonts/droidsans.ttf
 fonts/fontawesome-webfont.eot?v=4.0.3

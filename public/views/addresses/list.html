@@ -11,26 +11,38 @@
       <% if(data.addresses.length == 0) {%>
         <h4><%- T('No receive address yet.') %></h4>
       <% } else { %>
+      <% var zeroAddresses = 0; %>
+      <div class="clearfix">
+	<div style="float:right"><input type="checkbox" data-toggle="switch" id="zero-balance-toggle" <% if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden()){ %>checked<% } %>></div>
+	<label style="float:right;marin-right:30px; line-height: 1.4;padding-top:5px;font-size:15px;"><%- T("Hide 0 balance address") %>&nbsp;</label>
+      </div>
         
         <div class="hidden-lg hidden-md">
           <% for(var i=0;i<data.addresses.length;i++) { %>
-          <div class="row">
-            <div class="col-md-6">
-              <div>
-                <strong><%- data.addresses[i].name || T('No Label') %></strong>
-                <span class="addExchangePrice pull-right" style="color: #33CC33;">
-                  <%- data.balances[data.addresses[i].address] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
-                </span>
+	    <% if(! data.balances[data.addresses[i].address]) zeroAddresses++; %>
+	    <%
+	       var zeroBalanceClass = "zero-balance";
+	       var zeroHiddenClass = "";
+	       if(data.balances[data.addresses[i].address])
+	         zeroBalanceClass = "";
+	       else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
+	         zeroHiddenClass = "hidden";
+	    %>
+              <div class="row <%- zeroBalanceClass %> <%- zeroHiddenClass %>">
+		<div class="col-md-6">
+		  <div>
+                    <strong><%- data.addresses[i].name || T('No Label') %></strong>
+                    <span class="addExchangePrice pull-right" style="color: #33CC33;">
+                      <%- data.balances[data.addresses[i].address] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                    </span>
+		  </div>
+		  <div><%- data.addresses[i].address %></div>
+		  <div><a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> Request Payment</a></div>
+		</div>
+		<hr>
               </div>
-              <div><%- data.addresses[i].address %></div>
-              
-              <div><a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> Request Payment</a></div>
-            </div>
-          </div>
-          <hr>
           <% } %>
         </div>
-        
         <div class="visible-md visible-lg">
           <table class="table table-bordered table-striped table-hover">
             <thead>
@@ -50,33 +62,43 @@
             </thead>
             <tbody>
               <% for(var i=0; i<data.addresses.length; i++) { %>
-                <% if(true || !data.addresses[i].isChange) { %>
-                  <tr>
-                    <td><%- data.addresses[i].name %></td>
-                    <td><%- data.addresses[i].address %></td>
-                    <td><%- T(data.addresses[i].network)  %></td>
-                    <td>
-                      <span class="addExchangePrice">
-                        <%- data.balances[data.addresses[i].address] || 0 %>  <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
-                      </span>
-                    </td>
-                    <td>
-                      <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
-                      <!--
-                      <a href="#" class="btn btn-info"><i class="fa fa-edit"></i> Edit Label</a>
-                      <a href="#" class="btn btn-danger"><i class="fa fa-archive"></i> Archive</a>
-                      -->
-                    </td>
-                    <!--
-                    <td>Create Paper Wallet</td>
-                    <td>Generate</td>
-                    -->
-                  </tr>
-                <% } %>
-              <% } %>
+		 <%
+		    var zeroBalanceClass = "zero-balance";
+		    var zeroHiddenClass = "";
+		    if(data.balances[data.addresses[i].address])
+	              zeroBalanceClass = "";
+		    else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
+	              zeroHiddenClass = "hidden";
+		 %>
+                 <tr class="<%- zeroBalanceClass %> <%- zeroHiddenClass %>">
+                   <td><%- data.addresses[i].name %></td>
+                   <td><%- data.addresses[i].address %></td>
+                   <td><%- T(data.addresses[i].network)  %></td>
+                   <td>
+                     <span class="addExchangePrice">
+                       <%- data.balances[data.addresses[i].address] || 0 %>  <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                     </span>
+                   </td>
+                   <td>
+                     <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-primary"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
+                     <!--
+			 <a href="#" class="btn btn-info"><i class="fa fa-edit"></i> Edit Label</a>
+			 <a href="#" class="btn btn-danger"><i class="fa fa-archive"></i> Archive</a>
+			 -->
+                   </td>
+                   <!--
+                       <td>Create Paper Wallet</td>
+                   <td>Generate</td>
+                   -->
+                 </tr>
+		<% } %>
             </tbody>
           </table>
         </div>
+	<div style="text-align:right;" class="zero-balance-show <% if(!richwallet.controllers.addresses.isZeroBalanceAddressesHidden()) { %>hidden<% } %>">
+	  <label style="font-size:15px;line-height:30px;"><%- T("%s addresses has been hidden.", zeroAddresses) %></label>
+	  <button type="button" class="btn btn-link" onclick="$('#zero-balance-toggle').parents('div.switch').bootstrapSwitch('toggleState',true);"><%- T('Show') %></button>
+	</div>
 
       <% } %>
     </div>
@@ -103,3 +125,4 @@
     </form>
   </div>
 </div>
+<script>$("#zero-balance-toggle").wrap('<div class="switch" />').parent().bootstrapSwitch().on("switch-change",function(e,v){richwallet.controllers.addresses.toggleZeroBalanceAddressesHidden(v.value);});</script>

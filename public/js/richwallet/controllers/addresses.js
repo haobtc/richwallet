@@ -26,6 +26,24 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
   });
 };
 
+richwallet.controllers.Addresses.prototype.isZeroBalanceAddressesHidden = function(){
+  return richwallet.localProfile.get("isZeroBalanceAddressesHidden");
+}
+
+richwallet.controllers.Addresses.prototype.toggleZeroBalanceAddressesHidden = function(hidden){
+  richwallet.localProfile.set("isZeroBalanceAddressesHidden", hidden);
+  if(hidden){
+    $(".zero-balance").addClass("hidden");
+    $(".zero-balance-show").removeClass("hidden");
+    //$("#zero-balance-toggle").parent("div.switch").setStatus(true, true);
+  }
+  else{
+    $(".zero-balance").removeClass("hidden");
+    $(".zero-balance-show").addClass("hidden");
+    //$("#zero-balance-toggle").parent("div.switch").setStatus(false, true);
+  }
+}
+
 richwallet.controllers.Addresses.prototype.request = function(address) {
   var self = this;
   var addr = new Bitcoin.Address(address);

@@ -63,6 +63,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       errorDiv.addClass('hidden');
       wallet.loadPayload(response.wallet);
       richwallet.wallet = wallet;
+      richwallet.localProfile = new richwallet.LocalProfile(id);
       richwallet.router.listener();
       richwallet.router.route('dashboard');
     }
@@ -133,6 +134,7 @@ richwallet.controllers.Accounts.prototype.create = function() {
 	 var address = wallet.createNewAddress(network, 'Default');
 	 addresses.push(address);
      }
+    richwallet.localProfile = new richwallet.LocalProfile(email);
 
     this.saveWallet(wallet,
 		    {payload: {email: email,

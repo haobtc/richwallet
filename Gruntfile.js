@@ -29,6 +29,7 @@ module.exports = function(grunt) {
           'public/js/all.js': [
             'public/js/lib/jquery.js',
             'public/js/lib/bootstrap.js',
+	    'public/js/lib/bootstrap-switch.js',
             'public/js/lib/underscore.js',
             'public/js/lib/password_strength.js',
             'public/js/lib/jquery.strength.js',
@@ -62,6 +63,7 @@ module.exports = function(grunt) {
             'public/js/richwallet/template.js',
             'public/js/richwallet/models/database.js',
             'public/js/richwallet/models/wallet.js',
+	    'public/js/richwallet/models/localprofile.js',
             'public/js/richwallet/controller.js',
             'public/js/richwallet/controllers/accounts.js',
             'public/js/richwallet/controllers/addresses.js',
