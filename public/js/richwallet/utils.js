@@ -20,7 +20,7 @@ richwallet.utils.shortText = function(text, secLength) {
 };
 
 richwallet.utils.amountToSatoshi = function(amount) {
-    var amountSatoshiString = new BigNumber(amount).times(Math.pow(10,8)).toString();
+    var amountSatoshiString = new BigNumber(amount).times(Math.pow(10,8)).round().toString();
     return new Bitcoin.BigInteger(amountSatoshiString);
 };
 
