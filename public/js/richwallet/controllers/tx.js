@@ -286,7 +286,7 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
     var self = this;
     richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
 
-    self.saveWallet({override: true}, function(response) {
+    self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
 	    url: 'api/infoproxy/sendtx/' + network,
 	    data: JSON.stringify({rawtx: tx.raw}),
@@ -422,7 +422,7 @@ richwallet.controllers.Tx.prototype.quickCreate = function() {
 				       [{address:address, amount:amount}],
 				       fee);
     var self = this;
-    self.saveWallet({override: true}, function(response) {
+    self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
 	    url: 'api/infoproxy/sendtx/' + network,
 	    data: JSON.stringify({rawtx: tx.raw}),

@@ -52,27 +52,26 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
   if(richwallet.wallet.mergeUnspent(unspent) == true)
-    this.saveWallet({override: true}, callback);
+    this.saveWallet(richwallet.wallet, {override: true}, callback);
   else if(typeof callback == 'function')
     callback();
 };
 
-richwallet.Controller.prototype.saveWallet = function(data, callback) {
+richwallet.Controller.prototype.saveWallet = function(wallet, data, callback) {
   var self = this;
   var data = data || {};
-  data.serverKey = richwallet.wallet.serverKey;
+  data.serverKey = wallet.serverKey;
 
   if(!data.payload)
     data.payload = {};
 
   if(!data.payload.email)
-    data.payload.email = richwallet.wallet.walletId;
+    data.payload.email = wallet.walletId;
 
-  if(!data.payload.wallet)
-    data.payload.wallet = richwallet.wallet.encryptPayload();
-  data.payload.addresses = richwallet.wallet.addressHashes();
-  data.payload.originalPayloadHash = richwallet.wallet.payloadHash;
-  data.payload.newPayloadHash = richwallet.wallet.newPayloadHash;
+  data.payload.wallet = wallet.encryptPayload();
+  data.payload.addresses = wallet.addressHashes();
+  data.payload.originalPayloadHash = wallet.payloadHash;
+  data.payload.newPayloadHash = wallet.newPayloadHash;
 
   $.ajax({
     type: 'POST',
@@ -86,7 +85,7 @@ richwallet.Controller.prototype.saveWallet = function(data, callback) {
         //richwallet.wallet.mergePayload(response.wallet);
         //return self.saveWallet({override: true}, callback);
       }
-      richwallet.wallet.payloadHash = richwallet.wallet.newPayloadHash;
+      wallet.payloadHash = wallet.newPayloadHash;
       if(callback) {
         callback(response);
       }

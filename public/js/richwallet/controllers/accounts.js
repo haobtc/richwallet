@@ -133,17 +133,16 @@ richwallet.controllers.Accounts.prototype.create = function() {
 	 var address = wallet.createNewAddress(network, 'Default');
 	 addresses.push(address);
      }
-    richwallet.wallet = wallet;
 
-    this.saveWallet({
-      payload: {email: email,
-		emailActiveCode:emailActiveCode},
-      backup: true}, function(response) {
+    this.saveWallet(wallet,
+		    {payload: {email: email,
+			       emailActiveCode:emailActiveCode},
+		     backup: true}, function(response) {
       if(response.result == 'ok') {
+	richwallet.wallet = wallet;
         richwallet.router.listener();
         richwallet.router.route('dashboard');
       } else if(response.result == 'exists'){
-	delete richwallet.wallet;
         errorsDiv.html(T('Wallet already exists, you want to <a href="#/signin">sign in</a> instead.'));
         errorsDiv.removeClass('hidden');
         self.enableSubmitButton();
@@ -151,7 +150,6 @@ richwallet.controllers.Accounts.prototype.create = function() {
 	  $('#email_active_code').parents('.form-group').removeClass('hidden');
 	  self.enableSubmitButton();
       } else {
-	delete richwallet.wallet;
         errorsDiv.html('');
         for(var i=0;i<response.messages.length;i++) {
           errorsDiv.html(errorsDiv.html() + richwallet.utils.stripTags(T(response.messages[i])) + '<br>');
@@ -186,9 +184,8 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
     if(wallet.transactions && wallet.addresses()) {
       var payload = wallet.encryptPayload();
 
-      richwallet.wallet = wallet;
 
-      self.saveWallet({email:id}, function(resp) {
+      self.saveWallet(wallet, {email:id}, function(resp) {
         if(resp.result == 'exists') {
           $('#importErrorDialog').removeClass('hidden');
           $('#importErrorMessage').text('Cannot import your wallet, because the wallet already exists on this server.');
@@ -200,6 +197,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
           button.removeAttr('disabled');
           return;
         } else {
+	  richwallet.wallet = wallet;
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
           self.showSuccessMessage(msg);
@@ -227,6 +225,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
   var passwordObj = $('#changeEmailPassword');
   var id = idObj.val();
   var password = passwordObj.val();
+  var emailActiveCode = $('#email_active_code').val();
   var self = this;
 
   if(/.+@.+\..+/.exec(id) === null) {
@@ -244,24 +243,33 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
     return;
   }
 
-  richwallet.wallet.createWalletKey(id, password);
+  this.hideDialog();
 
-  this.saveWallet({payload: {email: id}, backup: true}, function(response) {
+  checkWallet.loadPayload(richwallet.wallet.encryptPayload());
+  checkWallet.createWalletKey(id, password);
+  this.saveWallet(checkWallet,
+		  {payload: {email: id,
+			     emailActiveCode: emailActiveCode},
+		   backup: true}, function(response) {
     if(response.result == 'exists') {
       self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
-      richwallet.wallet.createWalletKey(originalWalletId, password);
       return;
     } else if(response.result == 'ok') {
-
+      richwallet.wallet = checkWallet;
       self.deleteWallet(originalServerKey, function(resp) {
         self.template('header', 'header');
         idObj.val('');
         passwordObj.val('');
         self.changeDialog('success', 'Successfully changed email. You will need to use this to login next time, don\'t forget it!');
       });
+    } else if(response.result == "requireAuthCode") {
+      $("#email_active_code").parents(".form-group").removeClass("hidden");
+    } else if(response.messages.length) {
+      self.changeDialog('danger', T(response.messages[0]));
     } else {
       self.changeDialog('danger', 'An unknown error has occured, please try again later.');
     }
+
   });
 };
 
@@ -295,15 +303,15 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
   }
 
   var originalServerKey = richwallet.wallet.serverKey;
-  richwallet.wallet.createWalletKey(richwallet.wallet.walletId, newPassword);
+  checkWallet.loadPayload(richwallet.wallet.encryptPayload());
+  checkWallet.createWalletKey(richwallet.wallet.walletId, newPassword);
 
-  this.saveWallet({backup: true, override: true}, function(response) {
+  this.saveWallet(checkWallet, {backup: true, override: true}, function(response) {
     if(response.result == 'exists') {
       self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
-      richwallet.wallet.createWalletKey(richwallet.wallet.walletId, currentPassword);
       return;
     } else if(response.result == 'ok') {
-
+      richwallet.wallet = checkWallet;
       self.deleteWallet(originalServerKey, function(resp) {
         self.template('header', 'header');
         currentPasswordObj.val('');
@@ -323,6 +331,10 @@ richwallet.controllers.Accounts.prototype.changeDialog = function(type, message)
   $('#changeDialog').addClass('alert-'+type);
   $('#changeDialog').removeClass('hidden');
   $('#changeMessage').text(message);
+};
+
+richwallet.controllers.Accounts.prototype.hideDialog = function(){
+  $('#changeDialog').addClass('hidden');
 };
 
 richwallet.controllers.Accounts.prototype.generateAuthQR = function() {

@@ -48,7 +48,7 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
 	}
 	if(hasRemovable) {
 	    richwallet.wallet.transactions = _.reject(richwallet.wallet.transactions, function(tx) {return removableTxes[tx.hash]});
-	    saveWallet({}, function(){});
+	  saveWallet(richwallet.wallet, {}, function(){});
 	}
 	drawDashboard();
   });

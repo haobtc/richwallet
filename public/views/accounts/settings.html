@@ -33,6 +33,12 @@
         <label for="password"><%- T('Confirm password') %></label>
         <input type="password" class="form-control" id="changeEmailPassword" placeholder="<%- T('Current password') %>" autocomplete="off">
       </div>
+
+      <div class="form-group hidden">
+        <label for="email_active_code" class="control-label"><%- T('Email Activation Code') %></label>
+        <input id="email_active_code" type="text" placeholder="<%- T('Input the activate code to ensure a real email.') %>" autocomplete="off" class="form-control">
+      </div>
+
       <button type="submit" class="btn btn-primary"><%- T('Change Email') %></button>
     </form>
   </div>
