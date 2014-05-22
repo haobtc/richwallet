@@ -136,8 +136,9 @@ richwallet.controllers.Accounts.prototype.create = function() {
     richwallet.wallet = wallet;
 
     this.saveWallet({
-	payload: {email: email, 
-		  emailActiveCode:emailActiveCode}}, function(response) {
+      payload: {email: email,
+		emailActiveCode:emailActiveCode},
+      backup: true}, function(response) {
       if(response.result == 'ok') {
         richwallet.router.listener();
         richwallet.router.route('dashboard');
@@ -245,7 +246,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
 
   richwallet.wallet.createWalletKey(id, password);
 
-  this.saveWallet({payload: {email: id}}, function(response) {
+  this.saveWallet({payload: {email: id}, backup: true}, function(response) {
     if(response.result == 'exists') {
       self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
       richwallet.wallet.createWalletKey(originalWalletId, password);
@@ -296,7 +297,7 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
   var originalServerKey = richwallet.wallet.serverKey;
   richwallet.wallet.createWalletKey(richwallet.wallet.walletId, newPassword);
 
-  this.saveWallet({}, function(response) {
+  this.saveWallet({backup: true, override: true}, function(response) {
     if(response.result == 'exists') {
       self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
       richwallet.wallet.createWalletKey(richwallet.wallet.walletId, currentPassword);
