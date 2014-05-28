@@ -96,7 +96,7 @@
     "New Address": "新增地址",
     "Generate": "生成",
     "Show all addresses": "显示全部地址",
-    "Hide 0 balance addresses": "隐藏无余额地址",
+    "Hide no money addresses": "隐藏无余额地址",
     "%s addresses has been hidden.": "%s 个地址被隐藏了.",
     "Show": "显示",
 
