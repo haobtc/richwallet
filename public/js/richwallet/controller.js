@@ -80,10 +80,13 @@ richwallet.Controller.prototype.saveWallet = function(wallet, data, callback) {
     dataType: 'json',
     success: function(response) {
       if(response.result == 'outOfSync') {
-	  alert(T("Wallet was changed elsewhere, reload required!"));
-	  window.location.reload();
-        //richwallet.wallet.mergePayload(response.wallet);
-        //return self.saveWallet({override: true}, callback);
+	if(data.onOutOfSync == 'reload') {
+	   alert(T("Wallet was changed elsewhere, reload required!"));
+          window.location.reload();
+	} else {
+          wallet.mergePayload(response.wallet);
+          return self.saveWallet(wallet, {override: true}, callback);
+	}
       }
       wallet.payloadHash = wallet.newPayloadHash;
       if(callback) {

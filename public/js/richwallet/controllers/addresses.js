@@ -14,7 +14,7 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
   network  = network || 'litecoin';
   var address = richwallet.wallet.createNewAddress(network, label, false);
 
-  this.saveWallet(richwallet.wallet, {address: address, override: true, backup: true}, function() {
+  this.saveWallet(richwallet.wallet, {override: true, onOutOfSync:'reload', backup: true}, function() {
     self.render('addresses/list', {addresses: richwallet.wallet.addresses(),
 				  balances: richwallet.wallet.balanceForAddresses()}, function(id) {
     });

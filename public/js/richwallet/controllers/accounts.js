@@ -210,6 +210,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
           self.showSuccessMessage(msg);
+	  richwallet.router.listener();
           richwallet.router.route('dashboard');
         }
       });
