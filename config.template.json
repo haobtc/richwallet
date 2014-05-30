@@ -1,7 +1,7 @@
 {
     "networks": {
 	"litecoin": {"leadingChar": "L", 
-		     "version": 48, "p2sh": 5, "keyVersion":121,
+		     "version": 48, "p2sh": 5, "keyVersion":176,
 		     "currency": "LTC",		     
 		    "fee": 0.001,
 		     "sortIndex": 1
@@ -13,7 +13,7 @@
 		    "sortIndex": 10
 		   },
 	"dogecoin": {"leadingChar": "D", 
-		    "version": 30, "p2sh": 4, "keyVersion":126,
+		    "version": 30, "p2sh": 4, "keyVersion":158,
 		    "currency": "DOG",
 		    "fee": 1.0,
 		     "sortIndex": 100

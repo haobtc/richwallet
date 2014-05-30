@@ -103,6 +103,11 @@
     "Hide no money addresses": "隐藏无余额地址",
     "%s addresses has been hidden.": "%s 个地址被隐藏了.",
     "Show": "显示",
+    "Export Private Key": "导出私钥",
+    "Export": "导出",
+    "Please take care of your private key!": "请复制，并保管好您的私钥!",
+
+
 
     "Message": "消息",
     "Optional Message": "可选的消息",

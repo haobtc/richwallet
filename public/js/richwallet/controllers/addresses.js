@@ -26,6 +26,29 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
   });
 };
 
+richwallet.controllers.Addresses.prototype.showExportPrivateKey=function(address){
+  $("#exportPrivateKeyDialog strong:first").text(address);
+  $("#exportPrivateKeyDialog input[name='password']").val("");
+  $("#exportPrivateKeyDialog").modal({backdrop:false});
+}
+
+richwallet.controllers.Addresses.prototype.exportPrivateKey=function(){
+  var address = $("#exportPrivateKeyDialog strong:first").text();
+  var passwordInput = $("#exportPrivateKeyDialog input[name='password']");
+  var password = passwordInput.val();
+  var keyInfo = richwallet.wallet.exportPrivateKey(address, password);
+  if(keyInfo.error){
+    $("#exportPrivateKeyDialog .alert").text(keyInfo.error).removeClass("hidden");
+  }
+  else{
+    passwordInput.val('');
+    $("#exportPrivateKeyDialog").modal("toggle");
+    $("#privateKeyDialog span:first").text(keyInfo.key);
+    $("#privateKeyDialog").modal({backdrop: false});
+  }
+}
+
+
 richwallet.controllers.Addresses.prototype.isZeroBalanceAddressesHidden = function(){
   return richwallet.localProfile.get("isZeroBalanceAddressesHidden");
 }

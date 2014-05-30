@@ -118,6 +118,16 @@ richwallet.Wallet = function(walletKey, walletId) {
     return addrs;
   };
 
+  this.fixKeyVersion = function(){
+    for(var i=0; i<keyPairs.length; i++){
+      var addr = new Bitcoin.Address(keyPairs[i].address);
+      var eckey = new Bitcoin.ECKey(keyPairs[i].key);
+      var key = eckey.getExportedPrivateKey(addr.getNetwork());
+      if(keyPairs[i].key != key)
+	keyPairs[i].key = key;
+    }
+  };
+
   this.receiveAddressHashes = function() {
     var addrHashes = [];
     for(var i=0; i<keyPairs.length; i++) {
@@ -170,6 +180,20 @@ richwallet.Wallet = function(walletKey, walletId) {
     var payloadJSON = JSON.stringify(payload);
     this.newPayloadHash = this.computePayloadHash(payloadJSON);
     return sjcl.encrypt(this.walletKey, payloadJSON);
+  };
+
+  this.exportPrivateKey = function(address, password){
+    var key = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, this.walletId, this.defaultIterations))
+    if(key == this.walletKey){
+      for(var i=0; i<keyPairs.length; i++){
+	//var addr = new Bitcoin.Address(keyPairs[i].address);
+	if(keyPairs[i].address == address){
+	  return {'key': keyPairs[i].key};
+	}
+      }
+      return {'error': "Can not find the address"};
+    }
+    return {'error': "Password error"};
   };
 
   this.mergeUnspent = function(newUnspent, opts) {

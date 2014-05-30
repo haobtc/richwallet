@@ -46,7 +46,10 @@
 			<span class="dropdown-arrow dropdown-arrow-inverse"></span>
 			<ul class="dropdown-menu dropdown-inverse text-left" role="menu">
 			  <li>
-			    <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i><%- T("Edit Label") %></a>
+			    <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
+			  </li>
+			  <li>
+			    <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export") %></a>
 			  </li>
 			</ul>
 		      </span>
@@ -99,7 +102,10 @@
 		       <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
 		       <ul class="dropdown-menu dropdown-inverse" role="menu">
 			 <li>
-			   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i><%- T("Edit Label") %></a>
+			   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
+			 </li>
+			 <li>
+			   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export") %></a>
 			 </li>
 		       </ul>
 		     </div>
@@ -140,16 +146,14 @@
   </div>
 </div>
 
-
-
 <div class="modal fade" id="editLabel" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
 	<h4 class="text-center"><%- T('Edit Label') %></h4>
       </div>
+      <form>
       <div class="modal-body">
-	<form>
 	<div class="form-group clearfix">
 	  <div class="col-lg-12">
 	    <input type="text" name="addressName" class="form-control" placeholder="<%- T('Please input a label') %>" />
@@ -160,6 +164,61 @@
 	<button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Cancel') %></button>
 	<button type="submit" class="btn btn-primary"><%- T('Confirm') %></button>
       </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="privateKeyDialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="text-center"><%- T('Export Private Key') %></h4>
+      </div>
+      <div class="modal-body">
+	<div class="form-group clearfix">
+	  <div class="text-center text-danger">
+	    <span style="font-size: 16px;word-break: break-all; word-wrap: break-word;"></span>
+	    <br/>
+	    <strong><%- T("Please take care of your private key!") %></strong>
+	  </div>
+	</div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exportPrivateKeyDialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="text-center"><%- T('Export Private Key') %></h4>
+      </div>
+      <form action="#" onsubmit="richwallet.controllers.addresses.exportPrivateKey(); return false;">
+	<div class="modal-body">
+	  <div class="form-group clearfix">
+	    <label for="address" class="col-lg-2 control-label"><%- T('Address') %></label>
+	    <div class="col-lg-9">
+	      <strong style="word-break: break-all; word-wrap: break-word;"></strong>
+	    </div>
+	  </div>
+	  <div class="form-group clearfix">
+	    <label for="password" class="col-lg-2 control-label"><%- T('Password') %></label>
+	    <div class="col-lg-9">
+	      <input type="password" step="any" name="password" class="form-control" />
+	    </div>
+	    <div class="col-lg-5" id="balance">
+	    </div>
+	  </div>
+	</div>
+	<div class="alert alert-danger hidden">
+	</div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+          <button type="submit" id="quickSendButton" class="btn btn-primary"><%- T('Export') %></button>
+	</div>
       </form>
     </div>
   </div>

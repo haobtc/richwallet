@@ -62,6 +62,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       errorDiv.addClass('hidden');
       wallet.loadPayload(response.wallet);
       richwallet.wallet = wallet;
+      wallet.fixKeyVersion();
       richwallet.localProfile = new richwallet.LocalProfile(id);
       richwallet.usingAuthKey = response.usingAuthKey;
       richwallet.router.listener();
