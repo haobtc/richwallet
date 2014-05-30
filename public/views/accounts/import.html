@@ -21,28 +21,26 @@
 </div>
 
 <div class="row">
-  <div class="col-lg-6 col-lg-offset-4" style="margin-top: 20px">
+  <div class="col-lg-4 col-lg-offset-4" style="margin-top: 20px">
     <form class="form-horizontal" onsubmit="richwallet.controllers.accounts.performImport(); return false;">
       <div class="form-group">
-        <label for="importId" class="col-lg-2 control-label">Email</label>
-        <div class="col-lg-4">
-          <input type="text" class="form-control" id="importId" placeholder="Your wallet email">
-        </div>
+        <label for="importId" class="control-label">Email</label>
+        <input type="text" class="form-control" id="importId" placeholder="Your wallet email">
       </div>
 
       <div class="form-group">
-        <label for="importPassword" class="col-lg-2 control-label">Password</label>
-        <div class="col-lg-4">
-          <input type="password" class="form-control" id="importPassword" placeholder="Your wallet password" autocomplete="off">
-        </div>
+        <label for="importPassword" class="control-label">Password</label>
+        <input type="password" class="form-control" id="importPassword" placeholder="Your wallet password" autocomplete="off">
       </div>
 
       <div class="form-group">
-        <label for="importFile" class="col-lg-2 control-label">Wallet File</label>
-        <div class="col-lg-4">
-          <input id="importFile" type="file">
-        </div>
+        <label for="importFile" class="control-label">Wallet File</label>
+        <input id="importFile" type="file">
       </div>
+      <div class="form-group hidden">
+        <label for="email_active_code" class="control-label"><%- T('Email Activation Code') %></label>
+        <input id="email_active_code" type="text" placeholder="<%- T('Input the activate code to ensure a real email.') %>" autocomplete="off" class="form-control">
+        </div>
 
       <div style="margin-top: 20px">
         <button id="importButton" class="btn btn-success btn-lg">Import</button>

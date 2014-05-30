@@ -171,6 +171,8 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
   var file = $('#importFile').get(0).files[0];
   var self = this;
   var reader = new FileReader();
+  var emailActiveCode = $('#email_active_code').val();
+
 
   reader.onload = (function(walletText) {
     var wallet = new richwallet.Wallet();
@@ -186,8 +188,8 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
     if(wallet.transactions && wallet.addresses()) {
       var payload = wallet.encryptPayload();
 
-
-      self.saveWallet(wallet, {email:id}, function(resp) {
+      self.saveWallet(wallet, {payload: {email:id,
+					 emailActiveCode:emailActiveCode}}, function(resp) {
         if(resp.result == 'exists') {
           $('#importErrorDialog').removeClass('hidden');
           $('#importErrorMessage').text('Cannot import your wallet, because the wallet already exists on this server.');
@@ -198,8 +200,13 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
           $('#importErrorMessage').html(resp.messages.join('<br/>'));
           button.removeAttr('disabled');
           return;
+	} else if(resp.result == 'requireAuthCode') {
+	  $('#email_active_code').parents('.form-group').removeClass('hidden');
+	  button.removeAttr("disabled");
+	  return;
         } else {
 	  richwallet.wallet = wallet;
+	  richwallet.localProfile = new richwallet.LocalProfile(id);
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
           self.showSuccessMessage(msg);
