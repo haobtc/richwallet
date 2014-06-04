@@ -231,7 +231,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
     var hasError = false;
     if(feeString) {
 	var fee = richwallet.utils.parseBigNumber(feeString);
-	if(isNaN(fee) || fee.comparedTo(minAmount) < 0 ||
+	if(isNaN(fee) || fee.comparedTo(0) < 0 ||
 	   sumOutputAmount.plus(fee).comparedTo(sumInputAmount) > 0) {
 	    hasError = true;
 	}
@@ -251,6 +251,45 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
     } else {
 	$('#sendButton').addClass('disabled');
     }
+};
+
+richwallet.controllers.Tx.prototype.showSendReview = function(txInfo, callback){
+  $("#confirmSend h4").text(T("%s transaction review", T(txInfo.network)));
+  var sendElement = $("#confirmSend ul");
+  var sendtoItemElement = sendElement.find("li:first");
+  sendElement.find("li:not(:last):not(:first)").remove();
+  var totalSendAmount = new BigNumber(0);
+  _.map(txInfo.outputs, function(sendto){
+    var el = sendtoItemElement.clone().remove();
+    el.find("span:first").text(sendto.address);
+    el.find("span:last").text(sendto.amount + ' ' + richwallet.config.networkConfigs[txInfo.network].currency);
+    sendElement.find("li:last").before(el);
+    totalSendAmount = totalSendAmount.plus(sendto.amount);
+  });
+  if(txInfo.outputs.length){
+    sendtoItemElement.remove();
+  }
+  sendElement.find("span[data-role=total]").text(totalSendAmount);
+  sendElement.find("span[data-role=currency]").text(richwallet.config.networkConfigs[txInfo.network].currency);
+  var feeElement = $("#confirmSend span[data-role='fee']").text(txInfo.fee + ' ' + richwallet.config.networkConfigs[txInfo.network].currency);
+  feeElement.next().remove();
+  if(txInfo.fee.comparedTo(richwallet.config.networkConfigs[txInfo.network].fee) < 0){
+    feeElement.addClass("bg-danger");
+    feeElement.after($("<span></span>").addClass("text-danger").text(T("Costs is not enough")).css({'margin-left':'30px'}));
+  }
+  else{
+    feeElement.removeClass("bg-danger");
+  }
+  var bConfirm = false;
+  $("#confirmSend button[type=submit]").off('click').on("click",function(){
+    bConfirm = true;
+    $("#confirmSend").modal('hide');
+    return false;
+  });
+  $("#confirmSend").off("hidden.bs.modal").on("hidden.bs.modal",function(){
+    callback(bConfirm);
+  });
+  $("#confirmSend").modal({backdrop:false});
 };
 
 richwallet.controllers.Tx.prototype.advCreate = function() {
@@ -281,36 +320,47 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
     if(isNaN(fee) || fee.comparedTo(0) < 0) {
 	throw new Error(T('Fee is negative!'));
     }
-    
-    var tx = richwallet.wallet.createAdvTx(network, inputAddresses, outputs, fee);
-    var self = this;
-    richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
 
-    self.saveWallet(richwallet.wallet, {override: true}, function(response) {
+  var self = this;
+  var callback = function(bConfirm){
+    if(bConfirm){
+      var tx = richwallet.wallet.createAdvTx(network, inputAddresses, outputs, fee);
+      var button = this;
+      $(button).attr("disabled","disable");
+      richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
+      self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
-	    url: 'api/infoproxy/sendtx/' + network,
-	    data: JSON.stringify({rawtx: tx.raw}),
-	    contentType: 'application/json',
-	    dataType: 'json',
-	    type: 'POST',
-	    processData: false,
-	    success: function(resp) {
-		if(resp.error) {
-		    console.error('send raw transaction error', resp.error);
-		    return;
-		}
-		self.showSuccessMessage(T("Sent %s %s", totalAmount,
-					 richwallet.config.networkConfigs[network].currency));
-	      
-		var toAddress = _.map(outputs, function(output) {return output.address});
-		richwallet.wallet.addTx(tx, totalAmount.toString(), feeString, toAddress, '');
-		delete richwallet.wallet.sendingTXIDs[tx.obj.getHash()];
-		self.getUnspent(function() {
-		    richwallet.router.route('dashboard');
-		});
+	  url: 'api/infoproxy/sendtx/' + network,
+	  data: JSON.stringify({rawtx: tx.raw}),
+	  contentType: 'application/json',
+	  dataType: 'json',
+	  type: 'POST',
+	  processData: false,
+	  success: function(resp) {
+	    $(button).removeAttr("disabled");
+	    $("#confirmSend").modal('hide');
+	    if(resp.error) {
+	      console.error('send raw transaction error', resp.error);
+	      return;
 	    }
+	    self.showSuccessMessage(T("Sent %s %s", totalAmount,
+				      richwallet.config.networkConfigs[network].currency));
+	    var toAddress = _.map(outputs, function(output) {return output.address});
+	    richwallet.wallet.addTx(tx, totalAmount.toString(), feeString, toAddress, '');
+	    delete richwallet.wallet.sendingTXIDs[tx.obj.getHash()];
+	    self.getUnspent(function() {
+	      richwallet.router.route('dashboard');
+	    });
+	  }
 	});
-    });
+      });
+    }
+  };
+
+  this.showSendReview({network:network,
+		       outputs:outputs,
+		       fee:fee}, callback);
+
 };
 
 // quick send
@@ -417,11 +467,16 @@ richwallet.controllers.Tx.prototype.quickCreate = function() {
     if(fee.plus(amount).comparedTo(balance) > 0) {
 	fee = balance.minus(amount);
     }
+
+
+  var self = this;
+  var callback = function(bConfirm){
+    if(bConfirm){
+
     tx = richwallet.wallet.createAdvTx(network,
 				       richwallet.wallet.addressHashes(network),
 				       [{address:address, amount:amount}],
 				       fee);
-    var self = this;
     self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
 	    url: 'api/infoproxy/sendtx/' + network,
@@ -449,6 +504,20 @@ richwallet.controllers.Tx.prototype.quickCreate = function() {
 	    }
 	});
     });
+
+
+    }
+
+  };
+
+
+  this.showSendReview({network:network,
+		       fee:fee,
+		       outputs:[{address:address, amount:amount}]},
+		      callback);
+
+
+
 };
 
 richwallet.controllers.Tx.prototype.quickToCustom = function() {

@@ -51,6 +51,8 @@
     "Quick Send": "快捷发送",
     "Custom Send": "定制发送",
     "Close": "关闭",
+    "Cancel": "取消",
+    "Costs is not enough": "手续费太低",
     "Backup": "备份",
     "Signout": "退出",
     "Signup": "注册",
@@ -105,10 +107,14 @@
     "Back": "返回",
     
     "Send %s": "发送%s",
+    "%s transaction review": "%s交易确认",
+    "Send to addresses":"发送目的地址",
+    "Cancel transaction":"取消交易",
+    "Send transaction":"发送交易",
 
     "You have <span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> available to spend.": "你有<span id=\"availableBalance\" class=\"addExchangePrice\" style=\"color: #009933;\">%s</span> 可以发送",
     "You have no money available to spend.": "你没有可以足够的币.",
-    "Fee": "费用",
+    "Fee": "手续费",
     "To Address": "目的地址",
 
     "Blockhash": "块哈希",
