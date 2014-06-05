@@ -66,6 +66,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       richwallet.localProfile = new richwallet.LocalProfile(id);
       richwallet.router.listener();
       richwallet.router.route('dashboard');
+      localStorage.setItem("default_username", id);
     }
   });
 };
@@ -141,6 +142,7 @@ richwallet.controllers.Accounts.prototype.create = function() {
 			       emailActiveCode:emailActiveCode},
 		     backup: true}, function(response) {
       if(response.result == 'ok') {
+	localStorage.setItem("default_username", email);
 	richwallet.wallet = wallet;
         richwallet.router.listener();
         richwallet.router.route('dashboard');
@@ -207,6 +209,8 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
         } else {
 	  richwallet.wallet = wallet;
 	  richwallet.localProfile = new richwallet.LocalProfile(id);
+	  localStorage.setItem("default_username", id);
+
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
           self.showSuccessMessage(msg);
@@ -266,6 +270,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
       return;
     } else if(response.result == 'ok') {
       richwallet.wallet = checkWallet;
+      localStorage.setItem("default_username", id);
       self.deleteWallet(originalServerKey, function(resp) {
         self.template('header', 'header');
         idObj.val('');

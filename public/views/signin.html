@@ -60,3 +60,9 @@
   </div>
 </div>
 
+<script>
+  var defaultUsername = localStorage.getItem("default_username");
+  if(defaultUsername){
+    $("#walletId").val(defaultUsername);
+  }
+</script>
