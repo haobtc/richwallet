@@ -57,13 +57,13 @@ richwallet.controllers.Accounts.prototype.signin = function() {
           '<input id="authCode" type="password" class="form-control" placeholder="">' +
         '</div>');
       $('#authCode').focus();
-      richwallet.usingAuthKey = true;
 
     } else {
       errorDiv.addClass('hidden');
       wallet.loadPayload(response.wallet);
       richwallet.wallet = wallet;
       richwallet.localProfile = new richwallet.LocalProfile(id);
+      richwallet.usingAuthKey = response.usingAuthKey;
       richwallet.router.listener();
       richwallet.router.route('dashboard');
       localStorage.setItem("default_username", id);
