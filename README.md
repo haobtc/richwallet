@@ -1,15 +1,22 @@
 richwallet
 ==========
 
-A universal wallet that accept different encryptcoins, such as bitcoin, litecoin, ...
+The source code of openblock.com, A universal wallet that accept different encryptcoins, such as bitcoin, litecoin, ...
+
+LICENSE
+==========
+Richwallet is released under the LICENSE of AGPL v3
+http://www.gnu.org/licenses/agpl-3.0.txt
 
 
-Installation
+Install
 ==========
 
 checkout this repository and run
 ```
 npm install
+cp config.template.json config.json
+# Edit config.json to change some settings
 ```
 
 Run
