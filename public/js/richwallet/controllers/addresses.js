@@ -27,18 +27,20 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
 };
 
 richwallet.controllers.Addresses.prototype.showExportPrivateKey=function(address){
-  $("#exportPrivateKeyDialog strong:first").text(address);
+  $("#exportPrivateKeyDialog strong:first").text(T('The private key of the address %s will be exported.', address));
   $("#exportPrivateKeyDialog input[name='password']").val("");
+  $("#exportPrivateKeyDialog input[name=address]").val(address);
+  $("#exportPrivateKeyDialog .alert").addClass("hidden");
   $("#exportPrivateKeyDialog").modal({backdrop:false});
 }
 
 richwallet.controllers.Addresses.prototype.exportPrivateKey=function(){
-  var address = $("#exportPrivateKeyDialog strong:first").text();
+  var address = $("#exportPrivateKeyDialog input[name=address]").val();
   var passwordInput = $("#exportPrivateKeyDialog input[name='password']");
   var password = passwordInput.val();
   var keyInfo = richwallet.wallet.exportPrivateKey(address, password);
   if(keyInfo.error){
-    $("#exportPrivateKeyDialog .alert").text(keyInfo.error).removeClass("hidden");
+    $("#exportPrivateKeyDialog .alert").text(T(keyInfo.error)).removeClass("hidden");
   }
   else{
     passwordInput.val('');

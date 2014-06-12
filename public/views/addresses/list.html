@@ -49,7 +49,7 @@
 			    <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
 			  </li>
 			  <li>
-			    <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export") %></a>
+			    <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
 			  </li>
 			</ul>
 		      </span>
@@ -105,7 +105,7 @@
 			   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
 			 </li>
 			 <li>
-			   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export") %></a>
+			   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
 			 </li>
 		       </ul>
 		     </div>
@@ -156,7 +156,7 @@
       <div class="modal-body">
 	<div class="form-group clearfix">
 	  <div class="col-lg-12">
-	    <input type="text" name="addressName" class="form-control" placeholder="<%- T('Please input a label') %>" />
+	    <input type="text" name="addressName" class="form-control" placeholder="<%- T('Please input a label') %>" maxlength="24" />
 	  </div>
 	</div>
       </div>
@@ -199,17 +199,14 @@
       <form action="#" onsubmit="richwallet.controllers.addresses.exportPrivateKey(); return false;">
 	<div class="modal-body">
 	  <div class="form-group clearfix">
-	    <label for="address" class="col-lg-2 control-label"><%- T('Address') %></label>
-	    <div class="col-lg-9">
-	      <strong style="word-break: break-all; word-wrap: break-word;"></strong>
+	    <div class="col-lg-12 text-center">
+	      <strong><%- T('The private key of the address %s will be exported.') %></strong><input type="hidden" name="address"/>
 	    </div>
 	  </div>
 	  <div class="form-group clearfix">
-	    <label for="password" class="col-lg-2 control-label"><%- T('Password') %></label>
-	    <div class="col-lg-9">
-	      <input type="password" step="any" name="password" class="form-control" />
-	    </div>
-	    <div class="col-lg-5" id="balance">
+	    <!-- <label for="password" class="col-lg-2 control-label"><%- T('Login password') %></label> -->
+	    <div class="col-lg-6 col-lg-offset-3">
+	      <input type="password" step="any" name="password" class="form-control" placeholder="<%- T('Please input you password') %>" />
 	    </div>
 	  </div>
 	</div>

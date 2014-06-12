@@ -26,6 +26,7 @@
     "Input the activate code to ensure a real email.": "输入邮件中的激活码确认Email的真实性.",
     "Email Activation Code": "发送到Email的激活码",
     "Email address already exists": "Email地址已经存在",
+    "Password error":"密码错误",
 
     "Strongly Confirmed": "完全确认",
     "Soft Confirmed": "部分确认",
@@ -105,7 +106,10 @@
     "Show": "显示",
     "Export Private Key": "导出私钥",
     "Export": "导出",
+    "Login password": "登录密码",
+    "Please input you password": "请输入您的密码",
     "Please take care of your private key!": "请复制，并保管好您的私钥!",
+    "The private key of the address %s will be exported.": "地址 %s 的私钥将被导出.",
 
 
 
