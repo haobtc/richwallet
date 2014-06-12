@@ -18,7 +18,7 @@ richwallet.trans = {
 		     "<p>Your data is being encrypted in a way that the server cannot spend your coin wallet money. If you lose your password, there is no way to reset it.</p>" +
 		     "<h4><strong>Losing your password is like losing your real-life wallet. You will lose your bitcoins, <u>forever</u></strong>.<br/><u>Remember your password</u>.</h4>" +
 		     "<p>Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>"),
-    "twofactor.alert": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\">two factor authenticaton</a> is highly recommended.",
+    "twofactor.alert": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\" class=\"text-warning\">two factor authenticaton</a> is highly recommended.",
 };
 
 var language = navigator.language.toLowerCase();

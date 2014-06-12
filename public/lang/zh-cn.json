@@ -95,6 +95,8 @@
     "Total": "总额",
     "Total Received": "收到总额",
     "Request Payment": "请求付款",
+    "Edit Label": "修改标签",
+    "Please input a label": "请输入一个标签",
     "New Address": "新增地址",
     "Generate": "生成",
     "Show all addresses": "显示全部地址",
@@ -107,6 +109,7 @@
     "Back": "返回",
     
     "Send %s": "发送%s",
+    "Select All": "全部选中",
     "%s transaction review": "%s交易确认",
     "Send to addresses":"发送目的地址",
     "Cancel transaction":"取消交易",

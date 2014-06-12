@@ -44,6 +44,34 @@ richwallet.controllers.Addresses.prototype.toggleZeroBalanceAddressesHidden = fu
   }
 }
 
+richwallet.controllers.Addresses.prototype.editLabel = function(address){
+  var self = this;
+  var name = richwallet.wallet.getAddressName(address);
+  var dialog = $("#editLabel");
+  dialog.find("input[name=addressName]").val(name || "");
+  var bConfirm = false;
+  dialog.find("form").off("submit").on("submit", function(){
+    bConfirm = true;
+    name = dialog.find("input[name=addressName]").val();
+    dialog.modal('hide');
+    return false;
+  });
+  dialog.off("hidden.bs.modal").on("hidden.bs.modal", function(){
+    if(bConfirm){
+      richwallet.wallet.setAddressName(address, name);
+      self.saveWallet(richwallet.wallet, {override: true, backup: true}, function(){});
+      $("div[data-address=" + address + "] strong:first").text(name || T('No Label'));
+      $("tr[data-address=" + address + "] td:first").text(name || T('No Label'));
+    }
+  });
+  dialog.off("shown.bs.modal").on("shown.bs.modal", function(){
+    dialog.find("input[name=addressName]").focus(function(){this.select();}).focus();
+  });
+  dialog.modal({"backdrop":false});
+}
+
+
+
 richwallet.controllers.Addresses.prototype.request = function(address) {
   var self = this;
   var addr = new Bitcoin.Address(address);

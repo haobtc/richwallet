@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         options: {
           stdout: true
         },
-        command: 'cat public/css/bootstrap.css public/css/flat-ui.css public/css/font-awesome.css public/css/fonts.css | ./node_modules/gulp-cleancss/node_modules/.bin/cleancss -o public/css/all.css'
+        command: 'cat public/css/bootstrap.css public/css/richwallet.css public/css/font-awesome.css public/css/fonts.css | ./node_modules/gulp-cleancss/node_modules/.bin/cleancss -o public/css/all.css'
       }
     },
 

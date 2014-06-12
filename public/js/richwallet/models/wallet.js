@@ -86,6 +86,12 @@ richwallet.Wallet = function(walletKey, walletId) {
         return keyPairs[i].name;
   };
 
+  this.setAddressName = function(address, name) {
+    for(var i=0;i<keyPairs.length;i++)
+      if(keyPairs[i].address == address)
+        return keyPairs[i].name = name;
+  };
+
   this.addresses = function(network) {
     var addrs = [];
     for(var i=0; i<keyPairs.length; i++) {
