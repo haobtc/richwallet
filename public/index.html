@@ -17,20 +17,36 @@
       }
     </style>
     <script>
+    var needReload = false;
+    function alertReload(){
+      var text = 'A new version of onewallet is available. Load it?';
+      if(T != undefined) {
+        text = T(text);
+      }
+      if (confirm(text)) {
+	window.location.reload();
+      }
+    }
+    function checkVersion(){
+      window.applicationCache.update();
+      window.setTimeout("checkVersion();",60000);
+    }
     window.addEventListener('load', function(e) {
-          window.applicationCache.addEventListener('updateready', function(e) {
-              if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-		  window.applicationCache.swapCache();
-	          var text = 'A new version of onewallet is available. Load it?';
-	          if(T != undefined) {
-                      text = T(text);
-           	  }
-		  if (confirm(text)) {
-		      window.location.reload();
-		  }
-	      }
-	  }, false);
+      window.applicationCache.addEventListener('updateready', function(e) {
+        if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+	  window.applicationCache.swapCache();
+	  needReload = true;
+	  if($("div.navbar-header a.unreadmsg").length < 1){
+	    $("div.navbar-header").append($("<a href='#' class='unreadmsg'><i class='fa fa-circle'></i></a>").click(function(){
+	      alertReload();
+	      return false;
+	    }).tooltip({title:T("You have unread notifications"),placement:'bottom'}));
+	  }
+	}
+
       }, false);
+      checkVersion();
+    }, false);
 </script>
   </head>
   <body>
