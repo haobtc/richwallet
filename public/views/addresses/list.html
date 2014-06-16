@@ -98,8 +98,8 @@
                    </td>
                    <td>
 		     <div style="display:inline-block" class="dropdown">
-                       <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
-		       <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
+                       <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link fix-btn"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
+		       <a class="btn btn-link dropdown-toggle fix-btn" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
 		       <ul class="dropdown-menu dropdown-inverse" role="menu">
 			 <li>
 			   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>

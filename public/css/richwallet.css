@@ -302,3 +302,8 @@
 .fui-check-inverted-2:before {
   content: "\e000";
 }
+
+
+.fix-btn {
+    padding: 0 12px;
+}
