@@ -325,8 +325,31 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
   var callback = function(bConfirm){
     if(bConfirm){
       var tx = richwallet.wallet.createAdvTx(network, inputAddresses, outputs, fee);
-      var button = this;
-      $(button).attr("disabled","disable");
+      var button = $("#sendButton");
+      button.attr("disabled","disable");
+
+      // spin.js
+      var opts = {
+	lines: 11, // The number of lines to draw
+	length: 0, // The length of each line
+	width: 5, // The line thickness
+	radius: 11, // The radius of the inner circle
+	corners: 1, // Corner roundness (0..1)
+	rotate: 0, // The rotation offset
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	color: '#000', // #rgb or #rrggbb or array of colors
+	speed: 1.5, // Rounds per second
+	trail: 30, // Afterglow percentage
+	shadow: false, // Whether to render a shadow
+	hwaccel: false, // Whether to use hardware acceleration
+	className: 'spinner', // The CSS class to assign to the spinner
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	top: '50%', // Top position relative to parent
+	left: '50%' // Left position relative to parent
+      };
+      var loading = $("<div>&nbsp;</div>").height(button.height()).width(button.width()).css({'display':'inline-block','position':'relative'});
+      button.before(loading);
+      var spinner = new Spinner(opts).spin(loading[0]);
       richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
       self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
