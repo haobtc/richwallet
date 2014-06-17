@@ -346,13 +346,14 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
       var loading = $("<div>&nbsp;</div>").height(button.height()).width(button.width()).css({'display':'inline-block','position':'relative'});
       button.before(loading);
       var spinner = new Spinner(opts).spin(loading[0]);
-      richwallet.wallet.sendingTXIDs[tx.obj.getHash()] = true;
 
       var toAddress = _.map(outputs, function(output) {return output.address});
       richwallet.wallet.addTx(tx, totalAmount.toString(), feeString, toAddress);
+
       self.showSuccessMessage(T("Sent %s %s", totalAmount,
 				richwallet.config.networkConfigs[network].currency));
       richwallet.router.route('dashboard');
+
       self.saveWallet(richwallet.wallet, {override: true}, function(response) {
 	$.ajax({
 	  url: 'api/infoproxy/sendtx/' + network,
@@ -366,10 +367,11 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
 	    $("#confirmSend").modal('hide');
 	    if(resp.error) {
 	      console.error('send raw transaction error', resp.error);
-	      self.showErrorMessage(T("Send Transaction error!"))
+	      self.showErrorMessage(T("Send Transaction error!"));
 	      return;
 	    }
-	    self.getUnspent(function() {});
+	    self.getUnspent(function() {
+	    });
 	  }
 	});
       });
