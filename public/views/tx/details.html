@@ -1,5 +1,84 @@
+<%
+function addressLink(a){
+   return '<a href="javascript:richwallet.controllers.tx.showQuickSend(\'' +
+    a + '\');">' + richwallet.utils.shortText(a, 12) + '</a>';
+} 
+%>
 <div class="row">
-  <div class="col-lg-8 col-lg-offset-2">
+  <style>
+    .tx-info {padding: 4px 0 4px 0; margin-left:3px; margin-right: 3px;}
+    .tx-info .pull-left { font-weight: bold;}
+  </style>
+  <div class="visible-xs visible-sm col-lg-12">
+    <h2 class="text-center"><%- T('Transaction Detail') %></h2>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Network') %></div>
+      <div class="pull-right"><%- T(data.tx.network) %></div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Transaction ID') %></div>
+      <div class="pull-right"><small><%- data.tx.hash %></small></div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Amount') %></div>
+      <div class="pull-right">
+      <% if(data.tx.amount.comparedTo(0) <= 0 && data.tx.type == 'send') { %>
+	 <%- T('Inner wallet transaction') %>
+         <% } else { %>
+         <%- Math.abs(data.tx.amount) %> <%- data.currency %>
+	 <% } %>
+      </div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Fee') %></div>
+      <div class="pull-right"><%- data.tx.fee ? Math.abs(data.tx.fee)+(' ' + data.currency) : '' %></div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Block height') %></div>
+      <div class="pull-right"><%- data.tx.blockheight || '' %></div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div><%- T('Confirmations') %></div>
+      <div class="pull-right">
+        <%- data.tx.confirmations %>&nbsp;&nbsp;&nbsp;&nbsp;
+        <% if(data.tx.confirmations == 0) { %>              
+        <span class="label label-warning" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain."><%- T('Pending (Unconfirmed)') %></span>
+        <% } else if(data.tx.confirmations < richwallet.controllers.dashboard.minimumStrongSendConfirmations) { %>
+           <span class="label label-info" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe."><%- T('Soft Confirmed') %></span>
+           <% } else { %>
+           <span class="label label-success" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers."><%- T('Strongly Confirmed') %></span>
+           <% } %>
+      </div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Blockhash') %></div>
+      <div class="pull-right"><small><%- data.tx.blockhash %></small></div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Blocktime') %></div>
+      <div class="pull-right">
+        <% if(data.tx.blocktime) { %>
+        <%- richwallet.controllers.tx.friendlyTimeString(data.tx.blocktime*1000) %>
+        <% } %>
+      </div>
+    </div>
+    <hr>
+    <div class="tx-info clearfix">
+      <div class="pull-left"><%- T('Time') %></div>
+      <div class="pull-right"><%- richwallet.controllers.tx.friendlyTimeString(data.tx.time*1000) %></div>
+    </div>
+    <hr>
+  </div> <!-- .col-lg-8 -->
+
+  <div class="visible-md visible-lg col-lg-8 col-lg-offset-2">
     <h2 class="text-center"><%- T('Transaction Detail') %></h2>
     <table class="table table-bordered table-striped table-hover">
       <tbody>
@@ -13,23 +92,32 @@
         </tr>
         <tr>
           <td><%- T('Amount') %></td>
-          <td><%- Math.abs(data.tx.amount) %> <%- data.currency %></td>
+	  <% if(data.tx.amount.comparedTo(0) <= 0 && data.tx.type == 'send') { %>
+	     <td><%- T('Inner wallet transaction') %></td>
+             <% } else { %>
+             <td><%- Math.abs(data.tx.amount) %> <%- data.currency %></td>
+	     <% } %>
         </tr>
         <tr>
           <td><%- T('Fee') %></td>
           <td><%- data.tx.fee ? Math.abs(data.tx.fee)+(' ' + data.currency) : '' %></td>
         </tr>
         <tr>
+          <td><%- T('Block height') %></td>
+          <td><%- data.tx.blockheight || '' %></td>
+        </tr>
+
+        <tr>
           <td><%- T('Confirmations') %></td>
           <td>
             <%- data.tx.confirmations %>&nbsp;&nbsp;&nbsp;&nbsp;
             <% if(data.tx.confirmations == 0) { %>              
-              <span class="label label-warning" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain."><%- T('Pending (Unconfirmed)') %></span>
+            <span class="label label-warning" rel="tooltip" data-toggle="tooltip" title="Transaction has not yet been confirmed. You cannot safely spend this yet because you cannot be confident it isn't a double spend until it has been confirmed by the blockchain."><%- T('Pending (Unconfirmed)') %></span>
             <% } else if(data.tx.confirmations < richwallet.controllers.dashboard.minimumStrongSendConfirmations) { %>
-              <span class="label label-info" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe."><%- T('Soft Confirmed') %></span>
-            <% } else { %>
-              <span class="label label-success" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers."><%- T('Strongly Confirmed') %></span>
-            <% } %>
+               <span class="label label-info" rel="tooltip" data-toggle="tooltip" title="Transaction has had at least one confirmation and is likely to be successful, but will be considered even more definitive after 6 confirmations. You may want to wait if you are transferring a large sum of money, just to be safe."><%- T('Soft Confirmed') %></span>
+               <% } else { %>
+               <span class="label label-success" rel="tooltip" data-toggle="tooltip" title="Transaction has at least 6 confirmations. This is the standard most Bitcoin services use for confirming large transfers."><%- T('Strongly Confirmed') %></span>
+               <% } %>
           </td>
         </tr>
         <tr>
@@ -37,14 +125,10 @@
           <td><%- data.tx.blockhash %></td>
         </tr>
         <tr>
-          <td><%- T('Blockindex') %></td>
-          <td><%- data.tx.blockindex %></td>
-        </tr>
-        <tr>
           <td><%- T('Blocktime') %></td>
           <td>
             <% if(data.tx.blocktime) { %>
-              <%- richwallet.controllers.tx.friendlyTimeString(data.tx.blocktime*1000) %>
+            <%- richwallet.controllers.tx.friendlyTimeString(data.tx.blocktime*1000) %>
             <% } %>
           </td>
         </tr>
@@ -52,10 +136,61 @@
           <td><%- T('Time') %></td>
           <td><%- richwallet.controllers.tx.friendlyTimeString(data.tx.time*1000) %></td>
         </tr>
+      </tbody>
     </table>
-    
-    <div class="text-center">
-      <a href="#/dashboard" class="btn btn-lg btn-primary"><i class="fa fa-arrow-left"></i> <%- T('Back') %><a>
+  </div>
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-md-12 col-lg-8 col-lg-offset-2">
+    <div class="col-md-5" id="tx-input">
+      <h3 class="text-center"><%- T('Inputs') %></h3>
+      <% _.map(data.tx.inputs, function(input) { %>
+      <div class="clearfix text-center" style="padding-bottom: 10px;">
+        <div>
+	  <% if(!input.inWallet) { %>
+          <%= addressLink(input.address) %>
+	  <% } else {%>
+	  <%- richwallet.utils.shortText(input.address, 12) %>
+	  <% } %>
+	</div>
+	<div>
+	  <small style="margin-right: 30px;"><%- input.amount %> <%- data.currency %></small>
+	  <small><a href="#/tx/details/<%- data.tx.network %>/<%- input.hash %>"><%- richwallet.utils.shortText(input.hash, 8) %></a>#<%- input.vout %></small>
+	</div>	
+      </div>
+      <% }); %>
+    </div>
+    <div class="col-md-2 text-center">
+      <div class="visible-xs visible-sm" style="padding-top:20px;">
+	<i class="fa fa-arrow-down"></i>
+      </div>
+      <div class="visible-md visible-lg" style="padding-top:60px;">
+	<i class="fa fa-arrow-right"></i>
+      </div>
+    </div>
+    <div class="col-md-5 text-center" id="tx-output">
+      <h3><%- T('Outputs') %></h3>
+      <% _.map(data.tx.outputs, function(output) { %>
+      <div class="clearfix" style="padding-bottom: 10px;">
+	<div>
+	  <% if(!output.inWallet) { %>
+          <%= addressLink(output.address) %>
+	  <% } else { %>
+	  <%- richwallet.utils.shortText(output.address, 12) %>
+	  <% } %>
+	</div>
+	<div>
+	  <small><%- output.amount %> <%- data.currency %></small></div>
+      </div>
+      <% }); %>
     </div>
   </div>
-</div>
+</div> <!-- .row -->
+
+<div class="row">    
+  <div class="text-center">
+    <a href="#/dashboard" class="btn btn-lg btn-link"><i class="fa fa-arrow-left"></i> <%- T('Back') %><a>
+  </div>
+</div> <!-- .row -->
+

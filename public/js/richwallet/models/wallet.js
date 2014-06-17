@@ -1,4 +1,5 @@
 richwallet.Wallet = function(walletKey, walletId) {
+  var self = this;
   this.walletKey = walletKey;
   this.walletId = walletId;
   this.defaultIterations = 1000;
@@ -7,7 +8,6 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.unspent = [];
   this.minimumConfirmations = 0;
   this.unspentConfirmations = [];
-  this.sendingTXIDs = {};
   var keyPairs = [];
 
   this.loadPayloadWithLogin = function(id, password, payload) {
@@ -25,19 +25,19 @@ richwallet.Wallet = function(walletKey, walletId) {
     this.unspent = payload.unspent || [];
 
     for(var i=0; i<this.transactions.length; i++) {
-	var tx = this.transactions[i];
-	if(!tx.network) {
-	    var addr = new Bitcoin.Address(tx.address);
-	    tx.network = addr.getNetwork();
-	}
+      var tx = this.transactions[i];
+      if(!tx.network) {
+	var addr = new Bitcoin.Address(tx.address);
+	tx.network = addr.getNetwork();
+      }
     }
 
     for(var i=0; i<this.unspent.length; i++) {
-	var tx = this.unspent[i];
-	if(!tx.network) {
-	    var addr = new Bitcoin.Address(tx.address);
-	    tx.network = addr.getNetwork();
-	}
+      var tx = this.unspent[i];
+      if(!tx.network) {
+	var addr = new Bitcoin.Address(tx.address);
+	tx.network = addr.getNetwork();
+      }
     }
 
     return true;
@@ -109,7 +109,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     for(var i=0; i<keyPairs.length; i++) {
       var addr = new Bitcoin.Address(keyPairs[i].address);
       if (network != undefined && addr.getNetwork() != network) {
-          continue;
+        continue;
       }
 
       if(keyPairs[i].isChange != true)
@@ -144,7 +144,7 @@ richwallet.Wallet = function(walletKey, walletId) {
       if(keyPairs[i].isChange == true) {
 	var addr = new Bitcoin.Address(keyPairs[i].address);
 	if(!network || addr.getNetwork() == network) {
-            addrHashes.push(keyPairs[i].address);
+          addrHashes.push(keyPairs[i].address);
 	}
       }
     }
@@ -196,140 +196,106 @@ richwallet.Wallet = function(walletKey, walletId) {
     return {'error': "Password error"};
   };
 
-  this.mergeUnspent = function(newUnspent, opts) {
-      opts = opts || {};
-      var changed = false;
-      this.unspentConfirmations = this.unspentConfirmations || {};
+  this.mergeUnspent = function(newUnspent, callback) {
+    var changed = false;
+    var newTxIDs = [];
+    self.unspentConfirmations = self.unspentConfirmations || {};
 
-      var oldHashList = {};
-      for(var j=0;j<this.unspent.length;j++) {
-	  oldHashList[this.unspent[j].hash] = true;
+    var oldHashList = {};
+    for(var j=0;j<self.unspent.length;j++) {
+      oldHashList[self.unspent[j].hash] = true;
+    }
+
+    for(var i=0;i<newUnspent.length;i++) {
+      var uspt = newUnspent[i];
+      self.unspentConfirmations[newUnspent[i].hash] = uspt.confirmations;
+      if(!oldHashList[uspt.hash]) {
+	changed = true;
       }
-
-      for(var i=0;i<newUnspent.length;i++) {
-	  var uspt = newUnspent[i];
-	  this.unspentConfirmations[newUnspent[i].hash] = uspt.confirmations;
-	  if(!oldHashList[uspt.hash]) {
-	      changed = true;
-	  }
 
       // todo: time should probably not be generated here
-	  var txMatch = false;
-	  if(this.sendingTXIDs[uspt.hash]){
-	      continue;
+      var txMatch = false;
+
+      for(var k=0;k<self.transactions.length;k++) {
+	var rtx = self.transactions[k];
+        if(rtx.hash == uspt.hash) {
+	  var vout = rtx.vout;
+	  if(vout == undefined) {
+	    vout = uspt.vout;
 	  }
-
-	  for(var k=0;k<this.transactions.length;k++) {
-	      var rtx = this.transactions[k];
-              if(rtx.hash == uspt.hash) {
-		  var vout = rtx.vout;
-		  if(vout == undefined) {
-		      vout = uspt.vout;
-		  }
-		  if(rtx.type == 'send') {
-		      txMatch = true;
-		      rtx.confirmations = uspt.confirmations;
-		  } else if(vout == uspt.vout) {
-		      txMatch = true;
-		      rtx.confirmations = uspt.confirmations;
-		      rtx.vout = vout;
-		  }
-	      }
+	  if(rtx.type == 'send') {
+	    txMatch = true;
+	    rtx.confirmations = uspt.confirmations;
+	  } else if(vout == uspt.vout) {
+	    txMatch = true;
+	    rtx.confirmations = uspt.confirmations;
+	    rtx.vout = vout;
 	  }
-
-	  if(txMatch == false) {
-              this.transactions.push({
-		  network: uspt.network,
-		  hash: uspt.hash,
-		  vout: uspt.vout,
-		  type: 'receive',
-		  address: uspt.address,
-		  amount: uspt.amount,
-		  confirmations: uspt.confirmations,
-		  time: new Date().getTime()
-              });
-	  }
-      }
-      this.unspent = newUnspent;
-
-/*    for(var i=0;i<newUnspent.length;i++) {
-      var match = false;
-
-      for(var j=0;j<this.unspent.length;j++) {
-        if(this.unspent[j].hash == newUnspent[i].hash) {
-            match = true;
-	    this.unspent[j] = {
-		network: newUnspent[i].network,
-		hash: newUnspent[i].hash,
-		vout: newUnspent[i].vout,
-		address: newUnspent[i].address,
-		scriptPubKey: newUnspent[i].scriptPubKey,
-		amount: newUnspent[i].amount
-	    };	    
-	    break;
 	}
       }
 
-      this.unspentConfirmations[newUnspent[i].hash] = newUnspent[i].confirmations;
-
-      if(match == true)
-        continue;
-
-      changed = true;
-
-      this.unspent.push({
-	network: newUnspent[i].network,
-        hash: newUnspent[i].hash,
-        vout: newUnspent[i].vout,
-        address: newUnspent[i].address,
-        scriptPubKey: newUnspent[i].scriptPubKey,
-        amount: newUnspent[i].amount
-      });
-
-      // todo: time should probably not be generated here
-
-      var txMatch = false;
-
-      for(var k=0;k<this.transactions.length;k++) {
-        if(this.transactions[k].hash == newUnspent[i].hash)
-          txMatch = true;
-      }
-
       if(txMatch == false) {
-        this.transactions.push({
-	  network: newUnspent[i].network,
-          hash: newUnspent[i].hash,
-          type: 'receive',
-          address: newUnspent[i].address,
-          amount: newUnspent[i].amount,
-          time: new Date().getTime()
-        });
+	newTxIDs.push({network:uspt.network, tx:uspt.hash});
       }
-    } */
-
-    return changed;
+    }
+    self.unspent = newUnspent;
+    if(newTxIDs.length > 0) {
+      self.updateTransactions(newTxIDs, function() {
+	callback(changed);
+      });
+    } else {
+      callback(changed);
+    }
   };
 
-   this.filterNetwork = function(arr, network, iterator) {
-      for(var i=0; i<arr.length; i++) {
-	  var obj = arr[i];
-	  if(!network || network == obj.network) {
-	      iterator.call(this, obj, i);
+  this.updateTransactions = function(txIDs, callback) {
+    richwallet.controllers.tx.getTxDetails(txIDs, function(txes) {
+      _.map(txes, function(tx) {
+	var txObj = {
+	  network: tx.network,
+	  hash: tx.hash,
+	  type: tx.type,
+	  address: tx.address,
+	  amount: tx.amount.toString(),
+	  fee: tx.fee.toString(),
+	  confirmations: tx.confirmations,
+	  time: tx.time * 1000
+	};
+	var i=0;
+	for(i=0; i<self.transactions.length; i++) {
+	  if(self.transactions[i].hash == txObj.hash) {
+	    self.transactions[i] = txObj;
+	    break;
 	  }
+	}
+	if(i >= self.transactions.length) {
+	  self.transactions.push(txObj);
+	}
+      });
+      callback();
+    });
+  };
+
+  this.filterNetwork = function(arr, network, iterator) {
+    for(var i=0; i<arr.length; i++) {
+      var obj = arr[i];
+      if(!network || network == obj.network) {
+	iterator.call(this, obj, i);
       }
+    }
   };
 
   this.getUnspent = function(network, confirmations) {
     if(!network) {
-	throw 'void network ';
+      throw 'void network ';
     }
 
     var confirmations = confirmations || 0;
     var unspentList = [];
     this.filterNetwork(this.unspent, network, function(unspent) {
-	if(this.unspentConfirmations[unspent.hash] >= confirmations) {
-	    unspentList.push(unspent);
-	}
+      if(this.unspentConfirmations[unspent.hash] >= confirmations) {
+	unspentList.push(unspent);
+      }
     });
     return unspentList;
   };
@@ -349,18 +315,18 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.balanceObject = function() {
-      var bs = {};
-      for(var i =0; i<this.unspent.length; i++) {
-	  var uspt = this.unspent[i];
-	  var amount = bs[uspt.network];
-	  if(amount == undefined) {
-	      amount = new BigNumber(uspt.amount);
-	  } else {
-	      amount = amount.plus(uspt.amount);
-	  }
-	  bs[uspt.network] = amount;
+    var bs = {};
+    for(var i =0; i<this.unspent.length; i++) {
+      var uspt = this.unspent[i];
+      var amount = bs[uspt.network];
+      if(amount == undefined) {
+	amount = new BigNumber(uspt.amount);
+      } else {
+	amount = amount.plus(uspt.amount);
       }
-      return bs;
+      bs[uspt.network] = amount;
+    }
+    return bs;
   };
 
 
@@ -373,33 +339,33 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.balanceForNetworks = function() {
-      var balanceMap = {};
-      for(var i=0; i<this.unspent.length; i++) {
-	  var uspt = this.unspent[i];
-	  var amount = balanceMap[uspt.network] || new BigNumber(0);
-	  balanceMap[uspt.network] = amount.plus(new BigNumber(uspt.amount));
-      }
-      var balances = [];
-      _.map(richwallet.config.sortedNetworks, function(network) {
-	  var amount = balanceMap[network] || new BigNumber(0);
-	  balances.push({network: network, amount: amount});
-      });
-      return balances;
+    var balanceMap = {};
+    for(var i=0; i<this.unspent.length; i++) {
+      var uspt = this.unspent[i];
+      var amount = balanceMap[uspt.network] || new BigNumber(0);
+      balanceMap[uspt.network] = amount.plus(new BigNumber(uspt.amount));
+    }
+    var balances = [];
+    _.map(richwallet.config.sortedNetworks, function(network) {
+      var amount = balanceMap[network] || new BigNumber(0);
+      balances.push({network: network, amount: amount});
+    });
+    return balances;
   };
 
   this.balanceForAddresses = function(network) {
-      var addrBalances = {};
-      this.filterNetwork(this.unspent, network, function(uspt) {
-	  var amount = addrBalances[uspt.address] || 0;
-	  addrBalances[uspt.address] = amount + uspt.amount;
-      });
-      return addrBalances;
+    var addrBalances = {};
+    this.filterNetwork(this.unspent, network, function(uspt) {
+      var amount = addrBalances[uspt.address] || new BigNumber(0);
+      addrBalances[uspt.address] = amount.plus(uspt.amount);
+    });
+    return addrBalances;
   };
 
   // Safe to spend unspent txs.
   this.safeUnspent = function(network) {
     if(!network) {
-	throw "network must be provide";
+      throw "network must be provide";
     }
     var unspent = this.getUnspent(network);
     var changeAddresses = this.changeAddressHashes(network);
@@ -414,7 +380,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
   this.receivedAmountTotal = function(network) {
     if(!network) {
-	throw "network must be provide";
+      throw "network must be provide";
     }
     var addresses = this.addresses(network);
     var amount = new BigNumber(0);
@@ -440,7 +406,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     if(amt == Bitcoin.BigInteger.ZERO)
       throw "spend amount must be greater than zero";
-      
+    
 
     var fee = Bitcoin.util.parseValue(feeString || '0');
     var total = Bitcoin.BigInteger.ZERO.add(amt).add(fee);
@@ -470,7 +436,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     }
 
     if(!changeAddress && unspent.length > 0) {
-	changeAddress = unspent[0].address;
+      changeAddress = unspent[0].address;
     }
     if(!changeAddress)
       throw "change address was not provided";
@@ -487,7 +453,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
 
     if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
-	sendTx.addOutput(changeAddress, remainder);
+      sendTx.addOutput(changeAddress, remainder);
     }
 
     var hashType = 1; // SIGHASH_ALL
@@ -503,7 +469,7 @@ richwallet.Wallet = function(walletKey, walletId) {
           var key = new Bitcoin.Key(keyPairs[j].key);
           var signature = key.sign(hash);
           signature.push(parseInt(hashType, 10));
-	    
+	  
           sendTx.ins[i].script = Bitcoin.Script.createInputScript(signature, key.getPub());
           break;
         }
@@ -513,113 +479,117 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.createAdvTx = function(network, inputAddresses, outputs, fee) {
-      var sendTx = new Bitcoin.Transaction();
-      var unspent = [];
-      var unspentAmt = Bitcoin.BigInteger.ZERO;
-      var total = Bitcoin.BigInteger.ZERO;
-      _.map(outputs, function(output) {
-	  total = total.add(richwallet.utils.amountToSatoshi(output.amount));
-      });
-      total = total.add(richwallet.utils.amountToSatoshi(fee));
+    var sendTx = new Bitcoin.Transaction();
+    var unspent = [];
+    var unspentAmt = Bitcoin.BigInteger.ZERO;
+    var total = Bitcoin.BigInteger.ZERO;
+    _.map(outputs, function(output) {
+      total = total.add(richwallet.utils.amountToSatoshi(output.amount));
+    });
+    total = total.add(richwallet.utils.amountToSatoshi(fee));
 
-      var almostSafeUnspent = this.getUnspent(network);
-      for(var i=0;i<almostSafeUnspent.length;i++) {
-	  var uspt = almostSafeUnspent[i];
+    var almostSafeUnspent = this.getUnspent(network);
+    for(var i=0;i<almostSafeUnspent.length;i++) {
+      var uspt = almostSafeUnspent[i];
 
-	  var found = false;
-	  for(var j=0; j<inputAddresses.length; j++) {
-	      if(inputAddresses[j] == uspt.address) {
-		  found = true;
-		  break;
-	      }
-	  }
-	  if(!found) {
-	      continue;
-	  }
-	  unspent.push(uspt);
-
-	  unspentAmt = unspentAmt.add(richwallet.utils.amountToSatoshi(uspt.amount));
-
-	  // If > -1, we have enough to send the requested amount
-	  if(unspentAmt.compareTo(total) > -1) {
-              break;
-	  }
+      var found = false;
+      for(var j=0; j<inputAddresses.length; j++) {
+	if(inputAddresses[j] == uspt.address) {
+	  found = true;
+	  break;
+	}
       }
-
-      if(unspentAmt.compareTo(total) < 0) {
-	  throw T("you do not have enough coins to send this amount");
+      if(!found) {
+	continue;
       }
-      var changeAddress = unspent[0].address;
-      if(!changeAddress)
-	  throw "change address was not provided";
-      
-      for(var i=0;i<unspent.length;i++) {
-	  sendTx.addInput({hash: unspent[i].hash}, unspent[i].vout);
+      unspent.push(uspt);
+
+      unspentAmt = unspentAmt.add(richwallet.utils.amountToSatoshi(uspt.amount));
+
+      // If > -1, we have enough to send the requested amount
+      if(unspentAmt.compareTo(total) > -1) {
+        break;
       }
-      // The address you are sending to, and the amount:
-      _.map(outputs, function(output) {
-	  sendTx.addOutput(new Bitcoin.Address(output.address),
-			  richwallet.utils.amountToSatoshi(output.amount));
-      });
+    }
 
-      var remainder = unspentAmt.subtract(total);
-      
-      if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
-	  sendTx.addOutput(changeAddress, remainder);
+    if(unspentAmt.compareTo(total) < 0) {
+      throw T("you do not have enough coins to send this amount");
+    }
+    var changeAddress = unspent[0].address;
+    if(!changeAddress)
+      throw "change address was not provided";
+    
+    for(var i=0;i<unspent.length;i++) {
+      sendTx.addInput({hash: unspent[i].hash}, unspent[i].vout);
+    }
+    // The address you are sending to, and the amount:
+    _.map(outputs, function(output) {
+      sendTx.addOutput(new Bitcoin.Address(output.address),
+		       richwallet.utils.amountToSatoshi(output.amount));
+    });
+
+    var remainder = unspentAmt.subtract(total);
+    
+    if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
+      sendTx.addOutput(changeAddress, remainder);
+    }
+
+    var hashType = 1; // SIGHASH_ALL
+    // Here will be the beginning of your signing for loop
+
+    //for(var i=0;i<unspent.length;i++) {
+    _.map(unspent, function(uspt, i) {
+      var unspentOutScript = new Bitcoin.Script(Bitcoin.convert.hexToBytes(uspt.scriptPubKey));
+      var hash = sendTx.hashTransactionForSignature(unspentOutScript, i, hashType);
+      var pubKeyHash = unspentOutScript.simpleOutHash();
+      var pubKeyHashHex = Bitcoin.convert.bytesToHex(pubKeyHash);
+      for(var j=0;j<keyPairs.length;j++) {
+        if(_.isEqual(keyPairs[j].publicKey, pubKeyHashHex)) {
+	  var key = new Bitcoin.Key(keyPairs[j].key);
+	  var signature = key.sign(hash);
+	  signature.push(parseInt(hashType, 10));
+	  sendTx.ins[i].script = Bitcoin.Script.createInputScript(signature, key.getPub());
+	  break;
+        }
       }
-
-      var hashType = 1; // SIGHASH_ALL
-      // Here will be the beginning of your signing for loop
-
-      //for(var i=0;i<unspent.length;i++) {
-      _.map(unspent, function(uspt, i) {
-	  var unspentOutScript = new Bitcoin.Script(Bitcoin.convert.hexToBytes(uspt.scriptPubKey));
-	  var hash = sendTx.hashTransactionForSignature(unspentOutScript, i, hashType);
-	  var pubKeyHash = unspentOutScript.simpleOutHash();
-	  var pubKeyHashHex = Bitcoin.convert.bytesToHex(pubKeyHash);
-	  for(var j=0;j<keyPairs.length;j++) {
-              if(_.isEqual(keyPairs[j].publicKey, pubKeyHashHex)) {
-		  var key = new Bitcoin.Key(keyPairs[j].key);
-		  var signature = key.sign(hash);
-		  signature.push(parseInt(hashType, 10));
-		  sendTx.ins[i].script = Bitcoin.Script.createInputScript(signature, key.getPub());
-		  break;
-              }
-	  }
-      });
-      return {network: network, unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
+    });
+    return {network: network, unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
   };
 
-/*  this.calculateFee = function(amtString, addressString, changeAddress) {
-    var tx = this.createTx(amtString, 0, addressString, changeAddress);
-    var addr = new Bitcoin.Address(addressString);
-    var txSize = tx.raw.length / 2;
-    var fee = Math.ceil(txSize/1000)*addr.networkConfig().fee;
-    return fee;    
-  };
-*/
+  /*  this.calculateFee = function(amtString, addressString, changeAddress) {
+      var tx = this.createTx(amtString, 0, addressString, changeAddress);
+      var addr = new Bitcoin.Address(addressString);
+      var txSize = tx.raw.length / 2;
+      var fee = Math.ceil(txSize/1000)*addr.networkConfig().fee;
+      return fee;    
+      };
+  */
 
   this.feeOfTx = function(network, tx) {
-      var txSize = tx.raw.length / 2;
-      var fee = Math.ceil(txSize/1000)*richwallet.config.networkConfigs[network].fee;
-      return fee;
+    var txSize = tx.raw.length / 2;
+    var fee = Math.ceil(txSize/1000)*richwallet.config.networkConfigs[network].fee;
+    return fee;
   };
 
-  this.addTx = function (tx, amtString, feeString, addressString, changeAddress) {
-    this.transactions.push({
+  this.addTx = function (tx, amtString, feeString, address) {
+    var txObj = {
       network: tx.network,
       hash: Bitcoin.convert.bytesToHex(tx.obj.getHash()),
       type: 'send',
-      address: addressString,
+      address: address,
       amount: amtString,
       fee: feeString,
-      time: new Date().getTime()
-    });
-
+      time: new Date().getTime(),
+      confirmations: 0
+    };
+    this.transactions.push(txObj);
     // Remove unspent elements now that we have a tx that uses them
     for(var i=0;i<tx.unspentsUsed.length;i++) {
-      this.unspent = _.reject(this.unspent, function(u) { return u.hash == tx.unspentsUsed[i].hash })
+      this.unspent = _.reject(this.unspent,
+			      function(u) { return u.hash == tx.unspentsUsed[i].hash })
     }
+    this.updateTransactions([{network: txObj.network, tx:txObj.hash}], function() {
+    });
   };
 
   if(walletKey && walletId)

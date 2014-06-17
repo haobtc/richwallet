@@ -24,37 +24,94 @@ richwallet.Controller.prototype.getUnspent = function(confirmations, callback) {
 };
 
 richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
-    var txSections = {};
-    for(var i=0; i<txHashes.length; i++) {
-	var txHash = txHashes[i];
-	var arr = txSections[txHash.network];
-	if(arr) {
-	    arr.push(txHash.tx);
-	} else {
-	    arr = [txHash.tx];
-	    txSections[txHash.network] = arr;
-	}
+  var self = this;
+  var txSections = {};
+  for(var i=0; i<txHashes.length; i++) {
+    var txHash = txHashes[i];
+    var arr = txSections[txHash.network];
+    if(arr) {
+      arr.push(txHash.tx);
+    } else {
+      arr = [txHash.tx];
+      txSections[txHash.network] = arr;
     }
-    var jsonpUrl = 'api/infoproxy/tx/details';
-    var query = {};
-     for(var network in txSections) {
-	 query[network] =  txSections[network].join(',');
-    }
+  }
+  var jsonpUrl = 'api/infoproxy/tx/details';
+  var query = {};
+  for(var network in txSections) {
+    query[network] =  txSections[network].join(',');
+  }
 
-    $.post(jsonpUrl, query, function(resp) {
-	for(var i=0; i<resp.length; i++) {
-	  var tx = resp[i];
-	  tx.hash = tx.txid;
-	}
-	callback(resp);
-    }, 'json');
+  $.post(jsonpUrl, query, function(resp) {
+    for(var i=0; i<resp.length; i++) {
+      //var tx = resp[i];
+      //tx.hash = tx.txid;
+      //tx.details
+      self.processTxDetail(resp[i]);
+    }
+    callback(resp);
+  }, 'json');
+};
+
+richwallet.Controller.prototype.processTxDetail = function(txDetail) {
+  var sumInput = new BigNumber(0);
+  var sumOutput = new BigNumber(0);
+  var sendAmount = new BigNumber(0);
+
+  txDetail.type = 'receive';
+  txDetail.hash = txDetail.txid;
+  var selfAddrDict = {};
+  _.map(richwallet.wallet.addressHashes(txDetail.network), function(addr) {
+    selfAddrDict[addr] = true;
+  });
+  
+  _.map(txDetail.inputs, function(input) {
+    sumInput = sumInput.plus(input.amount);
+    var addrs = input.address.split(',');
+    for(var i=0; i<addrs.length; i++) {
+      if(selfAddrDict[addrs[i]]) {
+	txDetail.type = 'send';
+	input.inWallet = true;
+      }
+    }
+  });
+
+  var selfAddrs = [];
+  var extAddrs = [];
+  _.map(txDetail.outputs, function(output) {
+    sumOutput = sumOutput.plus(output.amount);
+    var addrs = output.address.split(',');
+    for(var i=0; i<addrs.length; i++) {
+      if(!selfAddrDict[addrs[i]]) {
+	sendAmount = sendAmount.plus(new BigNumber(output.amount).div(addrs.length));
+	extAddrs.push(addrs[i]);
+	output.inWallet = false;
+      } else {
+	selfAddrs.push(addrs[i]);
+	output.inWallet = true;
+      }
+    }
+  });
+
+  if(txDetail.type == 'send') {
+    txDetail.amount = sendAmount;
+    txDetail.address = extAddrs;
+  } else {
+    txDetail.amount = sumOutput.minus(sendAmount);
+    txDetail.address = selfAddrs;
+  }
+  txDetail.fee = sumInput.minus(sumOutput);
 };
 
 richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
-  if(richwallet.wallet.mergeUnspent(unspent) == true)
-    this.saveWallet(richwallet.wallet, {override: true}, callback);
-  else if(typeof callback == 'function')
-    callback();
+  var self = this;
+  richwallet.wallet.mergeUnspent(unspent, function(changed) {
+    if(changed) {
+      self.saveWallet(richwallet.wallet, {override: true}, callback);
+    } else if(typeof callback=='function'){
+      callback();
+    }
+  });
 };
 
 richwallet.Controller.prototype.saveWallet = function(wallet, data, callback) {
@@ -132,6 +189,20 @@ richwallet.Controller.prototype.showSuccessMessage = function(text) {
     msgDom.insertBefore($('#view'));
     setTimeout(function() {
 	$('#successMessage').fadeOut(function() {
+	    $(this).remove();
+	});
+    }, 5000);
+};
+
+richwallet.Controller.prototype.showErrorMessage = function(text) {
+    var msgDom = $('<div class="alert alert-danger alert-dismissable" id="errorMessage" style="margin-top: 20px;">' +
+	'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+      '<span id="messageContent"></span></div>');
+    $('#messageContent', msgDom).html(text);
+    //$('#view').prepand(msgDom);
+    msgDom.insertBefore($('#view'));
+    setTimeout(function() {
+	$('#errorMessage').fadeOut(function() {
 	    $(this).remove();
 	});
     }, 5000);

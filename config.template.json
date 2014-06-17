@@ -38,5 +38,6 @@
   },
   "httpPort": 8080,
   "authCodeSalt": "werNiosWE@#s8",
-  "blockInfoServer": "https://openblock.com"
+  "blockInfoServer": "https://openblock.com",
+  "blockQueryServer": "http://dev.openblock.com:9000"
 }
