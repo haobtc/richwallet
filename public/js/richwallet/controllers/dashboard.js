@@ -12,16 +12,16 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
     var txHashes = [];
 
     function drawDashboard() {
-	var balances = richwallet.wallet.balanceForNetworks();
-	var sortedTxs = richwallet.wallet.transactions.sort(function(a, b) {return b.time - a.time;});
+      var balances = richwallet.wallet.balanceForNetworks();
+      var sortedTxs = richwallet.wallet.transactions.sort(function(a, b) {return b.time - a.time;});
       
-	self.template('currencyBalances', 'dashboard/balances', {balances:balances}, function(id) {
-	    $('#'+id+" [rel='tooltip']").tooltip();
-	});
+      self.template('currencyBalances', 'dashboard/balances', {balances:balances}, function(id) {
+	$('#'+id+" [rel='tooltip']").tooltip();
+      });
 
-	self.template('allTransactions', 'dashboard/transactions', {tx:sortedTxs}, function(id) {
-	    $('#'+id+" [rel='tooltip']").tooltip();
-	});
+      self.template('allTransactions', 'dashboard/transactions', {tx:sortedTxs}, function(id) {
+	$('#'+id+" [rel='tooltip']").tooltip();
+      });
     }
 
     drawDashboard();
@@ -33,21 +33,25 @@ richwallet.controllers.Dashboard.prototype.renderDashboard = function() {
 	var removableTxes = {};
 	var hasRemovable = false;
 	for(i=0;i<txs.length;i++) {
-	    var j=0;
-	    for(;j<resp.length;j++) {
-		if(txs[i].hash == resp[j].hash) {
-		    txs[i].confirmations = resp[j].confirmations;
-		    break;
-		}
+	  var j=0;
+	  for(;j<resp.length;j++) {
+	    if(txs[i].hash == resp[j].hash) {
+	      txs[i].confirmations = resp[j].confirmations;
+	      break;
 	    }
-	    if(j >= resp.length && txs[i].confirmations == 0) {
-		// Not found
-		removableTxes[txs[i].hash] = true;
-		hasRemovable = true;
+	  }
+	  if(j >= resp.length && txs[i].confirmations == 0) {
+	    // Not found
+	    if(txs[i].sending > 0) {
+	      txs[i].sending--;
+	    } else {
+	      removableTxes[txs[i].hash] = true;
+	      hasRemovable = true;
 	    }
+	  }
 	}
 	if(hasRemovable) {
-	    richwallet.wallet.transactions = _.reject(richwallet.wallet.transactions, function(tx) {return removableTxes[tx.hash]});
+	  richwallet.wallet.transactions = _.reject(richwallet.wallet.transactions, function(tx) {return removableTxes[tx.hash]});
 	  self.saveWallet(richwallet.wallet, {override: true}, function(){});
 	}
 	drawDashboard();

@@ -580,7 +580,8 @@ richwallet.Wallet = function(walletKey, walletId) {
       amount: amtString,
       fee: feeString,
       time: new Date().getTime(),
-      confirmations: 0
+      confirmations: 0,
+      sending: 3
     };
     this.transactions.push(txObj);
     // Remove unspent elements now that we have a tx that uses them
