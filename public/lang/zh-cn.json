@@ -3,7 +3,8 @@
     "litecoin": "莱特币",
     "dogecoin": "狗狗币",
 
-    "A new version of onewallet is available. Load it?": "壹钱包有新版本了. 加载新版本?",
+    "A new version of onewallet is available. Restart is required!": "壹钱包有新版本了, 需要重载应用!",
+    "Restart wallet after %s seconds": "%s秒后重载应用",
     "OneWallet": "壹钱包",
     "Open": "开放",
     "Secure": "安全",
