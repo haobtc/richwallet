@@ -68,6 +68,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
       richwallet.router.listener();
       richwallet.router.route('dashboard');
       localStorage.setItem("default_username", id);
+      self.truncateTransactions();
     }
   });
 };
