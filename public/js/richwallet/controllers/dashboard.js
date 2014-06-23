@@ -76,4 +76,41 @@ richwallet.controllers.Dashboard.prototype.index = function() {
   });
 };
 
+richwallet.controllers.Dashboard.prototype.getTxIDList = function(callback) {
+  var self = this;
+  var query = {addresses: richwallet.wallet.addressHashes()};
+  if(!query.addresses || query.addresses.length == 0) {
+    return;
+  }
+  var jsonpUrl = 'api/infoproxy/tx/list';
+  $.post(jsonpUrl, {addresses:query.addresses.join(',')}, function(resp) {
+
+    var txIDs = {};
+    _.map(richwallet.wallet.transactions, function(tx) {
+      txIDs[tx.network + ':' + tx.hash] = true;
+    });
+    _.map(richwallet.wallet.archived, function(txd) {
+      txIDs[txd] = true;
+    });
+
+    var newTxHashes = [];
+    for(var netname in resp) {
+      resp[netname].forEach(function(txid) {
+	if(!txIDs[netname + ':' + txid]) {
+	  // New tx which is not recorded 
+	  newTxHashes.push({
+	    network: netname,
+	    tx: txid
+	  });
+	}
+      });
+    }
+    if(newTxHashes.length > 0) {
+      richwallet.wallet.updateTransactions(newTxHashes, callback);
+    } else {
+      callback();
+    }
+  }, 'json');
+};
+
 richwallet.controllers.dashboard = new richwallet.controllers.Dashboard();

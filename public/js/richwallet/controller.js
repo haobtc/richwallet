@@ -53,6 +53,7 @@ richwallet.Controller.prototype.getTxDetails = function(txHashes, callback) {
   }, 'json');
 };
 
+
 richwallet.Controller.prototype.processTxDetail = function(txDetail) {
   var sumInput = new BigNumber(0);
   var sumOutput = new BigNumber(0);
@@ -66,7 +67,7 @@ richwallet.Controller.prototype.processTxDetail = function(txDetail) {
   });
   
   _.map(txDetail.inputs, function(input) {
-    sumInput = sumInput.plus(input.amount);
+    sumInput = sumInput.plus(input.amount || 0);
     var addrs = input.address.split(',');
     for(var i=0; i<addrs.length; i++) {
       if(selfAddrDict[addrs[i]]) {
@@ -79,7 +80,7 @@ richwallet.Controller.prototype.processTxDetail = function(txDetail) {
   var selfAddrs = [];
   var extAddrs = [];
   _.map(txDetail.outputs, function(output) {
-    sumOutput = sumOutput.plus(output.amount);
+    sumOutput = sumOutput.plus(output.amount || 0);
     var addrs = output.address.split(',');
     for(var i=0; i<addrs.length; i++) {
       if(!selfAddrDict[addrs[i]]) {

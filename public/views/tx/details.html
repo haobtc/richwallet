@@ -1,7 +1,6 @@
 <%
 function addressLink(a){
-   return '<a href="javascript:richwallet.controllers.tx.showQuickSend(\'' +
-    a + '\');">' + richwallet.utils.shortText(a, 12) + '</a>';
+   return '<a href="#/search/' +  a + '">' + richwallet.utils.shortText(a, 12) + '</a>';
 } 
 %>
 <div class="row">
@@ -148,11 +147,7 @@ function addressLink(a){
       <% _.map(data.tx.inputs, function(input) { %>
       <div class="clearfix text-center" style="padding-bottom: 10px;">
         <div>
-	  <% if(!input.inWallet) { %>
           <%= addressLink(input.address) %>
-	  <% } else {%>
-	  <%- richwallet.utils.shortText(input.address, 12) %>
-	  <% } %>
 	</div>
 	<div>
 	  <small style="margin-right: 30px;"><%- input.amount %> <%- data.currency %></small>
@@ -174,11 +169,7 @@ function addressLink(a){
       <% _.map(data.tx.outputs, function(output) { %>
       <div class="clearfix" style="padding-bottom: 10px;">
 	<div>
-	  <% if(!output.inWallet) { %>
           <%= addressLink(output.address) %>
-	  <% } else { %>
-	  <%- richwallet.utils.shortText(output.address, 12) %>
-	  <% } %>
 	</div>
 	<div>
 	  <small><%- output.amount %> <%- data.currency %></small></div>

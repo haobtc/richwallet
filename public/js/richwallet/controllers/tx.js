@@ -15,6 +15,12 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
 
   this.getTxDetails([reqObj], function(resp) {
     var tx = resp[0];
+    if(!tx) {
+      self.showErrorMessage(T('Tx %s does not exist', reqObj.tx));
+      richwallet.router.route('dashboard');
+      return;
+    }
+    
     var txs = richwallet.wallet.transactions;
     for(var i=0;i<txs.length;i++) {
       if(txs[i].network == tx.network && txs[i].hash == tx.hash) {

@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v0.2.39
+# v0.2.42
 
 index.html
 js/all.js
@@ -47,6 +47,9 @@ views/dashboard/balances.html
 views/dashboard/transactions.html
 views/tx/details.html
 views/tx/advsend.html
+views/search/tx.html
+views/search/address.html
+views/search/noresult.html
 views/backup.html
 views/dashboard.html
 views/header.html

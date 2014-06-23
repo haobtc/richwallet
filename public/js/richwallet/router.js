@@ -18,17 +18,23 @@ richwallet.router.walletRequired = function() {
 };
 
 richwallet.router.listener = function() {
-    if(richwallet.router.listenerTimeout) {
-	clearInterval(richwallet.router.listenerTimeout);
-    }
-    richwallet.router.listenerTimeout = setInterval(function() {
-	richwallet.controllers.dashboard.getUnspent(function() {
-            var rt = $('#allTransactions');
-            if(rt.length == 1) {
-		richwallet.controllers.dashboard.renderDashboard();
-	    }
-	});
-    }, 30000);
+  if(richwallet.router.listenerTimeout) {
+    clearInterval(richwallet.router.listenerTimeout);
+  }
+  richwallet.router.listenerTimeout = setInterval(function() {
+    richwallet.controllers.dashboard.getUnspent(function() {
+      if($('#allTransactions').length >= 1) {
+	richwallet.controllers.dashboard.renderDashboard();
+      }
+    });
+    setTimeout(function() {
+      richwallet.controllers.dashboard.getTxIDList(function() {
+	if($('#allTransactions').length >= 1) {
+	  richwallet.controllers.dashboard.renderDashboard();
+	}	
+      });
+    }, 1000);
+  }, 30000);
 };
 
 richwallet.router.initWallet = function(callback) {
@@ -83,6 +89,15 @@ richwallet.router.map("#/dashboard").to(function() {
     if(res == false)
       return;
     richwallet.controllers.dashboard.index();
+  });
+});
+
+richwallet.router.map("#/search/:term").to(function() {
+  var term = this.params.term;
+  richwallet.router.initWallet(function(res) {
+    if(res == false)
+      return;
+    richwallet.controllers.search.searchTerm(term);
   });
 });
 

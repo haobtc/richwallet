@@ -7,8 +7,7 @@
 
 <%
 function addressLink(a){
-   return '<a href="javascript:richwallet.controllers.tx.showQuickSend(\'' +
-    a + '\');">' + richwallet.utils.shortText(a, 6) + '</a>';
+   return '<a href="#/search/' + a + '">' + richwallet.utils.shortText(a, 6) + '</a>';
 } 
 %>
 
@@ -19,7 +18,7 @@ function addressLink(a){
 <% } else { %>
   <div class="visible-xs visible-sm col-lg-12">
     <% for(var i=0; i<data.tx.length; i++) { var tx=data.tx[i]; %>
-      <hr>
+      <hr/>
       <div class="row">
         <div class="col-xs-12">
           <strong><%- humaneDate(new Date(tx.time).toISOString()) %></strong>

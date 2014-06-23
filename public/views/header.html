@@ -26,7 +26,17 @@
 	</li>
         <li class="hidden-xs hidden-sm"><a href="#/backup"><i class="fa fa-download"></i> <%- T('Backup') %></a></li>
       <% } %>
+
     </ul>
+    <% if(richwallet.wallet) { %>
+    <form id="searchForm" class="navbar-form navbar-left" role="search" onsubmit="richwallet.controllers.search.performSearch(); return false;">
+      <div class="form-group clearfix">
+	<input type="text" id="searchTerm" class="form-control" placeholder="<%- T('Search txid or address') %>"></input>
+      </div>
+      <button type="submit" class="btn btn-link"><i class="fa fa-search"></i></button>
+    </form>
+    <% } %>
+
     <ul class="nav navbar-nav navbar-right">
       <% if(richwallet.wallet) { %>
 	<li class="dropdown">
