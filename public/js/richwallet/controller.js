@@ -116,7 +116,11 @@ richwallet.Controller.prototype.mergeUnspent = function(unspent, callback) {
 
 richwallet.Controller.prototype.truncateTransactions = function() {
   if(richwallet.wallet.transactions.length >= 150) {
-    richwallet.wallet.transactions = richwallet.wallet.transactions.sort(function(a, b) {return b.time - a.time;}).slice(0, 100);
+    var trans = richwallet.wallet.transactions.sort(function(a, b) {return b.time - a.time;});
+    for(var i=100; i<trans.length; i++) {
+      richwallet.wallet.archived.push(trans[i].network + ':' + trans[i].hash);
+    }
+    richwallet.wallet.transactions = trans.slice(0, 100);
     this.saveWallet(richwallet.wallet, {override: true}, function() {});
   }
 };

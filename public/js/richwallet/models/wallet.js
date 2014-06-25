@@ -5,6 +5,7 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.defaultIterations = 1000;
   this.serverKey = undefined;
   this.transactions = [];
+  this.archived = [];
   this.unspent = [];
   this.minimumConfirmations = 0;
   this.unspentConfirmations = [];
@@ -22,6 +23,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     var payload = JSON.parse(payloadJSON);
     keyPairs = payload.keyPairs;
     this.transactions = payload.transactions || [];
+    this.archived = payload.archived || [];
     this.unspent = payload.unspent || [];
 
     for(var i=0; i<this.transactions.length; i++) {
@@ -176,7 +178,7 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.encryptPayload = function() {
-    var payload = {keyPairs: keyPairs, transactions: this.transactions, unspent: this.unspent};
+    var payload = {keyPairs: keyPairs, transactions: this.transactions, unspent: this.unspent, archived: this.archived};
     var payloadJSON = JSON.stringify(payload);
     this.newPayloadHash = this.computePayloadHash(payloadJSON);
     return sjcl.encrypt(this.walletKey, payloadJSON);
@@ -233,9 +235,10 @@ richwallet.Wallet = function(walletKey, walletId) {
 	  }
 	}
       }
-
       if(txMatch == false) {
-	newTxIDs.push({network:uspt.network, tx:uspt.hash});
+	if(!_.contains(self.archived, uspt.network + ':' + uspt.hash)) {
+	  newTxIDs.push({network:uspt.network, tx:uspt.hash});
+	}
       }
     }
     self.unspent = newUnspent;
