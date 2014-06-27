@@ -47,7 +47,9 @@
     "Two factor authentication code needed": "需要两步身份验证代码",
     "Two factor authentication code was invalid": "两步身份验证代码错误",
     "Auth Code": "验证码",
+    "Two factor auth is granted in 2 hours.":"两步验证后2小时内无需复验证。",
     "You have unread notifications": "您有未读的通知",
+    "User does not exist":"没有这个用户",
 
     "Transactions": "交易",
     "Receive": "收币",
@@ -172,6 +174,7 @@
     "Disable": "禁用",
     "Enter code to disable": "输入代码禁用",
     "Two Factor Auth": "两步验证",
+    "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make two factor authenticaton is highly recommended.":"您未开启两步验证，为了您的账号安全，建议您尽快开启两步验证。",
     "You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it": "你正在使用两步验证, 如果想禁用它，请在下方输入验证码",
     "Two factor authentication allows you to require a code from your phone from Login. Onewallet uses Google Authenticator, which you will need to download to use this.": "两步验证让你在登录的时候输入手机上的一个验证码，壹钱包使用Google Authenticator, 你需要在手机上先下载.",
     "twofactor.alert": "两步验证让你在登录时输入手机应用上的一个验证码，能很大程度提升账户的安全性。强烈建议开启 <a class=\"btn btn-info\" href=\"#/account/settings\">两步验证</a>",

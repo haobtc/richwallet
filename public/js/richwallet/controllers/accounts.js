@@ -25,6 +25,38 @@ richwallet.controllers.Accounts.prototype.backupDownload = function() {
     saveAs(blob, "richwallet-wallet.txt");
 };
 
+richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
+  var self = this;
+  var id = $('#walletId').val();
+  $.get('api/checkGoogleAuthCode', {email:id}, function(response){
+    $('div[data-role=authcode-input]').addClass("hidden");
+    $('div[data-role=authcode-alert]').addClass("hidden");
+    var errorDiv = $('#errors');
+    errorDiv.addClass('hidden');
+    errorDiv.html('');
+
+    if(response.error){
+      errorDiv.removeClass("hidden");
+      errorDiv.text(T(response.error));
+    }
+    else if(response.result == 'DoesNotExist'){
+      errorDiv.removeClass("hidden");
+      errorDiv.text(T('User does not exist'));
+    }
+    else if(response.result == 'AuthCode'){
+      $("div[data-role=authcode-input]").removeClass("hidden");
+    }
+    else if(response.result == 'NoAuthCode'){
+      $("div[data-role=authcode-alert]").removeClass("hidden");
+      $("div[data-role=authcode-alert] span").text(T("Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make two factor authenticaton is highly recommended."));
+    }
+    else if(response.result == 'NotExpired'){
+      $("div[data-role=authcode-alert]").removeClass("hidden");
+      $("div[data-role=authcode-alert] span").text(T("Two factor auth is granted in 2 hours."));
+    }
+  });
+};
+
 richwallet.controllers.Accounts.prototype.signin = function() {
   var self = this;
   var id = $('#walletId').val();
@@ -51,11 +83,7 @@ richwallet.controllers.Accounts.prototype.signin = function() {
     } else if(response.result == 'authCodeNeeded') {
       errorDiv.removeClass('hidden');
       errorDiv.text(T(response.message));
-      $('#signinPassword').after(
-        '<div class="form-group">' +
-          '<label for="authCode" class="control-label" styile="padding-top:0">' + T('Auth Code') + '</label>' +
-          '<input id="authCode" type="password" class="form-control" placeholder="">' +
-        '</div>');
+      $("div[data-role=authcode-input]").removeClass("hidden");
       $('#authCode').focus();
 
     } else {

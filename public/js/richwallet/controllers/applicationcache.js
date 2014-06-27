@@ -5,19 +5,19 @@ richwallet.controllers.ApplicationCache = function(){
 richwallet.controllers.ApplicationCache.prototype.alert = function(){
   var dialog = $("#updateCacheDialog");
   if(dialog.length < 1){
-    dialog = $("<div class=\"modal fade\" id=\"updateCache\" tabindex=\"-1\">
-                  <div class=\"modal-dialog modal-sm\">
-                    <div class=\"modal-content\">
-                      <div class=\"modal-body\">
-                        <div class=\"col-lg-12 text-center text-danger\" style=\"padding:40px 0px 40px 0px;\">
-                        </div>
-                        <div class=\"text-center\">
-                          <button type=\"button\" class=\"btn btn-primary\"></button>
-                        </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>");
+    dialog = $("<div class=\"modal fade\" id=\"updateCache\" tabindex=\"-1\">" +
+                  "<div class=\"modal-dialog modal-sm\">" +
+                    "<div class=\"modal-content\">" +
+                      "<div class=\"modal-body\">" +
+                        "<div class=\"col-lg-12 text-center text-danger\" style=\"padding:40px 0px 40px 0px;\">" +
+                        "</div>" +
+                        "<div class=\"text-center\">" +
+                          "<button type=\"button\" class=\"btn btn-primary\"></button>" +
+                        "</div>" +
+                     "</div>" +
+                   "</div>" +
+                 "</div>" +
+               "</div>");
     dialog.appendTo($(document.body));
   }
   dialog.find("div.text-danger").text(T('A new version of onewallet is available. Restart is required!'));
