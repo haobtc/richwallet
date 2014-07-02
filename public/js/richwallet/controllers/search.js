@@ -60,7 +60,7 @@ Search.prototype.searchAddress = function(address, network) {
       balance = balance.plus(new BigNumber(uspt.amount));
     });
     $.post('api/infoproxy/tx/list', {addresses:address, detail:'yes'}, function(resp) {
-      var txlist = resp[network];
+      var txlist = resp[network] || [];
       txlist.forEach(function(tx) {
 	var val = new BigNumber(0);
 	tx.inputs.forEach(function(txIn) {
