@@ -28,7 +28,7 @@ richwallet.controllers.Accounts.prototype.backupDownload = function() {
 richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
   var self = this;
   var id = $('#walletId').val();
-  $.get('api/checkGoogleAuthCode', {email:id}, function(response){
+  $.get('api/checkGoogleAuthCode', {email:id, r:$.now()}, function(response){
     $('div[data-role=authcode-input]').addClass("hidden");
     $('div[data-role=authcode-alert]').addClass("hidden");
     var errorDiv = $('#errors');
