@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h3 class="m-header"><%- T('Search result') %></h3>
+    <ul class="list-group">
+      <li class="list-group-item">
+	<span><%- T('Address') %></span>  <%- data.address %> (<%- T(data.network) %>)
+	<% if(!data.isSelf) { %>
+	<span class="pull-right">
+	  <a class="btn btn-link" href="#/tx/sendto/<%- data.address %>"><%- T('Send') %></a>
+	</span>
+	<% } %>
+      </li>
+      <li class="list-group-item">
+	<span><%- T('Balance') %></span>  <%- data.balance %> <%- richwallet.config.networkConfigs[data.network].currency %>
+      </li>
+    </ul>
+    <h3 class="m-header"><%- T('Related transactions') %></h3>
+    <ul class="list-group">
+      <% for(var i=0; i<data.txlist.length; i++) { var tx=data.txlist[i]; %>
+	 <li class="list-group-item">
+	 <a href="#/tx/details/<%- data.network %>/<%- tx.txid %>"><%- richwallet.utils.shortText(tx.txid, 12) %></a>
+	 <span class="pull-right"><%- tx.value %></span>
+       </li>
+       <% } %>
+    </ul>
+  </div>
+</div>
+

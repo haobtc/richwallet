@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h3 class="m-header"><%- T('Search result') %></h3>
+    <% for(var i=0; i<data.txlist.length; i++) { var tx=data.txlist[i]; %>
+       <hr/>
+       <div class="col-lg-12">
+	 <%- T(tx.network) %>
+	 <a href="#/tx/details/<%- tx.network %>/<%- tx.hash %>"><%- richwallet.utils.shortText(tx.hash, 12) %></a>
+       </div>
+       <% } %>
+  </div>
+</div>
+
