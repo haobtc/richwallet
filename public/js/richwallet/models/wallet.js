@@ -568,10 +568,59 @@ richwallet.Wallet = function(walletKey, walletId) {
       };
   */
 
-  this.feeOfTx = function(network, tx) {
-    var txSize = tx.raw.length / 2;
-    var fee = Math.ceil(txSize/1000)*richwallet.config.networkConfigs[network].fee;
+  this.estimateFee = function(network, inputAddresses, outputs) {
+    var sendTx = new Bitcoin.Transaction();
+    var countUnspent = 0;
+    var countOutputs = outputs.length;
+
+    var unspentAmt = Bitcoin.BigInteger.ZERO;
+    var total = Bitcoin.BigInteger.ZERO;
+    _.map(outputs, function(output) {
+      total = total.add(richwallet.utils.amountToSatoshi(output.amount));
+    });
+
+    var almostSafeUnspent = this.getUnspent(network);
+    for(var i=0;i<almostSafeUnspent.length;i++) {
+      var uspt = almostSafeUnspent[i];
+
+      var found = false;
+      for(var j=0; j<inputAddresses.length; j++) {
+	if(inputAddresses[j] == uspt.address) {
+	  found = true;
+	  break;
+	}
+      }
+      if(!found) {
+	continue;
+      }
+      countUnspent++;
+
+      unspentAmt = unspentAmt.add(richwallet.utils.amountToSatoshi(uspt.amount));
+
+      // If > -1, we have enough to send the requested amount
+      if(unspentAmt.compareTo(total) > -1) {
+        break;
+      }
+    }
+
+    var remainder = unspentAmt.subtract(total);
+    
+    if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
+      countOutputs++;
+    }
+    
+    var feeRate = richwallet.config.networkConfigs[network].fee;
+    var fee = Math.ceil((countUnspent + countOutputs)/10)*feeRate;
     return fee;
+  };
+
+  this.feeOfTx = function(network, tx, feeRate) {
+    var txSize = tx.raw.length / 2;
+    if(feeRate != undefined) {
+      feeRate = richwallet.config.networkConfigs[network].fee;
+    }
+    var fee = Math.ceil(txSize/1000)*feeRate;
+    return new BigNumber(fee);
   };
 
   this.addTx = function (tx, amtString, feeString, address) {

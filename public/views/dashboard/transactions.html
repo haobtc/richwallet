@@ -34,7 +34,11 @@ function addressLink(a){
 		 if(tx.type == "send") {
                    var address = tx.address;
 		   if(tx.address instanceof Array) {
-                      address = _.map(tx.address, addressLink).join(', ');
+                      if(tx.address.length > 1) {
+                        address = addressLink(tx.address[0]) + '...';
+                      } else {
+                        address = addressLink(tx.address.slice(0,1).join(''));
+             	      }
                    } else {
                       address = addressLink(address);
 		   }
@@ -75,7 +79,11 @@ function addressLink(a){
 		 if(tx.type == "send") {
                    var address = tx.address;
 		   if(tx.address instanceof Array) {
-                      address = _.map(tx.address, addressLink).join(', ');
+                      if(tx.address.length > 1) {
+                        address = addressLink(tx.address[0]) + '...';
+                      } else {
+                        address = addressLink(tx.address.slice(0,1).join(''));
+             	      }
                    } else {
                       address = addressLink(address);
 		   }
