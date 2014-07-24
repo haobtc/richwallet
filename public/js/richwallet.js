@@ -1,9 +1,38 @@
 var richwallet = {};
 
+var networkConfigs = {
+  "bitcoin": {
+    "leadingChar": "1", 
+    "version": 0, "p2sh": 1, "keyVersion":128,
+    "currency": "BTC",
+    "fee": 0.0001,
+  },
+  "litecoin": {
+    "leadingChar": "L", 
+    "version": 48, "p2sh": 5, "keyVersion":176,
+    "currency": "LTC",
+    "fee": 0.001
+  },
+  "dogecoin": {
+    "leadingChar": "D", 
+    "version": 30, "p2sh": 4, "keyVersion":158,
+    "currency": "DOG",
+    "fee": 1.0
+  },
+  "darkcoin": {
+    "leadingChar": "X", 
+    "version": 0x4C, "p2sh": 4, "keyVersion":204,
+    "currency": "DRK",
+    "fee": 0.01
+  }
+};
+
 $.ajax('api/config', {
   async: false,
   complete: function(resp) {
     richwallet.config = resp.responseJSON;
+    richwallet.config.networkConfigs = networkConfigs;
+    richwallet.config.sortedNetworks = ['bitcoin', 'litecoin', 'dogecoin', 'darkcoin'];
   }
 });
 
