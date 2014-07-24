@@ -3,7 +3,7 @@
     "bitcoin": "比特币",
     "litecoin": "莱特币",
     "dogecoin": "狗狗币",
-    "darkcoin": "黑暗币",
+    "darkcoin": "暗黑币",
 
     "A new version of onewallet is available. Restart is required!": "壹钱包有新版本了, 需要重载应用!",
     "Restart wallet after %s seconds": "%s秒后重载应用",
