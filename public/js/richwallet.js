@@ -3,7 +3,7 @@ var richwallet = {};
 var networkConfigs = {
   "bitcoin": {
     "leadingChar": "1", 
-    "version": 0, "p2sh": 1, "keyVersion":128,
+    "version": 0, "p2sh": 5, "keyVersion":128,
     "currency": "BTC",
     "fee": 0.0001,
   },
@@ -15,13 +15,13 @@ var networkConfigs = {
   },
   "dogecoin": {
     "leadingChar": "D", 
-    "version": 30, "p2sh": 4, "keyVersion":158,
+    "version": 30, "p2sh": 0x16, "keyVersion":158,
     "currency": "DOG",
     "fee": 1.0
   },
   "darkcoin": {
     "leadingChar": "X", 
-    "version": 0x4C, "p2sh": 4, "keyVersion":204,
+    "version": 0x4C, "p2sh": 5, "keyVersion":204,
     "currency": "DRK",
     "fee": 0.01
   }

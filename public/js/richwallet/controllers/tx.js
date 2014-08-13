@@ -185,7 +185,8 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
     if(addressString) {
       try {
 	var addr = new Bitcoin.Address(addressString);
-	if(addr.getNetwork() != network) {
+	if(addr.getNetwork() != network &&
+	   !_.contains(addr.p2shNetworks(), network)) {
 	  errorMessages.push(T('Invalid address'));
 	  hasError = true;
 	}
