@@ -50,6 +50,43 @@ richwallet.controllers.Addresses.prototype.exportPrivateKey=function(){
   }
 }
 
+richwallet.controllers.Addresses.prototype.showDeleteAddress=function(address){
+  $("#deleteAddressDialog strong:first").text(T('This address %s will be deleted.', address));
+  $("#deleteAddressDialog input[name='password']").val("");
+  $("#deleteAddressDialog input[name=address]").val(address);
+  $("#deleteAddressDialog .alert").addClass("hidden");
+  $("#deleteAddressDialog").modal({backdrop:false});
+}
+
+richwallet.controllers.Addresses.prototype.remindDeleteAddress=function(){
+  var address = $("#deleteAddressDialog input[name=address]").val();
+  var passwordInput = $("#deleteAddressDialog input[name='password']");
+  var password = passwordInput.val();
+  var keyInfo = richwallet.wallet.exportPrivateKey(address, password);
+  if(keyInfo.error){
+    $("#deleteAddressDialog .alert").text(T(keyInfo.error)).removeClass("hidden");
+  }
+  else{
+    passwordInput.val('');
+    $("#deleteAddressDialog").modal("toggle");
+//    $("#remindDeleteAddressDialog span:first").text(keyInfo.key);
+    $("#remindDeleteAddressDialog").modal({backdrop: false});
+  }
+}
+
+richwallet.controllers.Addresses.prototype.deleteAddress=function(){
+  var self = this;
+//  var name = richwallet.wallet.getAddressName(address);
+  var address = $("#deleteAddressDialog input[name=address]").val();
+  richwallet.wallet.deleteAddress(address);
+  $("#remindDeleteAddressDialog").modal("toggle");
+  self.saveWallet(richwallet.wallet, {override: true, onOutOfSync:'reload', backup: true}, function() {
+    self.render('addresses/list', {addresses: richwallet.wallet.addresses(),
+				  balances: richwallet.wallet.balanceForAddresses()}, function(id) {
+    });
+  });
+};
+
 
 richwallet.controllers.Addresses.prototype.isZeroBalanceAddressesHidden = function(){
   return richwallet.localProfile.get("isZeroBalanceAddressesHidden");
