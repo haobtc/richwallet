@@ -20,7 +20,7 @@ richwallet.controllers.ApplicationCache.prototype.alert = function(){
                "</div>");
     dialog.appendTo($(document.body));
   }
-  dialog.find("div.text-danger").text(T('A new version of onewallet is available. Restart is required!'));
+  dialog.find("div.text-danger").text(T('A new version of OpenblockWallet is available. Restart is required!'));
   dialog.find("button").text(T("Restart wallet after %s seconds", 10)).off("click").on("click", function(){
     window.location.reload();
   });
