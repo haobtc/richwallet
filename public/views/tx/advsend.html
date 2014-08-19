@@ -20,21 +20,26 @@
         <div class="col-lg-6">
 	  <ul class="list-group">
 	    <% _.map(data.addresses, function(address) {
-	       if(data.balance4Addresses[address]) { %>
+	       if(data.allBalance4Addresses[address]) { %>
 	    <li class="list-group-item clearfix">
 		 <input type="checkbox" checked="checked" id="checkbox_<%- address %>" rel="<%- address %>" value="<%- data.balance4Addresses[address] %>" class="col-lg-1"
 			onchange="richwallet.controllers.tx.advCheckValues();">
-		 <span class="pull-right"><%- data.balance4Addresses[address] + ' ' +  richwallet.config.networkConfigs[data.network].currency %></span>
+		 <span class="pull-right">
+		   <%- T('Balance/Available %s/%s %s', data.allBalance4Addresses[address], data.balance4Addresses[address]||0, richwallet.config.networkConfigs[data.network].currency) %>
+		 </span>
 		 <span ><%- richwallet.wallet.getAddressName(address) || richwallet.utils.shortText(address) %> </span>
 	    </li>
 	    <% }
 	    }); %>
 	    <li class="list-group-item clearfix">
+	      <span class="pull-right">
+		<%- T('Balance %s %s', data.allBalance, richwallet.config.networkConfigs[data.network].currency) %>
+	      </span>
+	    </li>
+	    <li class="list-group-item clearfix">
 	      <a href="javascript:richwallet.controllers.tx.advSelectAllAddresses();richwallet.controllers.tx.advCheckValues();"><%- T('Select All') %></a>
 	      <span class="pull-right">
-		<% if(data.allBalance.comparedTo(data.balance) != 0) { %>
-		<%- T('You have %s %s', data.allBalance, richwallet.config.networkConfigs[data.network].currency) %>
-		<% } %>
+
 		<%- T('Available to send this time') %> = <span id="totalBalance"><%- data.balance %></span> <%- richwallet.config.networkConfigs[data.network].currency %>
 		<i class="fa fa-question" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title="<%- T('Too many inputs may lead to a big tx that cannot be confirmed. Thus the number of inputs is limited.') %>"></i>
 	      </span>
