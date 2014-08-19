@@ -51,6 +51,7 @@ richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
        balance: balance,
        toaddress:toaddress,
        addresses: richwallet.wallet.addressHashes(network),
+       allBalance4Addresses: richwallet.wallet.balanceForAddresses(network),
        balance4Addresses: richwallet.wallet.usableBalanceForAddresses(usableUnspent)},
       function(id) {
 	$('#'+id+" [rel='tooltip']").tooltip();
