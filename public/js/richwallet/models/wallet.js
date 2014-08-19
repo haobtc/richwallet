@@ -316,7 +316,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     this.filterNetwork(this.unspent, network, function(unspent) {
       if(this.unspentConfirmations[unspent.hash] >= confirmations) {
 	unspentList.push(unspent);
-	if(unspentList.length >= 1) return false;
+	if(unspentList.length >= 20) return false;
       }
     });
     return unspentList;
