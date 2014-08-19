@@ -32,7 +32,10 @@
 	    <li class="list-group-item clearfix">
 	      <a href="javascript:richwallet.controllers.tx.advSelectAllAddresses();richwallet.controllers.tx.advCheckValues();"><%- T('Select All') %></a>
 	      <span class="pull-right">
-		<%- T('Available') %> = <span id="totalBalance"><%- data.balance %></span> <%- richwallet.config.networkConfigs[data.network].currency %>
+		<% if(data.allBalance.comparedTo(data.balance) != 0) { %>
+		<%- T('You have %s %s', data.allBalance, richwallet.config.networkConfigs[data.network].currency) %>
+		<% } %>
+		<%- T('Available to send this time') %> = <span id="totalBalance"><%- data.balance %></span> <%- richwallet.config.networkConfigs[data.network].currency %>
 		<i class="fa fa-question" rel="tooltip" data-toggle="tooltip" data-placement="bottom" title="<%- T('Too many inputs may lead to a big tx that cannot be confirmed. Thus the number of inputs is limited.') %>"></i>
 	      </span>
 	    </li>
