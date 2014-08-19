@@ -246,8 +246,6 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
 };
 
 richwallet.controllers.Tx.prototype.showSendReview = function(txInfo, callback){
-  console.info('txInfo', txInfo);
-
   $("#confirmSend h4").text(T("%s transaction review", T(txInfo.network)));
   var sendElement = $("#confirmSend ul");
   var sendtoItemElement = sendElement.find("li:first");

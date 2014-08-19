@@ -525,16 +525,27 @@ richwallet.Wallet = function(walletKey, walletId) {
     for(var i=0;i<unspent.length;i++) {
       sendTx.addInput({hash: unspent[i].hash}, unspent[i].vout);
     }
+
     // The address you are sending to, and the amount:
-    _.map(outputs, function(output) {
+    var newUnspents = [];
+    var addressHashes = this.addressHashes(network);
+    _.map(outputs, function(output, idx) {
       sendTx.addOutput(new Bitcoin.Address(output.address),
 		       richwallet.utils.amountToSatoshi(output.amount));
+      if(_.contains(addressHashes, output.address)) {
+	newUnspents.push({address:output.address,
+			  amount:output.amount.toString(),
+			 vout:idx});
+      }
     });
 
     var remainder = unspentAmt.subtract(total);
-    
     if(!remainder.equals(Bitcoin.BigInteger.ZERO)) {
       sendTx.addOutput(changeAddress, remainder);
+      var f = richwallet.utils.parseBigNumber(remainder).div(100000000).toString();
+      newUnspents.push({address:changeAddress,
+			amount:f,
+			vout:outputs.length});
     }
 
     var hashType = 1; // SIGHASH_ALL
@@ -556,7 +567,7 @@ richwallet.Wallet = function(walletKey, walletId) {
         }
       }
     });
-    return {network: network, unspentsUsed: unspent, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
+    return {network: network, unspentsUsed: unspent, newUnspents:newUnspents, obj: sendTx, raw: Bitcoin.convert.bytesToHex(sendTx.serialize())};
   };
 
   /*  this.calculateFee = function(amtString, addressString, changeAddress) {
@@ -624,9 +635,10 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.addTx = function (tx, amtString, feeString, address) {
+    var txid = Bitcoin.convert.bytesToHex(tx.obj.getHash());
     var txObj = {
       network: tx.network,
-      hash: Bitcoin.convert.bytesToHex(tx.obj.getHash()),
+      hash: txid,
       type: 'send',
       address: address,
       amount: amtString,
@@ -640,6 +652,21 @@ richwallet.Wallet = function(walletKey, walletId) {
     for(var i=0;i<tx.unspentsUsed.length;i++) {
       this.unspent = _.reject(this.unspent,
 			      function(u) { return u.hash == tx.unspentsUsed[i].hash })
+    }
+    if(tx.newUnspents && tx.newUnspents.length > 0) {
+      _.map(tx.newUnspents, function(u) {
+	var uspt = {
+	  address: u.address,
+	  amount: u.amount,
+	  confirmations: 0,
+	  hash: txid,
+	  network: tx.network,
+	  scriptPubKey: '',
+	  time: txObj.time,
+	  vout: u.vout
+	};
+	self.unspent.push(uspt);
+      });
     }
     this.updateTransactions([{network: txObj.network, tx:txObj.hash}], function() {
     });
