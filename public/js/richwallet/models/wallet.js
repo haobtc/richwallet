@@ -283,7 +283,10 @@ richwallet.Wallet = function(walletKey, walletId) {
     for(var i=0; i<arr.length; i++) {
       var obj = arr[i];
       if(!network || network == obj.network) {
-	iterator.call(this, obj, i);
+	var r = iterator.call(this, obj, i);
+	if(r === false) {
+	  break;
+	}
       }
     }
   };
@@ -298,6 +301,22 @@ richwallet.Wallet = function(walletKey, walletId) {
     this.filterNetwork(this.unspent, network, function(unspent) {
       if(this.unspentConfirmations[unspent.hash] >= confirmations) {
 	unspentList.push(unspent);
+      }
+    });
+    return unspentList;
+  };
+
+  this.getUsableUnspent = function(network, confirmations) {
+    if(!network) {
+      throw 'void network ';
+    }
+
+    var confirmations = confirmations || 0;
+    var unspentList = [];
+    this.filterNetwork(this.unspent, network, function(unspent) {
+      if(this.unspentConfirmations[unspent.hash] >= confirmations) {
+	unspentList.push(unspent);
+	if(unspentList.length >= 20) return false;
       }
     });
     return unspentList;
@@ -332,6 +351,14 @@ richwallet.Wallet = function(walletKey, walletId) {
     return bs;
   };
 
+  this.balanceForUnspent = function(unspent) {
+    var balance = new BigNumber(0);
+    for(var i =0; i<unspent.length; i++) {
+      var uspt = unspent[i];
+      balance = balance.plus(uspt.amount);
+    }
+    return balance;
+  };
 
   this.safeUnspentBalance = function(network) {
     var safeUnspentList = this.safeUnspent(network);
@@ -362,6 +389,16 @@ richwallet.Wallet = function(walletKey, walletId) {
       var amount = addrBalances[uspt.address] || new BigNumber(0);
       addrBalances[uspt.address] = amount.plus(uspt.amount);
     });
+    return addrBalances;
+  };
+
+  this.usableBalanceForAddresses = function(unspent) {
+    var addrBalances = {};
+    for(var i=0; i<unspent.length; i++) {
+      var uspt = unspent[i];
+      var amount = addrBalances[uspt.address] || new BigNumber(0);
+      addrBalances[uspt.address] = amount.plus(uspt.amount);
+    }
     return addrBalances;
   };
 

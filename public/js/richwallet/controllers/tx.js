@@ -40,7 +40,9 @@ richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
   var self = this;
   toaddress = toaddress || '';
   this.getUnspent(function(resp) {
-    var balance = richwallet.wallet.balanceObject()[network] || 0;
+    //var balance = richwallet.wallet.balanceObject()[network] || 0;
+    var usableUnspent = richwallet.wallet.getUsableUnspent(network);
+    var balance = richwallet.wallet.balanceForUnspent(usableUnspent);
     richwallet.router.render(
       'view',
       'tx/advsend', 
@@ -48,7 +50,7 @@ richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
        balance: balance,
        toaddress:toaddress,
        addresses: richwallet.wallet.addressHashes(network),
-       balance4Addresses: richwallet.wallet.balanceForAddresses(network)},
+       balance4Addresses: richwallet.wallet.usableBalanceForAddresses(usableUnspent)},
       function(id) {
 	$('#'+id+" [rel='tooltip']").tooltip();
 	if(toaddress) {
