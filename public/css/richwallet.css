@@ -1,4 +1,4 @@
-@font-face {
+.nav@font-face {
   font-family: "Flat-UI-Icons";
   src: url('../fonts/flat-ui-icons-regular.eot');
   src: url('../fonts/flat-ui-icons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/flat-ui-icons-regular.woff') format('woff'), url('../fonts/flat-ui-icons-regular.ttf') format('truetype'), url('../fonts/flat-ui-icons-regular.svg#flat-ui-icons-regular') format('svg');
@@ -6,9 +6,13 @@
   font-style: normal;
 }
 .navbar-inverse{
-  background-color:#34495e;
+  background-color:#0e67b5;
 }
 
+.navbar-fixed-top {
+  top:0;
+  border-bottom-width: 0px;
+}
 .navbar-inverse .navbar-brand {
   color: #fff;
 }
