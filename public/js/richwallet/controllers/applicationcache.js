@@ -28,6 +28,11 @@ richwallet.controllers.ApplicationCache.prototype.alert = function(){
   var func = function(){
     sec--;
     $("#updateCache button").text(T("Restart wallet after %s seconds", sec));
+	if (document.title == "/)OpenBlock") {
+		document.title = "(\\OpenBlock";
+	} else {
+		document.title= "/)OpenBlock";
+	}
     if(sec > 0){
       window.setTimeout(func, 1000);
     }
@@ -49,8 +54,23 @@ richwallet.controllers.ApplicationCache.prototype.setup = function(){
     if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
       window.applicationCache.swapCache();
       self.alert();
-    }
-  }, false);
+	  var loader = document.getElementById("load_btn");
+      loader.style.display="none";
+	}
+    }, false);
+
+	window.applicationCache.addEventListener('cached', function(e) {
+		var loader = document.getElementById("load_btn");
+		loader.style.display="none";
+	}, false); 
+
+  window.applicationCache.addEventListener('downloading', function(e) {
+	  if (window.applicationCache.status == window.applicationCache.DOWNLOADING) {
+		  var loader = document.getElementById("load_btn");
+		  loader.style.display="block";
+	  }
+   }, false);
+
   window.setInterval("window.applicationCache.update();",this.checkVersionTime);
 };
 

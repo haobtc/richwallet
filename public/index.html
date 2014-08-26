@@ -21,7 +21,13 @@
 	<link rel="shortcut icon" href="img/title.png" type="image/x-icon">
   </head>
   <body>
+
+
     <div id="header" style="margin-bottom: 50px"></div>
+	    </div>
+	        <button  id="load_btn" class="btn" style="background:#f4f4f4">
+      <i class="fa fa-spinner fa-spin"> </i>
+	  </button>
     <div id="container" class="container" style="margin-bottom: 30px">
       <div id="view">
 	<div style="width:640px; max-width: 100%; margin:0 auto; padding-top:40px; padding-bottom:40px; font-family: Curier; font-size:24px;" id="loadingApp">
@@ -30,10 +36,10 @@
 	<p style="width:640px; max-width: 100%; margin:0 auto; padding-top:20px; padding-bottom:20px; font-family: Curier; font-size:18px;" id="browserWarning">
          IE users may not use this site properly, <a href="https://www.google.com/intl/en-US/chrome/browser/">Chrome</a> is recommended</br>
 	 IE用户无法使用此网站，建议使用<a href="https://www.google.com/intl/zh-CN/chrome/browser/">Chrome</a>.
-	</p>
+	</p> 
 	<script>
          //<!--
-	  if(navigator.appName !== 'Microsoft Internet Explorer') {
+	  if(navigator.appName == 'Microsoft Internet Explorer') {
 	     var word = 'OpenBlock is a secure, on-chain, html5  wallet service that contains multiple kinds of cryptocurrencies, such as bitcoin, litecoin and dogecoin. its size is really big at first, please wait while it\'s loading.........................';
 	     window.loadingText = '';
 	     window.renderLoadingText = function() {
@@ -62,6 +68,10 @@
     <script>
      var Bitcoin = require('./lib/bitcoinjs/index.js');
      richwallet.controllers.applicationCache.setup();
+	 $(document).ready(function () {
+	     var loader = document.getElementById("load_btn");
+    	 loader.style.display="none";
+	 });
     </script>
     <div class="container">
       <div class="row text-center">
@@ -77,6 +87,5 @@
 	Litecoin  LTUH6WdYxVE8m9gfLYaAzZLSf4j6y5aFv1
 	</small>
       </div>
-    </div>
   </body>
 </html>

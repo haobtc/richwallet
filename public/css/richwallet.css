@@ -9,6 +9,29 @@
   background-color:#0e67b5;
 }
 
+
+
+
+.navbar-inverse .navbar-nav>.open>a{
+  color: #ffffff;
+  background-color: #0e67b5;
+}
+
+.navbar-inverse .navbar-nav>.open>a:focus{
+  color: #ffffff;
+  background-color: #0c5799;
+}
+
+.navbar-inverse .navbar-nav > .open > a:hover {
+  color: #ffffff;
+  background-color: #0c5799;
+}
+
+.navbar-inverse .navbar-nav > .open > a:active {
+  color: #ffffff;
+  background-color: #0c5799;
+}
+
 .navbar-fixed-top {
   top:0;
   border-bottom-width: 0px;
