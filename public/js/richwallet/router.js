@@ -67,6 +67,14 @@ richwallet.router.map("#/signup").to(function() {
   richwallet.router.render('view', 'signup');
 });
 
+richwallet.router.map("#/signup/:email/:actcode").to(function() {
+  richwallet.router.render('view', 'signup',{'email':this.params['email'], 'actcode':this.params['actcode']}, function() {
+	  $('#password_confirm').parents('.form-group').removeClass('hidden');
+	  $('#progressBar').parents('.progress').removeClass('hidden');
+	  $('#password').parents('.form-group').removeClass('hidden');
+  });
+});
+
 richwallet.router.map("#/signin").to(function() {
   if(richwallet.wallet)
     return richwallet.router.render('view', 'dashboard');
