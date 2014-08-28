@@ -134,16 +134,21 @@ richwallet.controllers.Accounts.prototype.create = function() {
   if(/.+@[\w\-\.]+\.[\w\-]+$/.exec(email) === null)
     errors.push('Email is not valid.');
 
-  if(password === '')
-    errors.push('Password cannot be blank.')
-
+  if(!$('#password').parent('.form-group').hasClass("hidden")) {
+	  var password = $('#password').val();
+	  var passwordConfirm = $('#password_confirm').val();
+	  if(password === '')
+		  errors.push('Password cannot be blank.')
+ 
   if(password != passwordConfirm)
-    errors.push('Passwords do not match.');
+      errors.push('Passwords do not match.');
+	  if(password != passwordConfirm)
+		  errors.push('Passwords do not match.');
+ 
 
-  if(password.length < this.requiredPasswordLength)
-    errors.push('Password must be at least 10 characters.');
-
-  
+	  if(password.length < this.requiredPasswordLength)
+		  errors.push('Password must be at least 10 characters.');
+  }
 
   var errorsDiv = $('#errors');
 
@@ -172,24 +177,24 @@ richwallet.controllers.Accounts.prototype.create = function() {
 			       emailActiveCode:emailActiveCode},
 		     backup: true}, function(response) {
       if(response.result == 'ok') {
-	localStorage.setItem("default_username", email);
-	richwallet.wallet = wallet;
-        richwallet.router.listener();
-        richwallet.router.route('dashboard');
+		  localStorage.setItem("default_username", email);
+		  richwallet.wallet = wallet;
+          richwallet.router.listener();
+          richwallet.router.route('dashboard');
       } else if(response.result == 'exists'){
-        errorsDiv.html(T('Wallet already exists, you want to <a href="#/signin">sign in</a> instead.'));
-        errorsDiv.removeClass('hidden');
-        self.enableSubmitButton();
+          errorsDiv.html(T('Wallet already exists, you want to <a href="#/signin">sign in</a> instead.'));
+          errorsDiv.removeClass('hidden');
+          self.enableSubmitButton();
       } else if(response.result == 'requireAuthCode') {
-	  $('#email_active_code').parents('.form-group').removeClass('hidden');
-	  self.enableSubmitButton();
-      } else {
-        errorsDiv.html('');
-        for(var i=0;i<response.messages.length;i++) {
-          errorsDiv.html(errorsDiv.html() + richwallet.utils.stripTags(T(response.messages[i])) + '<br>');
-        }
-        $('#errors').removeClass('hidden');
-        self.enableSubmitButton();
+		  errorsDiv.html(T('Auth email has been sent, please check your email address.'));
+		  errorsDiv.removeClass('hidden');
+	  } else {
+          errorsDiv.html('');
+          for(var i=0;i<response.messages.length;i++) {
+			  errorsDiv.html(errorsDiv.html() + richwallet.utils.stripTags(T(response.messages[i])) + '<br>');
+          }
+          $('#errors').removeClass('hidden');
+          self.enableSubmitButton();
       }
     });
   }
