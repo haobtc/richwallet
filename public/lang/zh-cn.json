@@ -51,8 +51,6 @@
 	"Auth email has been sent, please check your email address.": "已经发送确认邮件到您的邮箱，请查收.",
     "There was a server error, please try again later.": "服务器错误,请稍后重试.",
     "Invalid email auth code.": "验证码出错，确认邮箱是否正确.",
-
-
     "Two factor authentication code needed": "需要两步身份验证代码",
     "Two factor authentication code was invalid": "两步身份验证代码错误",
     "Auth Code": "验证码",

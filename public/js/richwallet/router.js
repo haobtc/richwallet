@@ -74,7 +74,6 @@ richwallet.router.map("#/signup/:email/:actcode").to(function() {
 	  $('#password').parents('.form-group').removeClass('hidden');
   });
 });
-
 richwallet.router.map("#/signin").to(function() {
   if(richwallet.wallet)
     return richwallet.router.render('view', 'dashboard');
