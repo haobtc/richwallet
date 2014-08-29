@@ -176,15 +176,14 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
   $('#createSendForm .alert').addClass('hidden');
 
   $('#fromAddresses input:checked').each(function() {
-    //var amount = parseFloat($(this).val());
-    var amount = richwallet.utils.parseBigNumber($(this).val());
+    var amount = richwallet.utils.parseBigNumber($.trim($(this).val()));
     sumInputAmount = sumInputAmount.plus(amount);
   });
 
   $('#totalBalance').html(sumInputAmount.toString());
 
   $('.sendtoRow input[name=address]').each(function() {
-    var addressString = $(this).val();
+    var addressString = $.trim($(this).val());
     var hasError = false;
     if(addressString) {
       try {
@@ -195,7 +194,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
 	  hasError = true;
 	}
       } catch(e) {
-	errorMessages.push(T('INvalid address'));
+	errorMessages.push(T('Invalid address'));
 	hasError = true;
       }
     }
@@ -213,7 +212,7 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
   sumOutputAmount = sumOutputAmount.plus(fee);
 
   $('.sendtoRow input[name=amount]').each(function() {
-    var amountString = $(this).val();
+    var amountString = $.trim($(this).val());
     var hasError = false;
     if(amountString) {
       var amount = richwallet.utils.parseBigNumber(amountString);
@@ -300,9 +299,9 @@ richwallet.controllers.Tx.prototype.estimateFee = function() {
 
   var totalAmount = new BigNumber(0);
   $('.sendtoRow').each(function() {
-    var addrString = $('input[name=address]', this).val();
+    var addrString = $.trim($('input[name=address]', this).val());
     if(addrString) {
-      var amountString = $('input[name=amount]', this).val();
+      var amountString = $.trim($('input[name=amount]', this).val());
       if(amountString && !isNaN(parseFloat(amountString))) {
 	var amount = richwallet.utils.parseBigNumber(amountString);
 	// FIXME: check addrString and amountString
@@ -327,9 +326,9 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
 
   var totalAmount = new BigNumber(0);
   $('.sendtoRow').each(function() {
-    var addrString = $('input[name=address]', this).val();
+    var addrString = $.trim($('input[name=address]', this).val());
     if(addrString) {
-      var amountString = $('input[name=amount]', this).val();
+      var amountString = $.trim($('input[name=amount]', this).val());
       var amount = richwallet.utils.parseBigNumber(amountString);
       // FIXME: check addrString and amountString
       totalAmount = totalAmount.plus(amount);
@@ -337,7 +336,7 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
     }
   });
 
-  var fee = $('#calculatedFee').val();
+  var fee = $.trim($('#calculatedFee').val());
   fee = new BigNumber(fee);
   var self = this;
 

@@ -64,7 +64,9 @@ Search.prototype.searchAddress = function(address, network) {
       txlist.forEach(function(tx) {
 	var val = new BigNumber(0);
 	tx.inputs.forEach(function(txIn) {
+	  console.info(tx.txid, ', ', txIn.address, ', ', address);
 	  if(txIn.address == address) {
+	    console.info('====', tx.txid, txIn.address, address);
 	    val = val.minus(txIn.amount);
 	  }
 	});
