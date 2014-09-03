@@ -3,6 +3,7 @@ richwallet.router = Path;
 richwallet.router.render = function(id, path, data, callback) {
   richwallet.Template.draw('header', 'header', data, callback);
   richwallet.Template.draw(id, path, data, callback);
+  richwallet.Template.draw('footer', 'footer');
 };
 
 richwallet.router.route = function(path) {
@@ -192,6 +193,10 @@ richwallet.router.map('#/addresses/request/:address').to(function() {
       return;
     richwallet.controllers.addresses.request(address);
   });
+});
+
+richwallet.router.map('#/contact').to(function() {
+  richwallet.router.render('view', 'contact');
 });
 
 richwallet.router.map('#/').to(function() {

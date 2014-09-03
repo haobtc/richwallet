@@ -202,5 +202,13 @@
     "intro.secure": "钱包文件会在本地浏览器用只有你知道的密码加密，所有人包括我们无法访问使用你的钱包, 我们所作的只是把加密后的钱包数据存放在服务器.",
     "intro.OpenBlock": "比特币,莱特币和狗币等多种加密货币都可以在这个钱包使用。支持的钱币种类将会持续增加.",
     "intro.open": "OpenBlock是<a href=\"https://github.com/haobtc/richwallet\" target=\"_blank\">开放源代码的服务</a>，欢迎大家使用贡献源代码。OpenBlock也来自于开源项目 <a href=\"https://github.com/kyledrake/coinpunk\" target=\"\">coinpunk</a>，非常感谢开源社区对我们生活和工作的影响！",
-    "signup.alert": "<h3><font color=\"red\">重要密码信息</font>:</h3><p>你的数据是在本地加密，服务器没有记录使用你的密码，如果你丢失密码，密码将无法找回，也无法重置你的密码。</p><h4><strong>如果丢失密码就会像现实生活中丢失钱包一样。网站无法帮你找回，请大家一定要记住钱包密码</strong>.<br/><u>记住你的密码</u>.</h4><p>密码必须至少有<b>10个字符</b>. 如果造了一个新密码，请把它保存再某地，比如evernote或者邮件里. 密码易失去, 务必妥善保存.</p>"
+    "signup.alert": "<h3><font color=\"red\">重要密码信息</font>:</h3><p>你的数据是在本地加密，服务器没有记录使用你的密码，如果你丢失密码，密码将无法找回，也无法重置你的密码。</p><h4><strong>如果丢失密码就会像现实生活中丢失钱包一样。网站无法帮你找回，请大家一定要记住钱包密码</strong>.<br/><u>记住你的密码</u>.</h4><p>密码必须至少有<b>10个字符</b>. 如果造了一个新密码，请把它保存再某地，比如evernote或者邮件里. 密码易失去, 务必妥善保存.</p>",
+  "Customer QQ: 2190034774": "客服QQ: 2190034774",
+  "QQ Group: 209494920": "QQ群: 209494920",
+  "Customer Email: ": "客服邮箱:",
+  "If you think OpenBlock is interesting and useful, please make a donation for us": "如果您对OpenBlock感兴趣或者认为OpenBlock对您有所帮助,您可以捐助我们",
+  "Contact Us": "联系我们",
+  "Dogecoin": "狗狗币",
+  "Bitcoin": "比特币",
+  "Litecoin": "莱特币"
 }
