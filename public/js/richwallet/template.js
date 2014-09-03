@@ -17,6 +17,7 @@ richwallet.Template = {
     'node_error',
     'signin',
     'signup',
+	'contact',
   ],
  
   templateCache: {},
@@ -33,7 +34,6 @@ richwallet.Template = {
 
   draw: function(id, path, data, callback) {
     var self = this;
-
     if(this.templateCache[path])
       this.parseTemplate(id, this.templateCache[path], data, callback);
     else

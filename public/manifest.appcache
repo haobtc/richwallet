@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v0.3.23
+# v0.3.24
 
 
 index.html
@@ -12,10 +12,10 @@ images/switch/mask-square.png
 
 fonts/droidsans-bold.ttf
 fonts/droidsans.ttf
-fonts/fontawesome-webfont.eot?v=4.0.3
-fonts/fontawesome-webfont.svg?v=4.0.3
-fonts/fontawesome-webfont.ttf?v=4.0.3
-fonts/fontawesome-webfont.woff?v=4.0.3
+fonts/fontawesome-webfont.eot?v=4.2.0
+fonts/fontawesome-webfont.svg?v=4.2.0
+fonts/fontawesome-webfont.ttf?v=4.2.0
+fonts/fontawesome-webfont.woff?v=4.2.0
 fonts/FontAwesome.otf
 
 fonts/lato/lato-regular.ttf
@@ -58,6 +58,8 @@ views/node_error.html
 
 views/signin.html
 views/signup.html
+views/contact.html
+views/footer.html
 lang/zh-cn.json
 
 NETWORK:
