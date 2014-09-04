@@ -4,6 +4,7 @@ richwallet.router.render = function(id, path, data, callback) {
   richwallet.Template.draw('header', 'header', data, callback);
   richwallet.Template.draw(id, path, data, callback);
   richwallet.Template.draw('footer', 'footer');
+  
 };
 
 richwallet.router.route = function(path) {
