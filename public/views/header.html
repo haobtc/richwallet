@@ -38,7 +38,7 @@
 
     <ul class="nav navbar-nav navbar-right">
       <% if(richwallet.wallet) { %>
-	<li class="dropdown">
+	  <li class="dropdown">
 	  <a class="dropdown-toggle" href="#" data-toggle="dropdown">
 	    <strong><i class="fa fa-user"></i>
 	    <%- richwallet.wallet.walletId %></strong></a>
@@ -46,11 +46,13 @@
 	  <ul class="dropdown-menu">
 	    <li><a href="#/account/settings"><i class="fa fa-cog"></i> <%- T('Settings') %></a></li>
 	    <li><a href="#/signout" onclick="if(!confirm(T('Really quit?'))){ return false;}"><i class="fa fa-sign-out"></i><%- T('Signout') %></a></li>
-		<li> 	<a href="#/contact"><i class="fa fa-phone"></i> <%- T('Contact Us') %></a> </li>
+		<li><a href="#/contact"><i class="fa fa-phone"></i> <%- T('Contact Us') %></a> </li>
 	  </ul>
 	</li>
+    <li><a id="changelang" href="javascript:changelang()"><%- richwallet.nextlangTxt %></a></li>
       <% } else { %>
         <li><a href="#/signup"><i class="fa fa-sign-in"></i> <%- T('Signup') %></a></li>
+        <li><a id="changelang" href="javascript:changelang()"><%- richwallet.nextlangTxt %></a></li>
       <% } %>
     </ul>
   </nav>

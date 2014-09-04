@@ -37,7 +37,7 @@ $.ajax('api/config', {
 });
 
 var supportedLangs = {'zh-cn': true};
-richwallet.trans = {
+var entrans = {
     "propaganda.intro": "OpenBlock is a free online crypto currencies wallet which you can use to make worldwide payments for free. We are not a bank, you retain complete ownership of your Money. We cannot view your balance, see your transactions or make payments on your behalf.",
     "intro.secure": "Your wallet  is encrypted  within your browser, before it is saved on our servers, so not even we have access to your account!",
     "intro.OpenBlock": "BTC, LTC, DOGECOIN and any other cryptcoins all storeed in OpenBlock, supported types of coins are keep increasing.",
@@ -49,18 +49,63 @@ richwallet.trans = {
 		     "<p>Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>"),
     "twofactor.alert": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\" class=\"text-warning\">two factor authenticaton</a> is highly recommended.",
 };
+richwallet.trans = {};
+for (var key in entrans) {
+  richwallet.trans[key] = entrans[key];
+}
 
-var language = navigator.language.toLowerCase();
-if(supportedLangs[language]) {
+var language = getCookie("lang") || navigator.language.toLowerCase();
+richwallet.nextlang = "";
+richwallet.nextlangTxt = ""
+
+if(supportedLangs[language]){
     $.ajax('lang/' + language + '.json', {
 	async: false,
 	success: function(resp) {
 	    for(var key in resp) {
-		richwallet.trans[key] = resp[key];
+		  richwallet.trans[key] = resp[key];
 	    }
+	  richwallet.nextlangTxt = "English";
+	  richwallet.nextlang = "en";
 	}
     });
+} else {
+  richwallet.nextlangTxt = "简体中文";
+  richwallet.nextlang = "zh-cn"
 }
+
+function changelang(){
+  if (supportedLangs[richwallet.nextlang]) {
+	$.ajax('lang/' + language + '.json', {
+	async: false,
+	success: function(resp) {
+	  richwallet.trans = {};
+	  for(var key in resp) {
+		richwallet.trans[key] = resp[key];
+	  }
+	}
+    });
+	setCookie("lang","zh-cn","d30");
+  } else {
+	richwallet.trans = {};
+	for (var key in entrans) {
+	  richwallet.trans[key] = entrans[key];
+	}
+	setCookie("lang","en","d30");
+  }
+
+	
+	window.location.reload();
+	if (richwallet.nextlang=="zh-cn") {
+	  richwallet.nextlang = "en";
+	  richwallet.nextlangTxt = "English";
+	} else  {
+	  richwallet.nextlang = "zh-cn"
+	  richwallet.nextlangTxt = "简体中文";
+	}
+}
+
+
 
 function T(fmt) {
     fmt = richwallet.trans[fmt] || fmt;
@@ -70,5 +115,36 @@ function T(fmt) {
     return fmt;
 }
 
- 
-      
+function getCookie(name) 
+{ 
+  var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+  if(arr=document.cookie.match(reg))
+	return unescape(arr[2]); 
+  else 
+    return null; 
+} 
+
+function setCookie(name,value,time)
+{ 
+  var strsec = getsec(time); 
+  var exp = new Date(); 
+  exp.setTime(exp.getTime() + strsec*1); 
+  document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString(); 
+} 
+function getsec(str)
+{ 
+   var str1=str.substring(1,str.length)*1; 
+   var str2=str.substring(0,1); 
+   if (str2=="s")
+   { 
+        return str1*1000; 
+   }
+   else if (str2=="h")
+   { 
+       return str1*60*60*1000; 
+   }
+   else if (str2=="d")
+   { 
+       return str1*24*60*60*1000; 
+   } 
+} 
