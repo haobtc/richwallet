@@ -128,7 +128,10 @@
     "Please take care of your private key!": "请复制，并保管好您的私钥!",
     "The private key of the address %s will be exported.": "地址 %s 的私钥将被导出.",
 
-
+	"Delete Address": "删除地址",
+	"This address %s will be deleted.": "地址 %s 将被删除.",
+	"Delete": "删除",
+	"Address deleted cannot be retrieved anymore, sure to do this?": "地址被删除之后就找不回来了，确认要删除么?",
 
     "Message": "消息",
     "Optional Message": "可选的消息",

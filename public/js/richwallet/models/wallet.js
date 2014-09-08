@@ -94,6 +94,12 @@ richwallet.Wallet = function(walletKey, walletId) {
         return keyPairs[i].name = name;
   };
 
+  this.deleteAddress = function(address) {
+	for(var i=0;i<keyPairs.length;i++)
+      if(keyPairs[i].address == address)
+        return keyPairs.splice(i,1);
+  };
+
   this.addresses = function(network) {
     var addrs = [];
     for(var i=0; i<keyPairs.length; i++) {
