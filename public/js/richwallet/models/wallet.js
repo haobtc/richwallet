@@ -9,7 +9,9 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.unspent = [];
   this.minimumConfirmations = 0;
   this.unspentConfirmations = [];
+  
   var keyPairs = [];
+  this.kpairs =  keyPairs;
 
   this.loadPayloadWithLogin = function(id, password, payload) {
     this.createWalletKey(id, password);
@@ -189,9 +191,9 @@ richwallet.Wallet = function(walletKey, walletId) {
     if(key == this.walletKey){
       for(var i=0; i<keyPairs.length; i++){
 	//var addr = new Bitcoin.Address(keyPairs[i].address);
-	if(keyPairs[i].address == address){
-	  return {'key': keyPairs[i].key};
-	}
+		if(keyPairs[i].address == address){
+		  return {'key': keyPairs[i].key};
+		}
       }
       return {'error': "Can not find the address"};
     }
