@@ -50,6 +50,89 @@ richwallet.controllers.Addresses.prototype.exportPrivateKey=function(){
   }
 }
 
+richwallet.controllers.Addresses.prototype.showSignMessage = function(address, network){
+  $("#signMessageDialog input[name='password']").val("");
+  $("#signMessageDialog input[name=network]").val(network);
+  $("#signHexArea").val("")
+  $("#signAddressLabel").text(address);
+  $("#signtext").val("");
+  $("#signHexArea").hide();
+  $("#signLabel").hide();
+  $("#signMessageDialog .alert").addClass("hidden");
+  $("#signMessageDialog").modal({backdrop:false});
+}
+
+richwallet.controllers.Addresses.prototype.signMessage = function() {
+  $("#signMessageDialog .alert").addClass("hidden");
+  var address = $.trim($("#signAddressLabel").text());
+  var passwd = $.trim($("#signMessageDialog input[name=password]").val());
+  var text = $.trim($("#signMessageDialog textarea[name=signtext]").val());
+  var network = $.trim($("#signMessageDialog input[name=network]").val());
+  var result = richwallet.wallet.signMessage(address, passwd, network, text);
+  
+  
+
+  if (text=="") {
+	$("#signMessageDialog .alert").text(T("Message to sign is empty")).removeClass("hidden");
+	return;
+  }
+  //
+  if(result.error) {
+	$("#signMessageDialog .alert").text(T(result.error)).removeClass("hidden");
+  } else {
+	$("#signLabel").show();
+	$("#signHexArea").text = result.sig;
+	$("#signHexArea").val(result.sig);
+	$("#signHexArea").show();
+
+//	$("#signMessageDialog .alert").text(T(result.sig)).removeClass("hidden");
+  }
+}
+
+richwallet.controllers.Addresses.prototype.showVerifyMessageDialog = function() {
+  $("#verifymessage").val("");
+  $("#verifysig").val("");
+  $("#verifyMessageDialog input[name=address]").val("");
+  $("#verifyMessageDialog .alert-danger").addClass("hidden");
+  $("#verifyMessageDialog .alert-success").addClass("hidden");
+  $("#verifyMessageDialog").modal({backdrop:false});
+}
+
+richwallet.controllers.Addresses.prototype.verifyMessage = function() {
+  $("#verifyMessageDialog .alert-danger").addClass("hidden");
+  $("#verifyMessageDialog .alert-danger").text("");
+  $("#verifyMessageDialog .alert-success").text("");
+  $("#verifyMessageDialog .alert-success").addClass("hidden");
+  
+  var address = $.trim($('#verifyMessageDialog input[name=address]').val());
+  var message = $.trim($("#verifyMessageDialog textarea[name=message]").val());
+  var signature = $.trim($("#verifyMessageDialog textarea[name=signature]").val());
+  var result = false ;
+  if (address=="") {
+	$("#verifyMessageDialog .alert-danger").text(T("Address is empty")).removeClass("hidden");
+	return;
+  }
+	
+  if (message=="") {
+	$("#verifyMessageDialog .alert-danger").text(T("Sign message is empty")).removeClass("hidden");
+	return;
+} 
+  if (signature=="") {
+	$("#verifyMessageDialog .alert-danger").text(T("Signature is empty")).removeClass("hidden");
+	return;
+  } 
+  try {
+	result = Bitcoin.Message.verifyMessage(address, signature, message);
+  } catch (err) {
+	$("#verifyMessageDialog .alert-danger").text(T($.trim(err))).removeClass("hidden");
+	return;
+  }
+  if (result === true) {
+	$("#verifyMessageDialog .alert-success").text(T("Verify message success")).removeClass("hidden");
+  } else {
+	$("#verifyMessageDialog .alert-danger").text(T("Verify message failed")).removeClass("hidden");
+  }
+}
 
 richwallet.controllers.Addresses.prototype.isZeroBalanceAddressesHidden = function(){
   return richwallet.localProfile.get("isZeroBalanceAddressesHidden");
