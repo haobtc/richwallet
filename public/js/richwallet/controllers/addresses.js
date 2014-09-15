@@ -92,6 +92,7 @@ richwallet.controllers.Addresses.prototype.signMessage = function() {
 richwallet.controllers.Addresses.prototype.showVerifyMessageDialog = function() {
   $("#verifymessage").val("");
   $("#verifysig").val("");
+  $("#verifyMessageDialog input[name=address]").val("");
   $("#verifyMessageDialog .alert-danger").addClass("hidden");
   $("#verifyMessageDialog .alert-success").addClass("hidden");
   $("#verifyMessageDialog").modal({backdrop:false});
@@ -99,7 +100,10 @@ richwallet.controllers.Addresses.prototype.showVerifyMessageDialog = function() 
 
 richwallet.controllers.Addresses.prototype.verifyMessage = function() {
   $("#verifyMessageDialog .alert-danger").addClass("hidden");
+  $("#verifyMessageDialog .alert-danger").text("");
+  $("#verifyMessageDialog .alert-success").text("");
   $("#verifyMessageDialog .alert-success").addClass("hidden");
+  
   var address = $.trim($('#verifyMessageDialog input[name=address]').val());
   var message = $.trim($("#verifyMessageDialog textarea[name=message]").val());
   var signature = $.trim($("#verifyMessageDialog textarea[name=signature]").val());
@@ -118,12 +122,12 @@ richwallet.controllers.Addresses.prototype.verifyMessage = function() {
 	return;
   } 
   try {
-	result = $.trim(Bitcoin.Message.verifyMessage(address, signature, message));
+	result = Bitcoin.Message.verifyMessage(address, signature, message);
   } catch (err) {
 	$("#verifyMessageDialog .alert-danger").text(T($.trim(err))).removeClass("hidden");
 	return;
   }
-  if (result) {
+  if (result === true) {
 	$("#verifyMessageDialog .alert-success").text(T("Verify message success")).removeClass("hidden");
   } else {
 	$("#verifyMessageDialog .alert-danger").text(T("Verify message failed")).removeClass("hidden");
