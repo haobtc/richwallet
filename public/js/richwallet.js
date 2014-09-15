@@ -48,6 +48,7 @@ var entrans = {
 		     "<h4><strong>Losing your password is like losing your real-life wallet. You will lose your bitcoins, <u>forever</u></strong>.<br/><u>Remember your password</u>.</h4>" +
 		     "<p>Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>"),
     "twofactor.alert": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\" class=\"text-warning\">two factor authenticaton</a> is highly recommended.",
+    "doge.merge.alert": "Dogecoin is undergoing a merged mining with litecoin, currently we are fixing this problem, please don't transfer you DOGEs for the time being, your balance will be right eventually. Sorry for the inconvenances."
 };
 richwallet.trans = {};
 for (var key in entrans) {
