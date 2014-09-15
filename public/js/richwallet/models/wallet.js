@@ -710,7 +710,23 @@ richwallet.Wallet = function(walletKey, walletId) {
     this.updateTransactions([{network: txObj.network, tx:txObj.hash}], function() {
     });
   };
-
+  
+  this.signMessage = function(address, passwd, network, text) {
+	var key = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(passwd, this.walletId, this.defaultIterations))
+    if(key == this.walletKey){
+      for(var i=0; i<keyPairs.length; i++){
+	//var addr = new Bitcoin.Address(keyPairs[i].address);
+		if(keyPairs[i].address == address){
+		  var key =new Bitcoin.ECKey(keyPairs[i].key);
+		  var sig =  Bitcoin.Message.signMessage(key, text,network);
+		  return {'sig': sig};
+		}
+      }
+      return {'error': "Can not find the address"};
+    }
+    return {'error': "Password error"};
+  }
+  
   if(walletKey && walletId)
     this.createServerKey();
 };
