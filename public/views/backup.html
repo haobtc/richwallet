@@ -5,27 +5,51 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-lg-12 text-center">
-    <h4><%- T('To backup your entire wallet, you can download it here.') %></h4>
-    <%= T('<h5>This wallet is encrypted and requires your password to unlock. <strong style="color: #FF0000">Do not forget your password.</strong> Write it down somewhere if you have to.</h5>') %>
+<div class="panel panel-warning">
+  <div class="panel-heading">
+	<%= T('<h5>This wallet is encrypted and requires your password to unlock. <strong style="color: #FF0000">Do not forget your password.</strong> Write it down somewhere if you have to.</h5>') %>
   </div>
+
+  <div class="panel-body">
+	
+	<div class="panel panel-info">
+	  <div class="panel-heading">
+		<div><h5><%- T('To backup your entire wallet, you can download it here.') %></h5> </div>
+	  </div>
+	  <div class="panel-body">
+		<div class="row">
+		  <div class="col-lg-12 text-center">
+			<a href="javascript:richwallet.controllers.accounts.backupDownload();" class="btn btn-lg btn-primary" style="width:180px"><i class="fa fa-download"></i> <%- T('Download') %></a>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<% if(richwallet.config.emailEnabled) { %>
+	<div class="panel panel-info">
+	  <div class="panel-heading">
+		<h5><%- T('Or save to email: %s', richwallet.wallet.walletId) %></h5>
+	  </div>
+	  <div class="panel-body">
+		<div class="row text-center">
+		  <div class="col-lg-12">
+			<a id="sendToEmail" style="width:180px" onclick="richwallet.controllers.accounts.backupToEmail();" class="btn btn-lg btn-primary"> <i class="fa fa-share"></i> <%- T('Send email') %></a>
+		  </div>
+		</div>
+	  </div>
+	</div> <!--end second panel-->
+	<% } %>
+  </div><!--end panel-body-->
+
+<!--  <div class="panel-footer">
+	<div class="row">
+	  <div class="col-lg-12 text-center">
+		<%= T('<h5>This wallet is encrypted and requires your password to unlock. <strong style="color: #FF0000">Do not forget your password.</strong> Write it down somewhere if you have to.</h5>') %>
+	  </div>
+	</div>
+  </div> -->
+
+
 </div>
 
-<div class="row text-center">
-  <div class="col-lg-12">
-    <h4><%- T('Backup Wallet') %></h4>
-    <a href="javascript:richwallet.controllers.accounts.backupDownload();" class="btn btn-lg btn-primary"><i class="fa fa-download"></i> <%- T('Download') %></a>
-  </div>
-</div>
-<% if(richwallet.config.emailEnabled) { %>
-<div class="row text-center">
-  <h4><%- T('Or') %></h4>
-</div>
-<div class="row text-center">
-  <div class="col-lg-12">
-    <h4><%- T('Save to email %s', richwallet.wallet.walletId) %></h4>
-    <a id="sendToEmail" onclick="richwallet.controllers.accounts.backupToEmail();" class="btn btn-lg btn-primary" onclick="#"><%- T('Send email') %></a>
-  </div>
-</div>
-<% } %>
+
