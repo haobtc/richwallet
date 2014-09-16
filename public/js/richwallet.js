@@ -16,7 +16,7 @@ var networkConfigs = {
   "dogecoin": {
     "leadingChar": "D", 
     "version": 30, "p2sh": 0x16, "keyVersion":158,
-    "currency": "DOG",
+    "currency": "DOGE",
     "fee": 1.0
   },
   "darkcoin": {
