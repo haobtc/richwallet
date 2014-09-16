@@ -117,6 +117,7 @@ richwallet.controllers.Accounts.prototype.enableSubmitButton = function() {
 
 richwallet.controllers.Accounts.prototype.backupToEmail = function() {
     var button = $('#sendToEmail');
+    $("#sendToEmail i").replaceWith("<i class=\"fa fa-spinner fa-spin\"></i>")
     button.attr('disabled', 'disabled');
     $.post('api/backupToEmail', {serverKey:richwallet.wallet.serverKey}, function(res) {
 	$('#sendToEmail').replaceWith($('<span>').html(T('Wallet sent to email')));
