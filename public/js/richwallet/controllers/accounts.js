@@ -43,7 +43,7 @@ richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
       errorDiv.removeClass("hidden");
       errorDiv.text(T('User does not exist'));
     }
-    else if(response.result == 'AuthCode'){
+    else if(response.result.exist == 'AuthCode'){
       $("div[data-role=authcode-input]").removeClass("hidden");
     }
     else if(response.result == 'NoAuthCode'){
@@ -307,7 +307,6 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
 		  {payload: {email: id,
 			     emailActiveCode: emailActiveCode},
 		   backup: true}, function(response) {
-			 console.log(response.result);
     if(response.result == 'exists') {
       self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
       return;
@@ -350,7 +349,15 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
     this.changeDialog('danger', 'Password must be at least '+this.requiredPasswordLength+' characters.');
     return;
   }
-
+  
+  
+  var id = richwallet.wallet.walletId;
+  var authKey;
+  $.get('api/checkGoogleAuthCode', {email:id, r:$.now(), force:true}, function(response){
+    if(response.result.exist == 'AuthCode'){
+      authKey = response.result.code;
+	}
+  });
   var checkWallet = new richwallet.Wallet();
   checkWallet.createWalletKey(richwallet.wallet.walletId, currentPassword);
 
@@ -370,8 +377,17 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
       return;
     } else if(response.result == 'ok') {
       richwallet.wallet = checkWallet;
+	  if (authKey) {
+		$.post('api/setAuthKey', {serverKey: checkWallet.serverKey, key: authKey}, function(res) {
+		  if(res.set != true) {
+
+		  } else {
+			richwallet.usingAuthKey = true;
+		  }
+		});
+	  }
       self.deleteWallet(originalServerKey, function(resp) {
-        self.template('header', 'header');
+		self.template('header', 'header');
         currentPasswordObj.val('');
         newPasswordObj.val('');
         confirmNewPasswordObj.val('');
