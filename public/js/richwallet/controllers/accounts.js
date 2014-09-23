@@ -43,7 +43,7 @@ richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
       errorDiv.removeClass("hidden");
       errorDiv.text(T('User does not exist'));
     }
-    else if(response.result.exist == 'AuthCode'){
+    else if(response.result == 'AuthCode'){
       $("div[data-role=authcode-input]").removeClass("hidden");
     }
     else if(response.result == 'NoAuthCode'){
@@ -341,29 +341,26 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
   var confirmNewPassword = confirmNewPasswordObj.val();
 
   if(newPassword != confirmNewPassword) {
-    this.changeDialog('danger', 'New passwords do not match.');
+    this.changeDialog('danger', T('New passwords do not match.'));
     return;
   }
 
+  if(newPassword == currentPassword) {
+	this.changeDialog('danger', T('New passwords equals old passwords.'));
+	return;
+  }
+
   if(newPassword < this.requiredPasswordLength) {
-    this.changeDialog('danger', 'Password must be at least '+this.requiredPasswordLength+' characters.');
+    this.changeDialog('danger', T('Password must be at least ')+this.requiredPasswordLength+T(' characters.'));
     return;
   }
-  
-  
-  var id = richwallet.wallet.walletId;
-  var authKey;
-  $.get('api/checkGoogleAuthCode', {email:id, r:$.now(), force:true}, function(response){
-    if(response.result.exist == 'AuthCode'){
-      authKey = response.result.code;
-	}
-  });
+
   var checkWallet = new richwallet.Wallet();
   checkWallet.createWalletKey(richwallet.wallet.walletId, currentPassword);
 
   if(checkWallet.serverKey != richwallet.wallet.serverKey) {
     currentPasswordObj.val('');
-    this.changeDialog('danger', 'Current password is not valid, please re-enter.');
+    this.changeDialog('danger', T('Current password is not valid, please re-enter.'));
     return;
   }
 
@@ -373,28 +370,26 @@ richwallet.controllers.Accounts.prototype.changePassword = function() {
 
   this.saveWallet(checkWallet, {backup: true, override: true}, function(response) {
     if(response.result == 'exists') {
-      self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
+      self.changeDialog('danger', T('Wallet file matching these credentials already exists, cannot change.'));
       return;
     } else if(response.result == 'ok') {
       richwallet.wallet = checkWallet;
-	  if (authKey) {
-		$.post('api/setAuthKey', {serverKey: checkWallet.serverKey, key: authKey}, function(res) {
-		  if(res.set != true) {
+	  $.post('api/cpAuthKey', {srcSvrKey: originalServerKey, dstSvrKey: checkWallet.serverKey}, function(res){
+		if (res.set == true || res.set == undefined) {
+		  self.deleteWallet(originalServerKey, function(resp) {
+			self.template('header', 'header');
+			currentPasswordObj.val('');
+			newPasswordObj.val('');
+			confirmNewPasswordObj.val('');
+			self.changeDialog('success', T('Successfully changed password. You will need to use this to login next time, don\'t forget it!'));
+		  });
+		} else {
+		  self.changeDialog('danger', T('An unknown error has occured, please try again later.'));
+		}
+	  });
 
-		  } else {
-			richwallet.usingAuthKey = true;
-		  }
-		});
-	  }
-      self.deleteWallet(originalServerKey, function(resp) {
-		self.template('header', 'header');
-        currentPasswordObj.val('');
-        newPasswordObj.val('');
-        confirmNewPasswordObj.val('');
-        self.changeDialog('success', 'Successfully changed password. You will need to use this to login next time, don\'t forget it!');
-      });
     } else {
-      self.changeDialog('danger', 'An unknown error has occured, please try again later.');
+      self.changeDialog('danger', T('An unknown error has occured, please try again later.'));
     }
   });
 };

@@ -231,5 +231,13 @@
   "Contact Us": "联系我们",
   "Dogecoin": "狗狗币",
   "Bitcoin": "比特币",
-  "Litecoin": "莱特币"
+  "Litecoin": "莱特币",
+  "Wallet file matching these credentials already exists, cannot change.": "该钱包已经存在",
+  "Successfully changed password. You will need to use this to login next time, don't forget it!": "成功修改密码,请牢记",
+  "An unknown error has occured, please try again later.": "未知错误,请稍后重试",
+  "Current password is not valid, please re-enter.": "当前密码验证失败,请重新输入",
+  "New passwords do not match.": "新密码两次输入不一样",
+  "New passwords equals old passwords.": "新旧密码相同",
+  "Password must be at least ": "密码长度最少为",
+  " characters.": "."
 }
