@@ -133,22 +133,19 @@ richwallet.controllers.Accounts.prototype.create = function() {
   var errors = [];
 
   if(/.+@[\w\-\.]+\.[\w\-]+$/.exec(email) === null)
-    errors.push('Email is not valid.');
+    errors.push(T('Email is not valid.'));
 
   if(!$('#password').parent('.form-group').hasClass("hidden")) {
 	var password = $('#password').val();
 	var passwordConfirm = $('#password_confirm').val();
 	if(password === '')
-	  errors.push('Password cannot be blank.')
+	  errors.push(T('Password cannot be blank.'));
 	
 	if(password != passwordConfirm)
-      errors.push('Passwords do not match.');
-	if(password != passwordConfirm)
-	  errors.push('Passwords do not match.');
-	
+	  errors.push(T('Passwords do not match.'));
 
 	if(password.length < this.requiredPasswordLength)
-	  errors.push('Password must be at least 10 characters.');
+	  errors.push(T('Password must be at least 10 characters.'));
   }
 
   var errorsDiv = $('#errors');
@@ -224,7 +221,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
       wallet.loadPayloadWithLogin(id, password, walletText.target.result);
     } catch(e) {
       $('#importErrorDialog').removeClass('hidden');
-      $('#importErrorMessage').text('Wallet import failed. Check the credentials and wallet file.');
+      $('#importErrorMessage').text(T('Wallet import failed. Check the credentials and wallet file.'));
       button.removeAttr('disabled');
       return;
     }
@@ -255,14 +252,15 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
 
           var msg = 'Wallet import successful! There will be a delay in viewing your transactions'+
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
-          self.showSuccessMessage(msg);
-	  richwallet.router.listener();
+          self.showSuccessMessage(T(msg));
+		  richwallet.router.listener();
+
           richwallet.router.route('dashboard');
         }
       });
     } else {
       $('#importErrorDialog').removeClass('hidden');
-      $('#importErrorMessage').text('Not a valid wallet backup file.');
+      $('#importErrorMessage').text(T('Not a valid wallet backup file.'));
       button.removeAttr('disabled');
     }
   });
@@ -285,7 +283,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
   var self = this;
 
   if(/.+@.+\..+/.exec(id) === null) {
-    self.changeDialog('danger', 'Email is not valid.');
+    self.changeDialog('danger', T('Email is not valid.'));
     return;
   }
 
@@ -295,7 +293,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
   checkWallet.createWalletKey(originalWalletId, password);
 
   if(checkWallet.serverKey != richwallet.wallet.serverKey) {
-    self.changeDialog('danger', 'The provided password does not match. Please try again.');
+    self.changeDialog('danger', T('The provided password does not match. Please try again.'));
     return;
   }
 
@@ -308,7 +306,7 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
 			     emailActiveCode: emailActiveCode},
 		   backup: true}, function(response) {
     if(response.result == 'exists') {
-      self.changeDialog('danger', 'Wallet file matching these credentials already exists, cannot change.');
+      self.changeDialog('danger', T('Wallet file matching these credentials already exists, cannot change.'));
       return;
     } else if(response.result == 'ok') {
       richwallet.wallet = checkWallet;
@@ -317,14 +315,14 @@ richwallet.controllers.Accounts.prototype.changeId = function() {
         self.template('header', 'header');
         idObj.val('');
         passwordObj.val('');
-        self.changeDialog('success', 'Successfully changed email. You will need to use this to login next time, don\'t forget it!');
+        self.changeDialog('success', T('Successfully changed email. You will need to use this to login next time, don\'t forget it!'));
       });
     } else if(response.result == "requireAuthCode") {
       $("#email_active_code").parents(".form-group").removeClass("hidden");
     } else if(response.messages.length) {
       self.changeDialog('danger', T(response.messages[0]));
     } else {
-      self.changeDialog('danger', 'An unknown error has occured, please try again later.');
+      self.changeDialog('danger', T('An unknown error has occured, please try again later.'));
     }
 
   });

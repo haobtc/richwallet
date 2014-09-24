@@ -19,9 +19,9 @@ richwallet.controllers.Addresses.prototype.generateNewAddress = function(network
 				  balances: richwallet.wallet.balanceForAddresses()}, function(id) {
     });
     $('#newAddressDialog').removeClass('hidden');
-    var message = 'Created new address '+address;
+    var message = T('Created new address ')+address;
     if(label != '')
-      var message = message + ' with label '+label;
+      var message = message + T(' with label ')+label;
     $('#newAddressMessage').text(message+'.');
   });
 };
