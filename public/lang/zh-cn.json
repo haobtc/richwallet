@@ -15,9 +15,9 @@
 
     "Signup - Create a New Wallet": "注册 － 创建新的钱包",
     "Email Address": "Email地址",
-    "Your email": "你的Email",
+    "Your email": "邮箱地址",
     "Password": "密码",
-    "Password for wallet": "钱包的密码",
+    "Password for wallet": "钱包密码",
     "Create a password": "创建密码",
     "Change password": "修改密码",
     "Confirm your password": "确认密码",
@@ -255,5 +255,16 @@
   "An unknown error has occured, please try again later.": "发生未知错误,请稍后重试.",
   "Created new address ": "创建新地址 ",
   " with label ": " 标签为 ",
-  "input < output + fee": "转出数额过多,大于可用余额与手续费之和"
+  "input < output + fee": "转出数额过多,大于可用余额与手续费之和",
+  "Cannot import your wallet, because the wallet already exists on this server.": "导入失败，服务器已经存在该钱包.",
+  "If you have a Richwallet wallet backup, this allows you to re-import it.": "本页面可以让您重新导入已经备份的钱包",
+  "You will need the email and password for the previous wallet when it was exported.": "请输入邮箱地址和导出时的钱包密码",
+  "It must be a Richwallet wallet, no other wallet formats are supported yet.": "该备份钱包文件只能是本站钱包，其它格式的备份尚不支持",
+  "Wallet File": "钱包文件",
+  "Import Backup Wallet File": "导入钱包备份文件",
+  "Your wallet password": "钱包密码",
+  "Your wallet email": "钱包邮箱地址",
+  "You must provide a wallet backup file.": "请提供钱包备份文件",
+  "Register Now | ": "立即注册 | ",
+  "Import Wallet": "导入钱包"
 }

@@ -28,6 +28,10 @@ richwallet.controllers.Accounts.prototype.backupDownload = function() {
 richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
   var self = this;
   var id = $('#walletId').val();
+  if (id=="") {
+	return;
+  }
+  
   $.get('api/checkGoogleAuthCode', {email:id, r:$.now()}, function(response){
     $('div[data-role=authcode-input]').addClass("hidden");
     $('div[data-role=authcode-alert]').addClass("hidden");
@@ -233,7 +237,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
 					 emailActiveCode:emailActiveCode}}, function(resp) {
         if(resp.result == 'exists') {
           $('#importErrorDialog').removeClass('hidden');
-          $('#importErrorMessage').text('Cannot import your wallet, because the wallet already exists on this server.');
+          $('#importErrorMessage').text(T('Cannot import your wallet, because the wallet already exists on this server.'));
           button.removeAttr('disabled');
           return;
 	} else if (resp.result == 'error') {
@@ -269,7 +273,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
     reader.readAsText(file);
   } catch(e) {
     $('#importErrorDialog').removeClass('hidden');
-    $('#importErrorMessage').text('You must provide a wallet backup file.');
+    $('#importErrorMessage').text(T('You must provide a wallet backup file.'));
     button.removeAttr('disabled');
   }
 };
