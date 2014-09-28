@@ -10,6 +10,7 @@ richwallet.Template = {
     'search/tx',
     'search/address',
     'search/noresult',
+	'search/email',
 //    'search/address',
     'backup',
     'dashboard',

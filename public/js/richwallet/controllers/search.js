@@ -11,16 +11,19 @@ Search.prototype.performSearch = function() {
 
 Search.prototype.searchTerm = function(term) {
   var self = this;
+  term = decodeURIComponent(term);
   try {
     if(term) {
       if(/^[0-9a-fA-F]{64}$/.test(term)) {
 	// term is txid
-	return this.searchTx(term);
+		return this.searchTx(term);
       } else if(/^[1-9a-zA-Z]{33,35}$/.test(term)){
-	// term may be address
-	var addr = new Bitcoin.Address(term);
-	return this.searchAddress(term, addr.getNetwork());
-      }
+		// term may be address
+		var addr = new Bitcoin.Address(term);
+		return this.searchAddress(term, addr.getNetwork());
+      } else if(/^\w+?@\w+?\.\w{1,5}$/.test(term)){
+		return this.searchEmail(term);
+	  }
     }
     self.render('search/noresult', {}, function(id){});
   } catch(e) {
@@ -82,5 +85,63 @@ Search.prototype.searchAddress = function(address, network) {
     });
   });
 };
+
+var emailSearchResults = [];
+Search.prototype.searchEmail = function(em) {
+  var self = this;
+  $.get('api/addlist', {email: em}, function(res){
+	if (res.error) {
+	  //todo
+	  self.render('search/noresult', {}, function(id){});
+	  return [];
+	} else {
+	  if (res['result'].length == 0) {
+		self.render('search/noresult', {}, function(id){});
+		return [];
+	  } else {
+		var emailSearchResults = [];
+		var addresses = res['result'];
+		var resu = sortCoinByNetwork(addresses);
+		for (var key in resu) {
+		  var item = {};
+		  item['addr'] = resu[key];
+		  item['network'] = key;
+//		  item['balance'] = balanceByAddress(resu[key]);
+		  emailSearchResults.push(item);
+		}
+		self.render('search/email',emailSearchResults, function(id) {});
+		return emailSearchResults;
+	  }
+	}
+  });
+};
+
+
+function sortCoinByNetwork(addresses) {
+  var coin = {};
+  for (var x=0; x<addresses.length; x++) {
+	var addr = new Bitcoin.Address(addresses[x]);
+	if (!coin[addr.network])  {
+	  coin[addr.network] = addresses[x];
+	}
+  }
+  return coin;
+}
+
+function balanceByAddress(address) {
+  var balance = new BigNumber(0);
+  $.ajax({ 
+    type : "post", 
+    url : "api/infoproxy/unspent", 
+    data : {addresses: address},
+    async : false, 
+    success : function(data){ 
+	  for (var i=0; i<data.length; i++) {
+		balance = balance.plus(new BigNumber(data[i].amount));
+	  }
+    } 
+  }); 
+  return balance;
+}
 
 richwallet.controllers.search = new Search();

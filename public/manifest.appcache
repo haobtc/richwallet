@@ -51,6 +51,7 @@ views/tx/advsend.html
 views/search/tx.html
 views/search/address.html
 views/search/noresult.html
+views/search/email.html
 views/backup.html
 views/dashboard.html
 views/header.html

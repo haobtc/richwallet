@@ -36,7 +36,7 @@
     "Pending (Unconfirmed)": "等待中(未确认)",
 
     "Sent %s %s to %s": "发送了%s %s到%s",
-    "Search txid or address": "搜索交易ID或者地址",
+    "Search txid or address or email": "搜索交易ID/地址/邮箱",
     "Search result": "搜索结果",
     "Related transactions": "相关交易",
     "No search result": "没有搜索结果",
