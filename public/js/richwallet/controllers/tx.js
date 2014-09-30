@@ -185,25 +185,32 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
   $('.sendtoRow input[name=address]').each(function() {
     var addressString = $.trim($(this).val());
     var hasError = false;
-    if(addressString) {
+    if(addressString && addressString!=="") {
       try {
-	var addr = new Bitcoin.Address(addressString);
-	if(addr.getNetwork() != network &&
-	   !_.contains(addr.p2shNetworks(), network)) {
+		var addr = new Bitcoin.Address(addressString);
+		if(addr.getNetwork() != network &&
+		   !_.contains(addr.p2shNetworks(), network)) {
+		  errorMessages.push(T('Invalid address'));
+		  hasError = true;
+		}
+      } catch(e) {
+		errorMessages.push(T('Invalid address'));
+		console.log("invalid add");
+		hasError = true;
+      }
+    } else {
 	  errorMessages.push(T('Invalid address'));
+	  console.log("invalid add2");
 	  hasError = true;
 	}
-      } catch(e) {
-	errorMessages.push(T('Invalid address'));
-	hasError = true;
-      }
-    }
     if(hasError) {
-      $(this).parent().addClass('has-error');
-      $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
+		//    $(this).parent().addClass('has-error');
+//      $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
+	  $('#checkValueAlert').removeClass('hidden').html(errorMessages[0]);
       enableButton = false;
     } else {
-      $(this).parent().removeClass('has-error');
+//      $(this).parent().removeClass('has-error');
+	  $("#checkValueAlert").addClass('hidden');
     }
   });
 
@@ -214,36 +221,46 @@ richwallet.controllers.Tx.prototype.advCheckValues = function() {
   $('.sendtoRow input[name=amount]').each(function() {
     var amountString = $.trim($(this).val());
     var hasError = false;
-    if(amountString) {
+    if(amountString && amountString!=="") {
       var amount = richwallet.utils.parseBigNumber(amountString);
       if(isNaN(amount) || amount.comparedTo(minAmount) <= 0) {
-	errorMessages.push(T('Illegal amount'));
-	hasError = true;
+		errorMessages.push(T('Illegal amount'));
+		console.log("invalid amount");
+		hasError = true;
       }
       if(sumOutputAmount.plus(amount).comparedTo(sumInputAmount) > 0) {
-	errorMessages.push(T('input < output + fee'));
-	hasError = true;
+		console.log("invalid amount 2");
+		errorMessages.push(T('input < output + fee'));
+		hasError = true;
       } else {
-	sumOutputAmount = sumOutputAmount.plus(amount);
+		sumOutputAmount = sumOutputAmount.plus(amount);
       }	    
     } else {
       enableButton = false;
+	  hasError = true;
+	  errorMessages.push(T('Illegal amount'));
+	  console.log("invalid amount 3");
     }
     if(hasError) {
       //console.error('error on sending', errorMessages);
-      $(this).parent().addClass('has-error');
-      $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
+	  $('#checkValueAlert').removeClass('hidden').html(errorMessages[0]);
+//      $(this).parent().addClass('has-error');
+  //    $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
       if(enableButton) {
-	enableButton = false;
+		enableButton = false;
       }
     } else {
-      $(this).parent().removeClass('has-error');
+//      $(this).parent().removeClass('has-error');
+	  $("#checkValueAlert").addClass('hidden');
     }
   });
 
+  $('#sendButton').removeClass('disabled');
   if(enableButton) {
-    $('#sendButton').removeClass('disabled');
+	$('#sendButton').removeClass('disabled');
+	return true;
   } else {
+	return false;
     $('#sendButton').addClass('disabled');
   }
 };
@@ -319,6 +336,9 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
 
   var network = $('#sendBlock').attr('rel');
 
+  if (!this.advCheckValues()) {
+	return ;
+  }
   $('#fromAddresses input:checked').each(function() {
     var addrString = $(this).attr('rel');
     inputAddresses.push(addrString);
