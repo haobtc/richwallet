@@ -24,8 +24,8 @@ richwallet.controllers.Tx.prototype.details = function(txHash, network) {
     var txs = richwallet.wallet.transactions;
     for(var i=0;i<txs.length;i++) {
       if(txs[i].network == tx.network && txs[i].hash == tx.hash) {
-	txs[i].confirmations = tx.confirmations; 
-	break;
+		txs[i].confirmations = tx.confirmations; 
+		break;
       }
     }
 
@@ -54,10 +54,10 @@ richwallet.controllers.Tx.prototype.advsend = function(network, toaddress) {
        allBalance4Addresses: richwallet.wallet.balanceForAddresses(network),
        balance4Addresses: richwallet.wallet.usableBalanceForAddresses(usableUnspent)},
       function(id) {
-	$('#'+id+" [rel='tooltip']").tooltip();
-	if(toaddress) {
-	  $('#' + id + ' #address').change();
-	}
+		$('#'+id+" [rel='tooltip']").tooltip();
+		if(toaddress) {
+		  $('#' + id + ' #address').change();
+		}
       });
   });
 };
@@ -145,7 +145,7 @@ richwallet.controllers.Tx.prototype.scanQR = function(event) {
 // Advanced send
 richwallet.controllers.Tx.prototype.advAddSendTo = function() {
   var newRow = $('.sendtoRow:last').clone();
-  $('.alert', newRow).addClass('hidden').html('');
+  //  $('.alert', newRow).addClass('hidden').html('');
   $('.has-error', newRow).removeClass('has-error');
   $('input', newRow).val('');
   $('.outputAddress', newRow).addClass('col-lg-offset-4');
@@ -168,98 +168,10 @@ richwallet.controllers.Tx.prototype.advSelectAllAddresses = function() {
 
 
 richwallet.controllers.Tx.prototype.advCheckValues = function() {
-  var network = $('#sendBlock').attr('rel');
-  var sumInputAmount = new BigNumber(0);
-  var sumOutputAmount = new BigNumber(0);
-  var enableButton = true;
-  var errorMessages = [];
-  $('#createSendForm .alert').addClass('hidden');
-
-  $('#fromAddresses input:checked').each(function() {
-    var amount = richwallet.utils.parseBigNumber($.trim($(this).val()));
-    sumInputAmount = sumInputAmount.plus(amount);
-  });
-
-  $('#totalBalance').html(sumInputAmount.toString());
-  var hasError = false;
-  $('.sendtoRow input[name=address]').each(function() {
-    var addressString = $.trim($(this).val());
-
-    if(addressString && addressString!=="") {
-      try {
-		var addr = new Bitcoin.Address(addressString);
-		if(addr.getNetwork() != network &&
-		   !_.contains(addr.p2shNetworks(), network)) {
-		  errorMessages.push(T('Invalid address'));
-		  hasError = true;
-		}
-      } catch(e) {
-		errorMessages.push(T('Invalid address'));
-		hasError = true;
-      }
-    } else {
-	  errorMessages.push(T('Invalid address'));
-	  hasError = true;
-	}
-    if(hasError) {
-	  //    $(this).parent().addClass('has-error');
-//      $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
-	  $('#checkValueAlert').removeClass('hidden').html(errorMessages[0]);
-	  enableButton = false;
-    } else {
-//      $(this).parent().removeClass('has-error');
-	  $("#checkValueAlert").addClass('hidden');
-    }
-  });
-
-  var fee = this.estimateFee();
-  $('#calculatedFee').val(fee);
-  sumOutputAmount = sumOutputAmount.plus(fee);
-
-  $('.sendtoRow input[name=amount]').each(function() {
-    var amountString = $.trim($(this).val());
-    var hasErrorAmnt = false;
-    if(amountString && amountString!=="") {
-      var amount = richwallet.utils.parseBigNumber(amountString);
-      if(isNaN(amount) || amount.comparedTo(minAmount) <= 0) {
-		errorMessages.push(T('Illegal amount'));
-		hasErrorAmnt = true;
-      }
-      if(sumOutputAmount.plus(amount).comparedTo(sumInputAmount) > 0) {
-		errorMessages.push(T('input < output + fee'));
-		hasErrorAmnt = true;
-      } else {
-		sumOutputAmount = sumOutputAmount.plus(amount);
-      }	    
-    } else {
-      enableButton = false;
-	  hasErrorAmnt = true;
-	  errorMessages.push(T('Illegal amount'));
-    }
-    if(hasErrorAmnt) {
-      //console.error('error on sending', errorMessages);
-	  $('#checkValueAlert').removeClass('hidden').html(errorMessages[0]);
-	  //      $(this).parent().addClass('has-error');
-	  //    $('.alert', $(this).parents('.sendtoRow')).removeClass('hidden').html(errorMessages[0]);
-      if(enableButton) {
-		enableButton = false;
-      }
-    } else {
-//      $(this).parent().removeClass('has-error');
-	  if (!hasError) {
-		$("#checkValueAlert").addClass('hidden');
-	  }
-	}
-  });
-
-  $('#sendButton').removeClass('disabled');
-  if(enableButton) {
-	$('#sendButton').removeClass('disabled');
+  if (this.checkAddress() && this.checkAmount()) {
 	return true;
-  } else {
-	return false;
-    $('#sendButton').addClass('disabled');
   }
+  return false;
 };
 
 richwallet.controllers.Tx.prototype.showSendReview = function(txInfo, callback){
@@ -301,6 +213,96 @@ richwallet.controllers.Tx.prototype.showSendReview = function(txInfo, callback){
   $("#confirmSend").modal({backdrop:false});
 };
 
+richwallet.controllers.Tx.prototype.checkAddress = function() {
+  
+  var network = $('#sendBlock').attr('rel');
+  var errorMessages = [];
+  //  $('#createSendForm .alert').addClass('hidden');
+  var hasError = false;
+  $('.sendtoRow input[name=address]').each(function() {
+    var addressString = $.trim($(this).val());
+	if(addressString && addressString!=="") {
+      try {
+		var addr = new Bitcoin.Address(addressString);
+		if(addr.getNetwork() != network &&
+		   !_.contains(addr.p2shNetworks(), network)) {
+		  errorMessages.push(T('Invalid address'));
+		  hasError = true;
+		}
+      } catch(e) {
+		errorMessages.push(T('Invalid address'));
+		hasError = true;
+      }
+    } else {
+	  errorMessages.push(T('Invalid address'));
+	  hasError = true;
+	}
+    if(hasError) {
+	  $('#checkValueAlert').html(errorMessages[0]);
+	  $('#checkValueAlert').show();
+    } else {
+	  //	  $("#checkValueAlert").addClass('hidden');
+	  $("#checkValueAlert").hide();
+    }
+  });
+
+  return !hasError;
+}
+
+
+richwallet.controllers.Tx.prototype.checkAmount = function() {
+  try {
+	var network = $('#sendBlock').attr('rel');
+	var sumInputAmount = new BigNumber(0);
+	var sumOutputAmount = new BigNumber(0);
+	var enableButton = true;
+	var errorMessages = [];
+	//  $('#createSendForm .alert').addClass('hidden');
+	$('#fromAddresses input:checked').each(function() {
+      var amount = richwallet.utils.parseBigNumber($.trim($(this).val()));
+      sumInputAmount = sumInputAmount.plus(amount);
+	});
+
+	$('#totalBalance').html(sumInputAmount.toString());
+	var hasError = false;
+	var fee = this.estimateFee();
+	
+	$('#calculatedFee').val(fee);
+	sumOutputAmount = sumOutputAmount.plus(fee);
+	$('.sendtoRow input[name=amount]').each(function() {
+      var amountString = $.trim($(this).val());
+      if(amountString && amountString!=="") {
+		var amount = richwallet.utils.parseBigNumber(amountString);
+		if(isNaN(amount) || amount.comparedTo(minAmount) <= 0) {
+		  errorMessages.push(T('Illegal amount'));
+		  hasError = true;
+		}
+		if(sumOutputAmount.plus(amount).comparedTo(sumInputAmount) > 0) {
+		  errorMessages.push(T('input < output + fee'));
+		  hasError = true;
+		} else {
+		  sumOutputAmount = sumOutputAmount.plus(amount);
+		}	    
+      } else {
+		enableButton = false;
+		hasError = true;
+		errorMessages.push(T('Illegal amount'));
+      }
+	  
+      if(hasError) {
+		$('#checkValueAlert').html(errorMessages[0]);
+		$('#checkValueAlert').show();
+	  } else {
+		$("#checkValueAlert").hide();
+	  }
+	});
+  } catch(e) {
+
+  }
+  
+  return !hasError;
+}
+
 richwallet.controllers.Tx.prototype.estimateFee = function() {
   var inputAddresses = [];
   var outputs = [];
@@ -317,10 +319,10 @@ richwallet.controllers.Tx.prototype.estimateFee = function() {
     if(addrString) {
       var amountString = $.trim($('input[name=amount]', this).val());
       if(amountString && !isNaN(parseFloat(amountString))) {
-	var amount = richwallet.utils.parseBigNumber(amountString);
-	// FIXME: check addrString and amountString
-	totalAmount = totalAmount.plus(amount);
-	outputs.push({address:addrString, amount:amount});
+		var amount = richwallet.utils.parseBigNumber(amountString);
+		// FIXME: check addrString and amountString
+		totalAmount = totalAmount.plus(amount);
+		outputs.push({address:addrString, amount:amount});
       }
     }
   });
@@ -328,6 +330,7 @@ richwallet.controllers.Tx.prototype.estimateFee = function() {
 };
 
 richwallet.controllers.Tx.prototype.advCreate = function() {
+  $("#checkValueAlert").hide();
   var inputAddresses = [];
   var outputs = [];
 
@@ -340,7 +343,7 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
     var addrString = $(this).attr('rel');
     inputAddresses.push(addrString);
   });
-
+  
   var totalAmount = new BigNumber(0);
   $('.sendtoRow').each(function() {
     var addrString = $.trim($('input[name=address]', this).val());
@@ -365,22 +368,22 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
 
       // spin.js
       var opts = {
-	lines: 11, // The number of lines to draw
-	length: 0, // The length of each line
-	width: 5, // The line thickness
-	radius: 11, // The radius of the inner circle
-	corners: 1, // Corner roundness (0..1)
-	rotate: 0, // The rotation offset
-	direction: 1, // 1: clockwise, -1: counterclockwise
-	color: '#000', // #rgb or #rrggbb or array of colors
-	speed: 1.5, // Rounds per second
-	trail: 30, // Afterglow percentage
-	shadow: false, // Whether to render a shadow
-	hwaccel: false, // Whether to use hardware acceleration
-	className: 'spinner', // The CSS class to assign to the spinner
-	zIndex: 2e9, // The z-index (defaults to 2000000000)
-	top: '50%', // Top position relative to parent
-	left: '50%' // Left position relative to parent
+		lines: 11, // The number of lines to draw
+		length: 0, // The length of each line
+		width: 5, // The line thickness
+		radius: 11, // The radius of the inner circle
+		corners: 1, // Corner roundness (0..1)
+		rotate: 0, // The rotation offset
+		direction: 1, // 1: clockwise, -1: counterclockwise
+		color: '#000', // #rgb or #rrggbb or array of colors
+		speed: 1.5, // Rounds per second
+		trail: 30, // Afterglow percentage
+		shadow: false, // Whether to render a shadow
+		hwaccel: false, // Whether to use hardware acceleration
+		className: 'spinner', // The CSS class to assign to the spinner
+		zIndex: 2e9, // The z-index (defaults to 2000000000)
+		top: '50%', // Top position relative to parent
+		left: '50%' // Left position relative to parent
       };
       var loading = $("<div>&nbsp;</div>").height(button.height()).width(button.width()).css({'display':'inline-block','position':'relative'});
       button.before(loading);
@@ -389,37 +392,37 @@ richwallet.controllers.Tx.prototype.advCreate = function() {
       var toAddress = _.map(outputs, function(output) {return output.address});
       richwallet.wallet.addTx(tx, totalAmount.toString(), fee.toString(), toAddress);
 
-      self.showSuccessMessage(T("Sent %s %s", totalAmount,
-				richwallet.config.networkConfigs[network].currency));
+      self.showSuccessMessage(T("Sent %s %s to %s", totalAmount,
+								richwallet.config.networkConfigs[network].currency, 
+							    toAddress));
       richwallet.router.route('dashboard');
 
       self.saveWallet(richwallet.wallet, {override: true}, function(response) {
-	$.ajax({
-	  url: 'api/infoproxy/sendtx/' + network,
-	  data: JSON.stringify({rawtx: tx.raw}),
-	  contentType: 'application/json',
-	  dataType: 'json',
-	  type: 'POST',
-	  processData: false,
-	  success: function(resp) {
-	    $(button).removeAttr("disabled");
-	    $("#confirmSend").modal('hide');
-	    if(resp.error) {
-	      console.error('send raw transaction error', resp.error);
-	      self.showErrorMessage(T("Send Transaction error!"));
-	      return;
-	    }
-	    self.getUnspent(function() {
-	    });
-	  }
-	});
+		$.ajax({
+		  url: 'api/infoproxy/sendtx/' + network,
+		  data: JSON.stringify({rawtx: tx.raw}),
+		  contentType: 'application/json',
+		  dataType: 'json',
+		  type: 'POST',
+		  processData: false,
+		  success: function(resp) {
+			$(button).removeAttr("disabled");
+			$("#confirmSend").modal('hide');
+			if(resp.error) {
+			  console.error('send raw transaction error', resp.error);
+			  self.showErrorMessage(T("Send Transaction error!"));
+			  return;
+			}
+			self.getUnspent(function() {
+			});
+		  }
+		});
       });
     }
   };
-
   this.showSendReview({network:network,
-		       outputs:outputs,
-		       fee:fee}, confirmTx);
+					   outputs:outputs,
+					   fee:fee}, confirmTx);
 
 };
 
