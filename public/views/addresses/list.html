@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12 text-center">
     <h2><%- T('Receive Addresses') %></h2>
-      <hr>
+    <hr>
   </div>
 </div>
 
@@ -9,126 +9,139 @@
   <div class="col-lg-12">
     <div id="addresses">
       <% if(data.addresses.length == 0) {%>
-        <h4><%- T('No receive address yet.') %></h4>
+      <h4><%- T('No receive address yet.') %></h4>
       <% } else { %>
       <% var zeroAddresses = 0; %>
       <div class="clearfix">
-	<div style="float:right"><input type="checkbox" data-toggle="switch" id="zero-balance-toggle" <% if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden()){ %>checked<% } %>></div>
-	<label style="float:right; line-height: 1.4;padding-top:5px;font-size:15px; padding-right:30px"><%- T("Hide no money addresses") %>&nbsp;</label>
+		<div style="float:right"><input type="checkbox" data-toggle="switch" id="zero-balance-toggle" <% if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden()){ %>checked<% } %>></div>
+		<label style="float:right; line-height: 1.4;padding-top:5px;font-size:15px; padding-right:30px"><%- T("Hide no money addresses") %>&nbsp;</label>
       </div>
-        
-        <div class="hidden-lg hidden-md">
-          <% for(var i=0;i<data.addresses.length;i++) { %>
-	    <% if(! data.balances[data.addresses[i].address]) zeroAddresses++; %>
-	    <%
-	       var zeroBalanceClass = "zero-balance";
-	       var zeroHiddenClass = "";
-	       if(data.balances[data.addresses[i].address])
-	         zeroBalanceClass = "";
-	       else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
-	         zeroHiddenClass = "hidden";
-	    %>
-              <div class="row <%- zeroBalanceClass %> <%- zeroHiddenClass %>" data-address="<%- data.addresses[i].address %>">
-		<div class="col-md-6">
-		  <div>
-                    <strong><%- data.addresses[i].name || T('No Label') %></strong>
-                    <span class="addExchangePrice pull-right" style="color: #33CC33;">
-                      <%- data.balances[data.addresses[i].address] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
-                    </span>
-		  </div>
-		  <div><%- data.addresses[i].address %></div>
-		  <div>
-		    <div class="text-right">
-		      <span class="dropdown" >
-			<a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
-
-			<a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
-			<span class="dropdown-arrow dropdown-arrow-inverse"></span>
-			<ul class="dropdown-menu dropdown-inverse text-left" role="menu">
-			  <li>
-			    <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
-			  </li>
-			  <li>
-			    <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
-			  </li>
-			  <li>
-			    <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
-			  </li>
-			</ul>
-		      </span>
-		     </div>
-		  </div>
-		</div>
-		<hr>
-              </div>
-          <% } %>
-        </div>
-        <div class="visible-md visible-lg">
-          <table class="table table-bordered table-striped table-hover">
-            <thead>
-              <tr>
-                <th><%- T('Label') %></th>
-                <th><%- T('Address') %></th>
-                <th><%- T('Network') %></th>
-                <th>
-		  <%- T('Balance') %>
-                </th>
-		<th>&nbsp;</th>
-                <!--
-                <th>Backups</th>
-                <th>Receive QR Code</th>
-                -->
-              </tr>
-            </thead>
-            <tbody>
-              <% for(var i=0; i<data.addresses.length; i++) { %>
-		 <%
-		    var zeroBalanceClass = "zero-balance";
-		    var zeroHiddenClass = "";
-		    if(data.balances[data.addresses[i].address])
+      
+      <div class="hidden-lg hidden-md">
+        <% for(var i=0;i<data.addresses.length;i++) { %>
+	       <% if(! data.balances[data.addresses[i].address]) zeroAddresses++; %>
+	       <%
+			  var zeroBalanceClass = "zero-balance";
+			  var zeroHiddenClass = "";
+			  if(data.balances[data.addresses[i].address])
+	          zeroBalanceClass = "";
+			  else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
+	          zeroHiddenClass = "hidden";
+			  %>
+           <div class="row <%- zeroBalanceClass %> <%- zeroHiddenClass %>" data-address="<%- data.addresses[i].address %>">
+			 <div class="col-md-6">
+			   <div>
+				 <strong><%- data.addresses[i].name || T('No Label') %></strong>
+                 <span class="addExchangePrice pull-right" style="color: #33CC33;">
+                   <%- data.balances[data.addresses[i].address] || 0 %> <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+                 </span>
+			   </div>
+			   <div><%- data.addresses[i].address %> </div>
+			   <div>
+				 <div class="text-right">
+				   <span class="dropdown" >
+					 <!--<a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a> -->
+					 <div class="container">
+					   <div class="row">
+						 <div class="col-xs-5 col-sm-5" style="height:64px;" id= <%- 'qraddr'+i %> ></div>
+						 <div class="col-sm-1 col-xs-1 col-xs-offset-1 col-sm-offset-1">
+						   <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
+						   <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+						   <ul class="dropdown-menu dropdown-inverse text-left" role="menu">
+							 <li>
+							   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
+							 </li>
+							 <li>
+							   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
+							 </li>
+							 <li>
+							   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
+							 </li>
+						   </ul>
+						 </div>
+					   </div>
+					 </div>
+				   </span>
+				 </div>
+			   </div>
+			 </div>
+			 <hr>
+           </div>
+           <% } %>
+      </div>
+      <div class="visible-md visible-lg">
+        <table class="table table-bordered table-striped table-hover " >
+          <thead>
+            <tr>
+              <th><%- T('Label') %></th>
+              <th><%- T('Address') %></th>
+              <th><%- T('Network') %></th>
+              <th>
+				<%- T('Balance') %>
+              </th>
+			  <th>&nbsp;</th>
+              <!--
+                  <th>Backups</th>
+              <th>Receive QR Code</th>
+              -->
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<data.addresses.length; i++) { %>
+			   <%
+				  var zeroBalanceClass = "zero-balance";
+				  var zeroHiddenClass = "";
+				  if(data.balances[data.addresses[i].address])
 	              zeroBalanceClass = "";
-		    else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
+				  else if(richwallet.controllers.addresses.isZeroBalanceAddressesHidden())
 	              zeroHiddenClass = "hidden";
-		 %>
-                 <tr class="<%- zeroBalanceClass %> <%- zeroHiddenClass %>" data-address="<%- data.addresses[i].address %>">
-                   <td><%- data.addresses[i].name %></td>
-                   <td><%- data.addresses[i].address %></td>
-                   <td><%- T(data.addresses[i].network)  %></td>
-                   <td>
-                     <span class="addExchangePrice">
-                       <%- data.balances[data.addresses[i].address] || 0 %>  <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
-                     </span>
-                   </td>
-                   <td>
-		     <div style="display:inline-block" class="dropdown">
-               <a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link fix-btn"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
-		       <a class="btn btn-link dropdown-toggle fix-btn" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
-		       <ul class="dropdown-menu dropdown-inverse" role="menu">
-			 <li>
-			   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
-			 </li>
-			 <li>
-			   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
-			 </li>
-			 <li>
-			   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
-			 </li>
-			 
-		       </ul>
-		     </div>
-                   </td>
-                 </tr>
-		<% } %>
-            </tbody>
-          </table>
-        </div>
-	<div style="text-align:right;" class="zero-balance-show <% if(!richwallet.controllers.addresses.isZeroBalanceAddressesHidden()) { %>hidden<% } %>">
-	  <label style="font-size:15px;line-height:30px;"><%- T("%s addresses has been hidden.", zeroAddresses) %></label>
-	  <button type="button" class="btn btn-link" onclick="$('#zero-balance-toggle').parents('div.switch').bootstrapSwitch('toggleState',true);"><%- T('Show') %></button>
-	</div>
+				  %>
+               <tr class="<%- zeroBalanceClass %> <%- zeroHiddenClass %>" data-address="<%- data.addresses[i].address %>">
+                 <td style="vertical-align:middle"><%- data.addresses[i].name %></td>
+                 <td style="vertical-align:middle">
+				   <div class="row">
+					 <div class="col-md-7" ><%- data.addresses[i].address %></div>
+					 <div class="col-md-2" id=  <%- 'qraddrlg'+i  %>> </div>
+				   </div>
+				 </td>
 
-      <% } %>
-    </div>
+				 <td style="vertical-align:middle"><%- T(data.addresses[i].network)  %></td>
+				 <td style="vertical-align:middle">
+				   <span class="addExchangePrice">
+					 <%- data.balances[data.addresses[i].address] || 0 %>  <%- richwallet.config.networkConfigs[data.addresses[i].network].currency %>
+				   </span>
+				 </td>
+				 <td style="vertical-align:middle">
+				   <div class="row">
+					 <div style="display:inline-block " class="dropdown col-md-2 col-md-offset-3 col-lg-offset-3">
+					   <a class="btn btn-link dropdown-toggle fix-btn" data-toggle="dropdown" role="button" href="#"><span class="fa fa-bars"></span><span class="hidden"><%- T("More") %></span></a>
+					   <ul class="dropdown-menu dropdown-inverse" role="menu">
+						 <li>
+						   <a role="menuitem" tabindex="-1" href="#" onclick="richwallet.controllers.addresses.editLabel('<%- data.addresses[i].address %>'); return false;"><i class="fa fa-edit"></i> <%- T("Edit Label") %></a>
+						 </li>
+						 <li>
+						   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showExportPrivateKey('<%- data.addresses[i].address %>');"><i class="fa fa-archive"></i> <%- T("Export Private Key") %></a>
+						 </li>
+						 <li>
+						   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
+						 </li>
+						 
+					   </ul>
+					 </div>
+				   </div>
+				 </td>
+			   </tr>
+			   <% } %>
+		  </tbody>
+		</table>
+	  </div>
+	  <div style="text-align:right;" class="zero-balance-show <% if(!richwallet.controllers.addresses.isZeroBalanceAddressesHidden()) { %>hidden<% } %>">
+		<label style="font-size:15px;line-height:30px;"><%- T("%s addresses has been hidden.", zeroAddresses) %></label>
+		<button type="button" class="btn btn-link" onclick="$('#zero-balance-toggle').parents('div.switch').bootstrapSwitch('toggleState',true);"><%- T('Show') %></button>
+	  </div>
+
+	  <% } %>
+	</div>
   </div>
 </div>
 
@@ -156,47 +169,47 @@
 
 
 <!--    <form onsubmit="richwallet.controllers.addresses.showGenerateAddress();a false;">
-      <div>
-        <%- T('Label') %> <small>(<%- T('optional') %>)</small>: <input id="addressLabel" type="text" style="width: 200px">
-	<select id="addressNetwork">
-	  <% _.map(richwallet.config.sortedNetworks, function(network){ %>
-	  <option value="<%- network %>"><%- T(network) %></option>
-	  <% }); %>
-	</select>
-	<button class="btn btn-primary"><i class="fa fa-plus"></i> <%- T('Generate') %></button>
-        <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">
-          <button type="btn" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          <span id="newAddressMessage"></span>
-        </div>
-      </div>
-    </form>
-  </div>
+		<div>
+          <%- T('Label') %> <small>(<%- T('optional') %>)</small>: <input id="addressLabel" type="text" style="width: 200px">
+		  <select id="addressNetwork">
+			<% _.map(richwallet.config.sortedNetworks, function(network){ %>
+			<option value="<%- network %>"><%- T(network) %></option>
+			<% }); %>
+		  </select>
+		  <button class="btn btn-primary"><i class="fa fa-plus"></i> <%- T('Generate') %></button>
+          <div id="newAddressDialog" class="alert alert-success alert-dismissable hidden">
+			<button type="btn" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<span id="newAddressMessage"></span>
+          </div>
+		</div>
+</form>
+</div>
 
-  <div class="col-lg-6"> 
-	<form onsubmit="richwallet.controllers.addresses.showVerifyMessageDialog(); return false;">
-	  <button class="btn btn-primary">签名验证</button>
-	</form>
-  </div>
+<div class="col-lg-6"> 
+  <form onsubmit="richwallet.controllers.addresses.showVerifyMessageDialog(); return false;">
+	<button class="btn btn-primary">签名验证</button>
+  </form>
+</div>
 </div>-->
 
 <div class="modal fade" id="editLabel" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-	<h4 class="text-center"><%- T('Edit Label') %></h4>
+		<h4 class="text-center"><%- T('Edit Label') %></h4>
       </div>
       <form>
-      <div class="modal-body">
-	<div class="form-group clearfix">
-	  <div class="col-lg-12">
-	    <input type="text" name="addressName" class="form-control" placeholder="<%- T('Please input a label') %>" maxlength="24" />
-	  </div>
-	</div>
-      </div>
-      <div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Cancel') %></button>
-	<button type="submit" class="btn btn-primary"><%- T('Confirm') %></button>
-      </div>
+		<div class="modal-body">
+		  <div class="form-group clearfix">
+			<div class="col-lg-12">
+			  <input type="text" name="addressName" class="form-control" placeholder="<%- T('Please input a label') %>" maxlength="24" />
+			</div>
+		  </div>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Cancel') %></button>
+		  <button type="submit" class="btn btn-primary"><%- T('Confirm') %></button>
+		</div>
       </form>
     </div>
   </div>
@@ -206,19 +219,19 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-	<h4 class="text-center"><%- T('Export Private Key') %></h4>
+		<h4 class="text-center"><%- T('Export Private Key') %></h4>
       </div>
       <div class="modal-body">
-	<div class="form-group clearfix">
-	  <div class="text-center text-danger">
-	    <span style="font-size: 16px;word-break: break-all; word-wrap: break-word;"></span>
-	    <br/>
-	    <strong><%- T("Please take care of your private key!") %></strong>
-	  </div>
-	</div>
-	<div class="modal-footer">
-	  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
-	</div>
+		<div class="form-group clearfix">
+		  <div class="text-center text-danger">
+			<span style="font-size: 16px;word-break: break-all; word-wrap: break-word;"></span>
+			<br/>
+			<strong><%- T("Please take care of your private key!") %></strong>
+		  </div>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+		</div>
       </div>
     </div>
   </div>
@@ -227,28 +240,28 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-	<h4 class="text-center"><%- T('Export Private Key') %></h4>
+		<h4 class="text-center"><%- T('Export Private Key') %></h4>
       </div>
       <form action="#" onsubmit="richwallet.controllers.addresses.exportPrivateKey(); return false;">
-	<div class="modal-body">
-	  <div class="form-group clearfix">
-	    <div class="col-lg-12 text-center">
-	      <strong><%- T('The private key of the address %s will be exported.') %></strong><input type="hidden" name="address"/>
-	    </div>
-	  </div>
-	  <div class="form-group clearfix">
-	    <!-- <label for="password" class="col-lg-2 control-label"><%- T('Login password') %></label> -->
-	    <div class="col-lg-6 col-lg-offset-3">
-	      <input type="password" step="any" name="password" class="form-control" placeholder="<%- T('Please input you password') %>" />
-	    </div>
-	  </div>
-	</div>
-	<div class="alert alert-danger hidden">
-	</div>
-	<div class="modal-footer">
-	  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+		<div class="modal-body">
+		  <div class="form-group clearfix">
+			<div class="col-lg-12 text-center">
+			  <strong><%- T('The private key of the address %s will be exported.') %></strong><input type="hidden" name="address"/>
+			</div>
+		  </div>
+		  <div class="form-group clearfix">
+			<!-- <label for="password" class="col-lg-2 control-label"><%- T('Login password') %></label> -->
+			<div class="col-lg-6 col-lg-offset-3">
+			  <input type="password" step="any" name="password" class="form-control" placeholder="<%- T('Please input you password') %>" />
+			</div>
+		  </div>
+		</div>
+		<div class="alert alert-danger hidden">
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
           <button type="submit" id="quickSendButton" class="btn btn-primary"><%- T('Export') %></button>
-	</div>
+		</div>
       </form>
     </div>
   </div>
@@ -301,15 +314,15 @@
 		<div class="modal-body">
 		  <div class="form-group clearfix">
 			<div class="col-lg-12">
-<!--			  <div class="input-group input-group-lg col-md-10 col-md-offset-1"> <-->
-				<input type="text" step="any" name="address"  class="form-control" placeholder="<%- T('Please input the address') %>" />
-				<hr>
-				<p></p>
-				<textarea rows="2" name="message" id="verifymessage" class="form-control" placeholder="<%- T('Please enter the message to verify') %>"> </textarea>
-				<hr>
-				<p></p>
-				<textarea rows="2" name="signature" id="verifysig" class="form-control" placeholder="<%- T('Please enter the signature to verify') %>"> </textarea>
-	<!--		  </div> -->
+			  <!--			  <div class="input-group input-group-lg col-md-10 col-md-offset-1"> <-->
+			  <input type="text" step="any" name="address"  class="form-control" placeholder="<%- T('Please input the address') %>" />
+			  <hr>
+			  <p></p>
+			  <textarea rows="2" name="message" id="verifymessage" class="form-control" placeholder="<%- T('Please enter the message to verify') %>"> </textarea>
+			  <hr>
+			  <p></p>
+			  <textarea rows="2" name="signature" id="verifysig" class="form-control" placeholder="<%- T('Please enter the signature to verify') %>"> </textarea>
+			  <!--		  </div> -->
 			</div>
 		  </div>
 		</div>
@@ -327,4 +340,33 @@
 <script>
   $("#zero-balance-toggle").wrap('<div class="switch" />').parent().bootstrapSwitch().on("switch-change",function(e,v){richwallet.controllers.addresses.toggleZeroBalanceAddressesHidden(v.value);});
   $(".dropdown-toggle").dropdown();
-</script>
+  var colorb= "#0052a8";
+  var colorg= "#009532"
+  var qrcolor = "";
+  for(var i=0; i<richwallet.wallet.addresses().length; i++) {
+													   if ((i%2)==0) {
+													   qrcolor = colorb;
+													   } else {
+													   qrcolor = colorg;
+													   }
+													   
+													   new QRCode(document.getElementById('qraddr'+i), {
+													   text:richwallet.wallet.addresses()[i].address,
+													   width: 64,
+													   height: 64,
+													   colorDark : qrcolor,
+													   correctLevel: QRCode.CorrectLevel.M
+													   });
+													   
+																											new QRCode(document.getElementById('qraddrlg'+i), {
+																											text:richwallet.wallet.addresses()[i].address,
+																											width: 48,
+																											height: 48,
+																											colorDark : qrcolor,
+																											correctLevel: QRCode.CorrectLevel.M
+																											});
+																											
+																											}
+
+
+																											</script>
