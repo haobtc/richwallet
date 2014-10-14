@@ -421,21 +421,27 @@ richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
       path: richwallet.wallet.walletId
     });
     authURI.setSearch({issuer: 'OneWallet', secret: resp.key});
-
+	var showKey = "";
+	var j = 0;
+	for (var i=4; i<=resp.key.length; i+=4) {
+		showKey = showKey + ' ' + resp.key.slice(j,i);
+		j = i;
+	}
     new QRCode(document.getElementById('authQR'), {
 	text: authURI.toString(),
 	correctLevel: QRCode.CorrectLevel.M
     });
     $('#authQR').after(
       '<form role="form" id="submitAuth" onsubmit="richwallet.controllers.accounts.submitAuth(); return false;">' +
-        '<p>' + T('Enter code shown on Google Authenticator') + ':</p>' +
-        '<input type="hidden" id="authKeyValue" value="'+resp.key+'">' +
-        '<div class="form-group">' +
-          '<label for="confirmAuthCode">' + T('Confirm Auth Code') + '</label>' +
-          '<input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">' +
+		'<div class="form-group">' + '<p>' + T('If your mobile phone couldnot regconize the qrcode, you can manually input the following strings') + '</p>' + 
+        '<span  id="authKeyValue" style="text-align:center" class="label label-success" >'+showKey+'</span>' + ' <br>' + 
+		'<br>'+
+        '<label for="confirmAuthCode">'  + T('Enter code shown on Google Authenticator')  + '</label>' +
+        '<input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">' +
         '</div>' +
         '<button type="submit" class="btn btn-primary">' + T('Confirm') + '</button>' +
       '</form>');
+	$('#authKeyValue').val(resp.key);
     $('#confirmAuthCode').focus();
   });
 };

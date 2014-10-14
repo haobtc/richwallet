@@ -266,5 +266,6 @@
   "Your wallet email": "钱包邮箱地址",
   "You must provide a wallet backup file.": "请提供钱包备份文件",
   "Register Now | ": "立即注册 | ",
-  "Import Wallet": "导入钱包"
+  "Import Wallet": "导入钱包",
+  "If your mobile phone couldnot regconize the qrcode, you can manually input the following strings": "如果您的手机无法识别该二维码，可以手动输入下面的字符串"
 }
