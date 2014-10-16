@@ -1,22 +1,22 @@
 {
   "mailer": {
-      "enabled": false,
-      "fromAddress": "xx@gmail.com",
+      "enabled": true,
+      "fromAddress": "693576271@qq.com",
       "option": {
-	  "service": "Gmail",
+	  "service": "qq",
 	  "auth": {
-	      "user": "user",
-	      "pass": "pass"
+	      "user": "693576271",
+	      "pass": "daohaosima"
 	  }
       }
   },
   "backends": {
-      "uses": "indexeddb",
+      "uses": "mongodb",
       "redis": {"port": null, "host": null},
       "mongodb": {"url": "mongodb://localhost:27017/richwallet"},
       "indexeddb": {"sqlite3Path": "rw.db"}
   },
   "httpPort": 8080,
   "authCodeSalt": "werNiosWE@#s8",
-  "blockQueryServer": "http://dev.openblock.com:9000"
+  "blockQueryServer": [{"http://218.61.196.200:9000":3},{"http://218.61.196.200:9000":1}]
 }
