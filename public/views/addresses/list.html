@@ -40,7 +40,7 @@
 			   <div>
 				 <div class="text-right">
 				   <span class="dropdown" >
-					 <!--<a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a> -->
+					 <!--<a href="#/addresses/request/<%- data.addresses[i].address %>" class="btn btn-link"><i class="fa fa-qrcode"></i> <%- T(' Request Payment') %></a> -->
 					 <div class="container">
 					   <div class="row">
 						 <div class="col-xs-5 col-sm-5" style="height:64px;" id= <%- 'qraddr'+i %> ></div>
@@ -56,6 +56,9 @@
 							 </li>
 							 <li>
 							   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
+							 </li>
+							 <li>
+							   <a role ="menuitem" href="#/addresses/request/<%- data.addresses[i].address %>"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
 							 </li>
 						   </ul>
 						 </div>
@@ -125,7 +128,9 @@
 						 <li>
 						   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showSignMessage('<%- data.addresses[i].address %>','<%- data.addresses[i].network %>');"><i class="fa fa-key"> </i> <%- T("Sign Message") %></a>
 						 </li>
-						 
+						 <li>
+						   <a role ="menuitem" href="#/addresses/request/<%- data.addresses[i].address %>"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
+						 </li>
 					   </ul>
 					 </div>
 				   </div>

@@ -1,17 +1,17 @@
 {
   "mailer": {
       "enabled": true,
-      "fromAddress": "693576271@qq.com",
+      "fromAddress": "xx@gmail.com",
       "option": {
-	  "service": "qq",
+	  "service": "gmail",
 	  "auth": {
-	      "user": "693576271",
-	      "pass": "daohaosima"
+	      "user": "user",
+	      "pass": "pwd"
 	  }
       }
   },
   "backends": {
-      "uses": "mongodb",
+      "uses": "indexeddb",
       "redis": {"port": null, "host": null},
       "mongodb": {"url": "mongodb://localhost:27017/richwallet"},
       "indexeddb": {"sqlite3Path": "rw.db"}
