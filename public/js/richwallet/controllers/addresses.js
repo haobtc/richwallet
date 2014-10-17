@@ -212,4 +212,29 @@ richwallet.controllers.Addresses.prototype.drawRequestQR = function(address) {
   });
 }
 
+richwallet.controllers.Addresses.prototype.showAddrQRcode = function(address) {
+  $("#showQRcode").modal({backdrop:false});
+  var qrcode ;
+  var exists = false;
+  if ($("#addrQRcode img").length >0) {
+	exists = true;
+  }
+  if (!exists) {
+	new QRCode(document.getElementById('addrQRcode'), {
+	  text: address,
+	  width: 80,
+	  height: 80,
+	  correctLevel: QRCode.CorrectLevel.M
+	});
+  } else {
+	$("#addrQRcode").replaceWith("<div id='addrQRcode'></div>")
+    new QRCode(document.getElementById('addrQRcode'), {
+	  text: address,
+	  width: 160,
+	  height: 160,
+	  correctLevel: QRCode.CorrectLevel.M
+	});
+  }
+}
+
 richwallet.controllers.addresses = new richwallet.controllers.Addresses();
