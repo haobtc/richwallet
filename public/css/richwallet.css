@@ -341,3 +341,61 @@
 .fix-btn {
     padding: 0 12px;
 }
+
+
+.btn,
+.btn-lg,
+.btn-sm,
+.btn-default,
+.btn-xs {
+  border-radius: 0px;
+}
+
+.btn-group-sm,
+.btn-group-lg,
+.btn-group-xs,
+.btn-group-md {
+    border-Radius:0px
+}
+
+
+.input {
+    border-Radius:0px
+}
+
+.input-sm,
+.input-lg,
+.input-md,
+.input-xs {
+  border-radius: 0px;
+}
+
+.input-group-sm,
+.input-group-xs,
+.input-group-md,
+.input-group-lg{
+    border-radius: 0px;    
+}
+
+.dropdown-menu {
+    border-radius: 0px;
+}
+
+.nav-tabs,
+.nav-toggle {
+    border-radius: 0px;
+}
+
+.label,
+.alert {
+    border-radius: 0px;
+}
+
+.form-control,
+.balance-box,
+.panel,
+.balance-box {
+    border-radius:0px;
+}
+
+
