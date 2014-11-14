@@ -267,5 +267,6 @@
   "You must provide a wallet backup file.": "请提供钱包备份文件",
   "Register Now | ": "立即注册 | ",
   "Import Wallet": "导入钱包",
-  "(QR Code)": "(二维码)"
+  "(QR Code)": "(二维码)",
+  "QR Code": "二维码"
 }
