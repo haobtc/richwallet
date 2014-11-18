@@ -268,5 +268,10 @@
   "Register Now | ": "立即注册 | ",
   "Import Wallet": "导入钱包",
   "(QR Code)": "(二维码)",
-  "QR Code": "二维码"
+  "Private key in QT-fromatted/base64/base58/hex": "QT钱包/base64/base58/hex格式私钥",
+  "Unknown key format": "私钥格式不正确",
+  "Address already exists": "私钥地址已存在",
+  "Input your private key firstly": "请先输入私钥"
+  "From an import": "用户导入地址",
+  "Import an address": "导入地址"
 }

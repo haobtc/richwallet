@@ -84,6 +84,32 @@ richwallet.Wallet = function(walletKey, walletId) {
     return newKeyPair.address;
   };
 
+  this.importKey = function(network, name,  isChange, key) {
+    var ret = {};
+    var eckey      = new Bitcoin.ECKey(key);
+    if (eckey == undefined ) {
+      return {'success':false, 'info':'Unknown key format'}
+    }
+    var addr = eckey.getBitcoinAddress(network).toString()
+    
+    for (var i=0; i<keyPairs.length; i++) {
+      if (addr === keyPairs[i].address.toString()) {
+        return  {'success':false, 'info':'Address already exists' }
+      }
+    }
+    
+    var newKeyPair = {
+      key: eckey.getExportedPrivateKey(network),
+      publicKey: Bitcoin.convert.bytesToHex(eckey.getPubKeyHash()),
+      address: eckey.getBitcoinAddress(network).toString(),
+      isChange: (isChange == true)
+    };
+    if(name)
+      newKeyPair.name = name;
+    keyPairs.push(newKeyPair);
+    return {'success':true, "address":newKeyPair.address}
+  }
+  
   this.getAddressName = function(address) {
     for(var i=0;i<keyPairs.length;i++)
       if(keyPairs[i].address == address)
@@ -99,6 +125,8 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.addresses = function(network) {
     var addrs = [];
     for(var i=0; i<keyPairs.length; i++) {
+
+
       var addr = new Bitcoin.Address(keyPairs[i].address);
       if (network != undefined && addr.getNetwork() != network) {
         continue;
@@ -125,10 +153,11 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.fixKeyVersion = function(){
     for(var i=0; i<keyPairs.length; i++){
       var addr = new Bitcoin.Address(keyPairs[i].address);
+//todo  eckey may cause wrong key
       var eckey = new Bitcoin.ECKey(keyPairs[i].key);
       var key = eckey.getExportedPrivateKey(addr.getNetwork());
       if(keyPairs[i].key != key)
-	keyPairs[i].key = key;
+	    keyPairs[i].key = key;
     }
   };
 

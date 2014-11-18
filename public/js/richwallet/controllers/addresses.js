@@ -237,4 +237,28 @@ richwallet.controllers.Addresses.prototype.showAddrQRcode = function(address) {
   }
 }
 
+richwallet.controllers.Addresses.prototype.importPrivKey = function(network,key) {
+  var self = this;
+  $("#importKeyAlert").addClass("hidden");
+  if (network==="" || key==="") {
+    $("#importKeyAlert").text(T("Input your private key firstly"));
+    $("#importKeyAlert").removeClass("hidden");
+  }
+
+  var ret = richwallet.wallet.importKey(network,T("From an import"),false,key);
+  var address = ""
+  if (ret.success) {
+    this.saveWallet(richwallet.wallet, {override: true, onOutOfSync:'reload', backup: true}, 
+                  function() {
+                    self.render('addresses/list', {addresses: richwallet.wallet.addresses(),
+				          balances: richwallet.wallet.balanceForAddresses()}, 
+                                function(id) {
+                                });
+                  });
+  } else {
+    $("#importKeyAlert").text(T(ret.info));
+    $("#importKeyAlert").removeClass("hidden");
+  }
+}
+
 richwallet.controllers.addresses = new richwallet.controllers.Addresses();
