@@ -240,6 +240,7 @@ richwallet.controllers.Addresses.prototype.showAddrQRcode = function(address) {
 richwallet.controllers.Addresses.prototype.importPrivKey = function(network,key) {
   var self = this;
   $("#importKeyAlert").addClass("hidden");
+  key = $.trim(key)
   if (network==="" || key==="") {
     $("#importKeyAlert").text(T("Input your private key firstly"));
     $("#importKeyAlert").removeClass("hidden");

@@ -86,7 +86,13 @@ richwallet.Wallet = function(walletKey, walletId) {
 
   this.importKey = function(network, name,  isChange, key) {
     var ret = {};
-    var eckey      = new Bitcoin.ECKey(key);
+    var eckey;
+    try {
+      eckey      = new Bitcoin.ECKey(key);
+    } catch (err) {
+      return {'success': false, 'info': err.message}
+    }
+    
     if (eckey == undefined ) {
       return {'success':false, 'info':'Unknown key format'}
     }

@@ -149,7 +149,7 @@
 
 <div class="container">
   <div class="row">
-	<div class="col-xs-8 col-md-8 col-sm-6">
+	<div class="col-xs-12 col-md-6 col-sm-6">
 	  <div class="input-group">
 		<input type="text" id="addressLabel" placeholder="<%- T('New address label(optional)') %>" class="form-control">
 		<div class="input-group-btn">
@@ -164,13 +164,13 @@
 	  </div><!-- /input-group -->
 	</div><!-- /.col-lg-6 -->
     
-	<div class="col-xs-6">
+	<div class="col-xs-4">
 	  <button class="btn btn-primary" onclick="javascript:richwallet.controllers.addresses.showVerifyMessageDialog()"><%- T('Verify Message') %></button>
 	</div>
   </div> <!-- end row -->
   
   <div class="row">
-    <div class="col-xs-8 col-md-8 col-sm-6">
+    <div class="col-xs-12 col-md-6 col-sm-6">
       <div class="input-group">
         <input type="text" id="importKey" class="form-control" placeholder="<%- T('Private key in QT-fromatted/base64/base58/hex') %>" >
         <div class="input-group-btn">
@@ -181,11 +181,12 @@
 			<li><a href="javascript:richwallet.controllers.addresses.importPrivKey('dogecoin',$('#importKey').val())"><%- T('dogecoin') %></a></li>
 			<li><a href="javascript:richwallet.controllers.addresses.importPrivKey('darkcoin',$('#importKey').val())"><%- T('darkcoin') %></a></li>
 		  </ul>
-        </span>
-      </div><!-- /input-group -->
-    </div>
+        </div><!-- /input-group-btn -->
+      </div><!--input-group-->
+    </div> <!--col-->
   </div> <!--end row-->
-  <div class="alert alert-danger hidden" id="importKeyAlert">
+  
+  <div class="alert alert-danger hidden"  id="importKeyAlert">
   </div>
 </div>
 
