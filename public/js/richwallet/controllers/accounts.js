@@ -28,17 +28,23 @@ richwallet.controllers.Accounts.prototype.backupDownload = function() {
 richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
   var self = this;
   var id = $('#walletId').val();
+  var password = $.trim($("#password").val());
   if (id=="") {
 	return;
   }
   
-  $.get('api/checkGoogleAuthCode', {email:id, r:$.now()}, function(response){
-    $('div[data-role=authcode-input]').addClass("hidden");
+  var wallet = new richwallet.Wallet();
+  var walletKey = wallet.createWalletKey(id, password);
+  var payload   = wallet.encryptPayload();
+  console.log(wallet.serverKey);
+  console.log(password)
+  $.post('api/checkGoogleAuthCode', {email:id, r:$.now(),serverKey: wallet.serverKey}, function(response){
+//    $('div[data-role=authcode-input]').addClass("hidden");
     $('div[data-role=authcode-alert]').addClass("hidden");
     var errorDiv = $('#errors');
     errorDiv.addClass('hidden');
     errorDiv.html('');
-
+    
     if(response.error){
       errorDiv.removeClass("hidden");
       errorDiv.text(T(response.error));
@@ -49,14 +55,22 @@ richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
     }
     else if(response.result == 'AuthCode'){
       $("div[data-role=authcode-input]").removeClass("hidden");
+      $("div[data-role=authcode-input]").removeClass("hidden");
     }
     else if(response.result == 'NoAuthCode'){
       $("div[data-role=authcode-alert]").removeClass("hidden");
       $("div[data-role=authcode-alert] span").text(T("Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make two factor authenticaton is highly recommended."));
+      $("#authCode").attr("type","text");
+      $("#authCode").attr("placeholder",T("You do not have the google auth ,login directly"));
     }
     else if(response.result == 'NotExpired'){
       $("div[data-role=authcode-alert]").removeClass("hidden");
       $("div[data-role=authcode-alert] span").text(T("Two factor auth is granted in 2 hours."));
+      $("#authCode").attr("type","text");
+      $("#authCode").attr("placeholder",T("Your google auth code is not expired, login directly"));
+    } else if(response.result=='Wallet not found or invalid password') {
+      $("div[data-role=authcode-alert]").removeClass("hidden");
+      $("div[data-role=authcode-alert] span").text(T("Wallet not found or invalid password"));
     }
   });
 };
@@ -73,13 +87,13 @@ richwallet.controllers.Accounts.prototype.signin = function() {
 
   var walletKey = wallet.createWalletKey(id, password);
   var payload   = wallet.encryptPayload();
-
-  var body = {serverKey: wallet.serverKey};
+  var loginVerifyCode = $.trim($("#emailCode").val());
+  var body = {serverKey: wallet.serverKey, emailCode:loginVerifyCode};
 
   var authCode = $('#authCode');
   if(authCode)
     body.authCode = authCode.val();
-
+  
   $.get('api/wallet', body, function(response) {
     if(response.result == 'error') {
       errorDiv.removeClass('hidden');
@@ -406,7 +420,7 @@ richwallet.controllers.Accounts.prototype.changeDialog = function(type, message)
 
 richwallet.controllers.Accounts.prototype.hideDialog = function(){
   $('#changeDialog').addClass('hidden');
-};
+}; 
 
 richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
   var e = $('#generateAuthQR');
@@ -469,5 +483,25 @@ richwallet.controllers.Accounts.prototype.disableAuth = function() {
     richwallet.router.route('dashboard', 'settings');
   });
 };
+
+richwallet.controllers.Accounts.prototype.firstTimeLoginBrowserCheckEmail = function() {
+  var user = $.trim($("#walletId").val())
+  if (user=="") {
+    return ;
+  }
+  
+  $('div[data-role=emailcode-input]').addClass("hidden");
+  $('div[data-role=emailcode-alert]').addClass("hidden");
+  //  $('div[data-role=authcode-input]').addClass("hidden");
+  $('div[data-role=authcode-alert]').addClass("hidden");
+  $.get('api/firstLoginCheckEmail', {user:user}, function(data,status){
+    if (data.checkemail==false) {
+    } else {
+      $('div[data-role=emailcode-input]').removeClass("hidden");
+      $('div[data-role=emailcode-alert]').removeClass("hidden");  
+    }
+  });
+};
+
 
 richwallet.controllers.accounts = new richwallet.controllers.Accounts();
