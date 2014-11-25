@@ -272,7 +272,6 @@
   "Unknown key format": "私钥格式不正确",
   "Address already exists": "私钥地址已存在",
   "Input your private key firstly": "请先输入私钥",
-  "From an import": "用户导入地址",
   "Import an address": "导入地址",
   "Invalid private key format.": "错误的私钥格式.",
   "Verify Code": "登陆验证码",
