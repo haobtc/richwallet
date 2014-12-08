@@ -18,27 +18,29 @@
         <label for="password" class="control-label" style="padding-top:0"><%- T('Password') %></label>
         <input type="password" class="form-control" id="password" placeholder="<%- T('Password for wallet') %>" autocomplete="off">
       </div>
-	  
-      		
         <div class="form-group hidden" data-role="emailcode-input">
           <label for="emailCode" class="control-label" styile="padding-top:0"><%- T('Verify Code') %></label>
           <input id="emailCode" type="text" class="form-control" placeholder=<%- T("Check your email and input verify code from email") %> >
 		</div>
         
 		<div class="form-group " data-role="authcode-input">
-          <label for="authCode" class="control-label" styile="padding-top:0"><%- T('Auth Code') %></label>
+          <label for="authCode" class="control-label" styile="padding-top:0"><%- T('Auth Code') %></label> <a href="javascript:void(0);" onclick="richwallet.controllers.accounts.resetAuth();"> (<%- T('Click to reset') %>)</a>
           <input id="authCode" type="text" class="form-control" placeholder="">
 		</div>
 
-
-        
+        <div class="form-group hidden" data-role="emailcode-forauth-input">
+          <label for="emailCodeForAuth" class="control-label " styile="padding-top:0"><%- T('Reset google auth verify code') %></label>
+          <div class="container">
+            <div class="row ">
+              <input id="emailCodeForAuth" type="text" class="col-xs-12 col-sm-3" placeholder=<%- T("Check your email and input verify code from email") %> > 
+              <button type="button" class="btn-success col-xs-12 col-sm-3 col-xs-offset-0 col-sm-offset-4" onclick="richwallet.controllers.accounts.verifyResetAuthCode()"> 提交 </button>
+		    </div>
+          </div>  <!-- end container -->
+        </div> 
 		<div class="form-group hidden" data-role="authcode-alert">
           <!--label for="authCode" class="control-label" styile="padding-top:0"><%- T('Auth Code') %></label-->
           <span></span>
 		</div>
-
-        
-
       <div class="row form-group">
         <button type="submit" class="btn btn-lg btn-success col-lg-12 col-xs-12"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
       </div>
@@ -46,8 +48,6 @@
 	  <div class="pull-right">
 			  <a href="#/signup"> <%- T('Register Now | ') %></a> <a href="#/accounts/import"> <%- T('Import Wallet') %></a>
 	  </div>
-
-
   </div>
   </form>
 </div>
@@ -88,7 +88,6 @@
   $("#walletId").blur(function(){richwallet.controllers.accounts.firstTimeLoginBrowserCheckEmail();});
   $("#emailCode").blur(function(){richwallet.controllers.accounts.checkEmailCode();});
   $("#password").blur(function(){richwallet.controllers.accounts.checkGoogleAuthCode();})
-
   
 </script>
 

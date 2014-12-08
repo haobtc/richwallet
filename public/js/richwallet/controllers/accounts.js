@@ -29,6 +29,8 @@ richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
   var self = this;
   var id = $('#walletId').val();
   var password = $.trim($("#password").val());
+
+  $("#authCode").attr("placeholder","");
   if (id=="") {
 	return;
   }
@@ -36,10 +38,8 @@ richwallet.controllers.Accounts.prototype.checkGoogleAuthCode = function(){
   var wallet = new richwallet.Wallet();
   var walletKey = wallet.createWalletKey(id, password);
   var payload   = wallet.encryptPayload();
-  console.log(wallet.serverKey);
-  console.log(password)
   $.post('api/checkGoogleAuthCode', {email:id, r:$.now(),serverKey: wallet.serverKey}, function(response){
-//    $('div[data-role=authcode-input]').addClass("hidden");
+    //    $('div[data-role=authcode-input]').addClass("hidden");
     $('div[data-role=authcode-alert]').addClass("hidden");
     var errorDiv = $('#errors');
     errorDiv.addClass('hidden');
@@ -272,7 +272,7 @@ richwallet.controllers.Accounts.prototype.performImport = function(id, password)
                     ' until the server finishes scanning for unspent transactions on your addresses. Please be patient.';
           self.showSuccessMessage(T(msg));
 		  richwallet.router.listener();
-
+          
           richwallet.router.route('dashboard');
         }
       });
@@ -470,19 +470,76 @@ richwallet.controllers.Accounts.prototype.disableAuth = function() {
   var dialog = $('#disableAuthDialog');
   dialog.addClass('hidden');
   var authCode = $('#disableAuth #disableAuthCode').val();
-
+  
   $.post('api/disableAuthKey', {serverKey: richwallet.wallet.serverKey, authCode: authCode}, function(resp) {
     if(resp.result == 'error') {
       dialog.text(resp.message);
       dialog.removeClass('hidden');
       return;
     }
-
+    
     richwallet.usingAuthKey = false;
     richwallet.controllers.accounts.showSuccessMessage(T('Two factor authentication has been disabled.'));
     richwallet.router.route('dashboard', 'settings');
   });
 };
+
+richwallet.controllers.Accounts.prototype.resetAuth = function() {
+  var dialog = $('#errors');
+  dialog.addClass('hidden');
+  $('div[data-role=emailcode-forauth-input]').addClass("hidden");
+  $('div[data-role=emailcode-forauth-alert]').addClass("hidden");
+  var email = $("#walletId").val();
+  var password = $('#password').val();
+  if (email==="" || password==="") {
+    console.log("email or pass empty")
+    return
+  }
+  var wallet = new richwallet.Wallet();
+  var walletKey = wallet.createWalletKey(email, password);
+  $.post('auth/reset', {serverKey: wallet.serverKey, email: email}, function(resp) {
+    if (!resp.Success) {
+      dialog.removeClass("hidden")
+      dialog.text(T(resp.Info))
+      return 
+    } else {
+      $('div[data-role=emailcode-forauth-input]').removeClass("hidden");
+      $('div[data-role=emailcode-forauth-alert]').removeClass("hidden");  
+    }
+    //richwallet.controllers.accounts.showSuccessMessage(T('Two factor authentication has been disabled.'));
+  });
+};
+
+richwallet.controllers.Accounts.prototype.verifyResetAuthCode = function() {
+  $("#errors").addClass("hidden");
+  var code = $("#emailCodeForAuth").val()
+  if (code === "") {
+    return 
+  }
+  
+  var email = $("#walletId").val();
+  var password = $('#password').val();
+  if (email==="" || password==="") {
+    console.log("email or pass empty")
+    return
+  }
+  var wallet = new richwallet.Wallet();
+  var walletKey = wallet.createWalletKey(email, password);
+  $.post('auth/verify', {serverKey: wallet.serverKey, email: email, code: code}, function(resp) {
+    console.log(resp.result)
+    console.log(resp.Info)
+    if (!resp.Success) {
+      $("#errors").removeClass("hidden")
+      $("#errors").text(resp.Info)
+      return 
+    }
+    $("#errors").removeClass("hidden")
+    $("#errors").text(T("Your request is passed, we will reset your auth in %s days" , resp.Info))
+    $("div[data-role=emailcode-forauth-input]").addClass("hidden")
+    $("div[data-role=emailcode-forauth-alert]").addClass("hidden")
+  })
+ 
+}
 
 richwallet.controllers.Accounts.prototype.firstTimeLoginBrowserCheckEmail = function() {
   var user = $.trim($("#walletId").val())
@@ -502,6 +559,5 @@ richwallet.controllers.Accounts.prototype.firstTimeLoginBrowserCheckEmail = func
     }
   });
 };
-
 
 richwallet.controllers.accounts = new richwallet.controllers.Accounts();

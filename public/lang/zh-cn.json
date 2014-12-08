@@ -272,10 +272,19 @@
   "Unknown key format": "私钥格式不正确",
   "Address already exists": "私钥地址已存在",
   "Input your private key firstly": "请先输入私钥",
+  "From an import": "用户导入地址",
   "Import an address": "导入地址",
   "Invalid private key format.": "错误的私钥格式.",
   "Verify Code": "登陆验证码",
-  "Check your email and input verify code from email": "请检查您的邮箱并输入收到的登陆验证码",
-  "Your google auth code is not expired, login directly": "您的二次认证尚未过期,请直接登陆",
-  "You do not have the google auth ,login directly": "您尚未启用二次认证,请直接登陆"
+  "Check your email and input verify code from email": "请检查您的邮箱并输入收到的验证码",
+  "Reset google auth verify code ": "重置两步认证验证码",
+  "Your google auth code is not expired, login directly": "您的两步认证尚未过期,请直接登陆",
+  "You do not have the google auth ,login directly": "您尚未启用两步认证,请直接登陆",
+  "User not exists or passwords error or auth not exists": "用户不存在或密码有误或两步认证不存在",
+  "Already requested before": "用户此前已提交重置申请",
+  "Reset google auth verify code": "重置两步认证验证码",
+  "Click to reset": "点击重置",
+  "Your request is passed, we will reset your auth in %s days" : "您的重置请求已经通过,重置将在%s天后完成",
+  "User not exists or passwords error or auth code invalid": "用户不存在或密码有误或验证码有误",
+  "Verify code is invalid": "验证码有误"
 }
