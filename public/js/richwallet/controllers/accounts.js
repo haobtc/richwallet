@@ -498,9 +498,9 @@ richwallet.controllers.Accounts.prototype.resetAuth = function() {
   var wallet = new richwallet.Wallet();
   var walletKey = wallet.createWalletKey(email, password);
   $.post('auth/reset', {serverKey: wallet.serverKey, email: email}, function(resp) {
-    if (!resp.Success) {
+    if (resp.result === 'error') {
       dialog.removeClass("hidden")
-      dialog.text(T(resp.Info))
+      dialog.text(T(resp.message))
       return 
     } else {
       $('div[data-role=emailcode-forauth-input]').removeClass("hidden");
@@ -527,15 +527,16 @@ richwallet.controllers.Accounts.prototype.verifyResetAuthCode = function() {
   var walletKey = wallet.createWalletKey(email, password);
   $.post('auth/verify', {serverKey: wallet.serverKey, email: email, code: code}, function(resp) {
     console.log(resp.result)
-    console.log(resp.Info)
-    if (!resp.Success) {
+    console.log(resp.message)
+    if (resp.result === 'error') {
       $("#errors").removeClass("hidden")
-      $("#errors").text(resp.Info)
+      $("#errors").text(resp.message)
       return 
     }
     $("#errors").removeClass("hidden")
-    $("#errors").text(T("Your request is passed, we will reset your auth in %s days" , resp.Info))
+    $("#errors").text(T("Your request is passed, we will reset your auth in %s days" , resp.message))
     $("div[data-role=emailcode-forauth-input]").addClass("hidden")
+    $("div[data-role=emailcode-forauth-input]").text("")
     $("div[data-role=emailcode-forauth-alert]").addClass("hidden")
   })
  
