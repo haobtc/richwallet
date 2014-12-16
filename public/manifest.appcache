@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v0.3.54
+# v0.3.56
 
 index.html
 js/all.js
@@ -42,6 +42,8 @@ fonts/lato/lato-italic.svg
 
 views/accounts/import.html
 views/accounts/settings.html
+views/accounts/resetAuth.html
+views/accounts/resetAuthVerify.html
 views/addresses/list.html
 views/addresses/request.html
 views/dashboard/balances.html

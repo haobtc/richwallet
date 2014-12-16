@@ -187,6 +187,19 @@ richwallet.router.map('#/addresses/list').to(function() {
   });
 });
 
+richwallet.router.map('#/resetAuth').to(function() {
+  richwallet.router.render('view', 'accounts/resetAuth')
+});
+
+richwallet.router.map('#/resetAuthVerify/:email/:actcode').to(function() {
+  var email = this.params['email']
+  var actcode =  this.params['actcode']
+  richwallet.router.render('view', 'accounts/resetAuthVerify',{'email':this.params['email'], 'actcode':this.params['actcode']}, function() {
+    $("#resetAuthEmail").val(email);
+    $("#resetAuthVerifyCode").val(actcode);
+  });
+});
+
 richwallet.router.map('#/addresses/request/:address').to(function() {
   var address = this.params['address'];
   richwallet.router.initWallet(function(res) {
