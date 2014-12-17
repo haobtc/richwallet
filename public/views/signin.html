@@ -74,7 +74,7 @@
   $("#walletId").focus();
   }
 
-  $("#walletId").blur(
+  $("#walletId").blur( function() {
   $('div[data-role=emailcode-input]').addClass("hidden");
   $('div[data-role=emailcode-alert]').addClass("hidden");
   $('div[data-role=authcode-input]').addClass("hidden");
