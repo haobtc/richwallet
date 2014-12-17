@@ -453,7 +453,7 @@ richwallet.controllers.Accounts.prototype.generateAuthQR = function() {
         '<p>' + T('Enter code shown on Google Authenticator') + ':</p>' +
         '<input type="hidden" id="authKeyValue" value="'+resp.key+'">' +
         '<div class="form-group">' +
-          '<label for="confirmAuthCode">' + T('Confirm Auth Code') + '</label>' +
+          '<label for="confirmAuthCode">' + T('Confirm Google Auth Code') + '</label>' +
           '<input class="form-control" type="text" id="confirmAuthCode" autocorrect="off" autocomplete="off">' +
         '</div>' +
         '<button type="submit" class="btn btn-primary">' + T('Confirm') + '</button>' +
@@ -548,6 +548,7 @@ richwallet.controllers.Accounts.prototype.firstTimeLoginBrowserCheckEmail = func
   $('div[data-role=emailcode-input]').addClass("hidden");
   $('div[data-role=emailcode-alert]').addClass("hidden");
   //  $('div[data-role=authcode-input]').addClass("hidden");
+  $('div[data-role=authcode-input]').addClass("hidden");
   $('div[data-role=authcode-alert]').addClass("hidden");
   $.get('api/firstLoginCheckEmail', {user:user}, function(data,status){
     if (data.checkemail==false) {

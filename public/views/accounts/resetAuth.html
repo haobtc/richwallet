@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h3><%- T('Reset Auth') %></h3>
+    <h3><%- T('Reset Google Auth') %></h3>
     <hr>
   </div>
 </div>
@@ -16,6 +16,10 @@
         </div>
         
         <div class="form-group">
+          <p><%- T('Input your email address to reset google auth, we will send your email the verify code . After the validation , we will reset your google auth in five days.For the reason of safe, reminding emails will be send in the following days') %></p>
+        </div>
+        
+        <div class="form-group">
           <label for="resetAuthEmail" class="control-label"><%- T('Email Address') %></label>
           <input id="resetAuthEmail" type="email" placeholder="<%- T('Your email') %>" class="form-control" value="<%- data.email %>">
         </div>
@@ -26,7 +30,7 @@
         </div>
 
         <div>
-          <button id="resetAuthBtn" class="btn btn-large btn-success" href="#" style="margin-top: 10px" onclick="richwallet.controllers.accounts.resetAuth();"><i class="fa fa-undo"></i> <%- T('Reset Auth') %></button>
+          <button id="resetAuthBtn" class="btn btn-large btn-success" href="#" style="margin-top: 10px" onclick="richwallet.controllers.accounts.resetAuth();"><i class="fa fa-undo"></i> <%- T('Reset Google Auth') %></button>
         </div>
         
         

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12 text-center">
-    <h3><%- T('Reset Auth') %></h3>
+    <h3><%- T('Reset Google Auth') %></h3>
     <hr>
   </div>
 </div>
@@ -14,19 +14,22 @@
         <div class="form-group">
           <div id="resetAuthErrors" class="alert alert-danger hidden"></div>
         </div>
-        
+        <div class="form-group">
+          <p><%- T('Input your email address to reset google auth, we will send your email the verify code . After the validation , we will reset your google auth in five days.For the reason of safe, reminding emails will be send in the following days') %></p>
+        </div>
+ 
         <div class="form-group">
           <label for="resetAuthEmail" class="control-label"><%- T('Email Address') %></label>
           <input id="resetAuthEmail" type="email" placeholder="<%- T('Your email') %>" class="form-control" value="<%- data.email %>">
         </div>
 
         <div class="form-group ">
-          <label for="resetAuthVerifyCode" class="control-label"><%- T('Verify Code') %></label>
+          <label for="resetAuthVerifyCode" class="control-label"><%- T('Email Auth Code For Reset Google Auth') %></label>
           <input id="resetAuthVerifyCode" type="text" placeholder="<%- T('Check your email and input verify code from email') %>" class="form-control" value="<%- data.email %>">
         </div>
 
         <div>
-          <button id="resetAuthVerifyBtn" class="btn btn-large btn-success" href="#" style="margin-top: 10px" onclick="richwallet.controllers.accounts.verifyResetAuthCode();"><i class="fa fa-undo"></i> <%- T('Reset Auth') %></button>
+          <button id="resetAuthVerifyBtn" class="btn btn-large btn-success" href="#" style="margin-top: 10px" onclick="richwallet.controllers.accounts.verifyResetAuthCode();"><i class="fa fa-undo"></i> <%- T('Reset Google Auth') %></button>
         </div>
         
       </form>
