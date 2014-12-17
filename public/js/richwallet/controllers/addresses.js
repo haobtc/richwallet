@@ -246,7 +246,7 @@ richwallet.controllers.Addresses.prototype.importPrivKey = function(network,key)
     $("#importKeyAlert").removeClass("hidden");
   }
 
-  var ret = richwallet.wallet.importKey(network,T("From an import"),false,key);
+  var ret = richwallet.wallet.importKey(network,"Import",false,key);
   var address = ""
   if (ret.success) {
     this.saveWallet(richwallet.wallet, {override: true, onOutOfSync:'reload', backup: true}, 

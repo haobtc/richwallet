@@ -18,6 +18,8 @@ richwallet.Template = {
     'node_error',
     'signin',
     'signup',
+    'accounts/resetAuth',
+    'accounts/resetAuthVerify',
 	'contact',
   ],
  

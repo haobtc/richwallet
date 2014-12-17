@@ -18,29 +18,24 @@
         <label for="password" class="control-label" style="padding-top:0"><%- T('Password') %></label>
         <input type="password" class="form-control" id="password" placeholder="<%- T('Password for wallet') %>" autocomplete="off">
       </div>
-	  
-
-		<div class="form-group hidden" data-role="authcode-input">
-          <label for="authCode" class="control-label" styile="padding-top:0"><%- T('Auth Code') %></label>
-          <input id="authCode" type="password" class="form-control" placeholder="">
-		</div>
-		<div class="form-group hidden" data-role="authcode-alert">
-          <!--label for="authCode" class="control-label" styile="padding-top:0"><%- T('Auth Code') %></label-->
-          <span></span>
-		</div>
-		
-
-
-
+      <div class="form-group hidden" data-role="emailcode-input">
+        <label for="emailCode" class="control-label" styile="padding-top:0"><%- T('Email Auth Code For Login') %></label>
+        <input id="emailCode" type="text" class="form-control" placeholder=<%- T("Check your email and input verify code from email") %> >
+	  </div>
+      
+	  <div class="form-group hidden" data-role="authcode-input" >
+        <label for="authCode" class="control-label" styile="padding-top:0"><%- T('Google Auth Code') %></label> 
+        <input id="authCode" type="text" class="form-control" placeholder="">
+	  </div>
+	  <div class="form-group hidden" data-role="authcode-alert">
+	  </div>
       <div class="row form-group">
         <button type="submit" class="btn btn-lg btn-success col-lg-12 col-xs-12"><i class="fa fa-sign-in"></i> <%- T('Sign in') %></button>
       </div>
 
 	  <div class="pull-right">
-			  <a href="#/signup"> <%- T('Register Now | ') %></a> <a href="#/accounts/import"> <%- T('Import Wallet') %></a>
+		<a href="#/signup"> <%- T('Register Now | ') %></a> <a href="#/accounts/import"> <%- T('Import Wallet') %></a> <a href="#/resetAuth"><%- T('| Reset Google Auth') %></a>
 	  </div>
-
-
   </div>
   </form>
 </div>
@@ -70,13 +65,18 @@
 </div>
 
 <script>
+  $("#authcode-alert").addClass("hidden")
   var defaultUsername = localStorage.getItem("default_username");
   if(defaultUsername){
-    $("#walletId").val(defaultUsername);
-    richwallet.controllers.accounts.checkGoogleAuthCode();
+  $("#walletId").val(defaultUsername);
+  //    richwallet.controllers.accounts.checkGoogleAuthCode();
+  } else{
+  $("#walletId").focus();
   }
-  else{
-    $("#walletId").focus();
-  }
-  $("#walletId").blur(function(){richwallet.controllers.accounts.checkGoogleAuthCode();});
+
+  $("#walletId").blur(
+  function(){richwallet.controllers.accounts.firstTimeLoginBrowserCheckEmail();}
+  );
+
 </script>
+
