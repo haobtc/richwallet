@@ -96,6 +96,12 @@ richwallet.controllers.Accounts.prototype.signin = function() {
     body.authCode = authCode.val();
   }
   
+var emailCode = $("#emailCode")
+if (emailCode.val() === "") {
+  body.emailCode = undefined
+} else {
+  body.emailCode = emailCode.val()
+}
   $.get('api/wallet', body, function(response) {
     if(response.result === 'error') {
       if ( response.message == "Login verify code from your email is wrong"  && $("div[data-role=emailcode-input]").attr("class").search("hidden") > 0)  {
