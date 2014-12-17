@@ -74,9 +74,12 @@
   $("#walletId").focus();
   }
 
-  $("#walletId").blur(
-  function(){richwallet.controllers.accounts.firstTimeLoginBrowserCheckEmail();}
-  );
+  $("#walletId").blur( function() {
+  $('div[data-role=emailcode-input]').addClass("hidden");
+  $('div[data-role=emailcode-alert]').addClass("hidden");
+  $('div[data-role=authcode-input]').addClass("hidden");
+  $('div[data-role=authcode-alert]').addClass("hidden");
+})
 
 </script>
 
