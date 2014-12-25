@@ -18,6 +18,5 @@
   },
   "httpPort": 8080,
   "authCodeSalt": "werNiosWE@#s8",
-
-  "blockQueryServer": [{"url":"10.10.10.10", "weight":3}, {"url":"20.20.20.20", "weight":4}]
+  "blockQueryServer": []
 }
