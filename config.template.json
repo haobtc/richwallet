@@ -18,6 +18,6 @@
   },
   "httpPort": 8080,
   "authCodeSalt": "werNiosWE@#s8",
-  "authServer":  "http://121.199.63.170:9000/",
-  "blockQueryServer": [{"http://218.61.196.200:9000":3},{"http://218.61.196.200:9000":1}]
+
+  "blockQueryServer": []
 }
