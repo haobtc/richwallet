@@ -60,6 +60,9 @@
 							 <li>
 							   <a role ="menuitem" href="#/addresses/request/<%- data.addresses[i].address %>"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
 							 </li>
+			                 <li>
+			                   <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showDeleteAddress('<%- data.addresses[i].address %>');"><i class="fa fa-scissors"></i> <%- T("Delete Address") %></a>
+			                 </li>
 						   </ul>
 						 </div>
 					   </div>
@@ -104,7 +107,6 @@
                  <td style="vertical-align:middle">
 				   <div><%- data.addresses[i].address %> <a href="javascript:void(0);" onclick="richwallet.controllers.addresses.showAddrQRcode('<%- data.addresses[i].address %>');return false;"><%- T("(QR Code)") %></a> </div>     
 				 </td>
-
 				 <td style="vertical-align:middle"><%- T(data.addresses[i].network)  %></td>
 				 <td style="vertical-align:middle">
 				   <span class="addExchangePrice">
@@ -128,6 +130,11 @@
 						 <li>
 						   <a role ="menuitem" href="#/addresses/request/<%- data.addresses[i].address %>"><i class="fa fa-qrcode"></i> <%- T('Request Payment') %></a>
 						 </li>
+                         
+			             <li>
+			               <a role="menuitem" href="javascript:void(0);" onclick="richwallet.controllers.addresses.showDeleteAddress('<%- data.addresses[i].address %>');"><i class="fa fa-scissors"></i> <%- T("Delete Address") %></a>
+			             </li>
+                         
 					   </ul>
 					 </div>
 				   </div>
@@ -379,6 +386,59 @@
 		  <button type="submit" id="signBtn" class="btn btn-primary"><%- T('Verify') %></button>
 		</div>
       </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteAddressDialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="text-center"><%- T('Delete Address') %></h4>
+      </div>
+      <form action="#" onsubmit="richwallet.controllers.addresses.remindDeleteAddress(); return false;">
+	<div class="modal-body">
+	  <div class="form-group clearfix">
+	    <div class="col-lg-12 text-center">
+	      <strong><%- T('This address %s will be deleted.') %></strong><input type="hidden" name="address"/>
+	    </div>
+	  </div>
+	  <div class="form-group clearfix">
+	    <!-- <label for="password" class="col-lg-2 control-label"><%- T('Login password') %></label> -->
+	    <div class="col-lg-6 col-lg-offset-3">
+	      <input type="password" step="any" name="password" class="form-control" placeholder="<%- T('Please input you password') %>" />
+	    </div>
+	  </div>
+	</div>
+	<div class="alert alert-danger hidden">
+	</div>
+	<div class="modal-footer">
+	  <button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Close') %></button>
+          <button type="submit" id="deleteAddress" class="btn btn-primary"><%- T('Delete') %></button>
+	</div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="remindDeleteAddressDialog" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="text-center"><%- T('Delete Address') %></h4>
+      </div>
+      <div class="modal-body">
+	<div class="form-group clearfix">
+	  <div class="text-center text-danger">
+	    <span style="font-size: 16px;word-break: break-all; word-wrap: break-word;"></span>
+	    <strong><%- T("Address deleted cannot be retrieved anymore, sure to do this?") %></strong>
+	  </div>
+	</div>
+	<div class="modal-footer">
+      <form action="#" onsubmit="richwallet.controllers.addresses.deleteAddress(); return false;">
+	<button type="button" class="btn btn-default" data-dismiss="modal"><%- T('Cancel') %></button>
+	<button type="submit" class="btn btn-primary"><%- T('Confirm') %></button>
+	  </form>
+	</div>
+      </div>
     </div>
   </div>
 </div>

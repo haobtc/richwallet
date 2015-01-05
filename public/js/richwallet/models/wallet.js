@@ -90,17 +90,26 @@ richwallet.Wallet = function(walletKey, walletId) {
     try {
       eckey      = new Bitcoin.ECKey(key);
     } catch (err) {
-      return {'success': false, 'info': err.message}
+      return {'success': false, 'info': err.message};
     }
-    
+
     if (eckey == undefined ) {
       return {'success':false, 'info':'Unknown key format'}
     }
-    var addr = eckey.getBitcoinAddress(network).toString()
+
+    try {
+      // validate the private key;
+      var pk = eckey.getExportedPrivateKey(network);
+      var tk = new Bitcoin.ECKey(pk);
+    } catch(err) {
+      return {'success': false, 'info': err.message};
+    }
+
+    var addr = eckey.getBitcoinAddress(network).toString();
     
     for (var i=0; i<keyPairs.length; i++) {
       if (addr === keyPairs[i].address.toString()) {
-        return  {'success':false, 'info':'Address already exists' }
+        return  {'success':false, 'info':'Address already exists' };
       }
     }
     
@@ -113,7 +122,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     if(name)
       newKeyPair.name = name;
     keyPairs.push(newKeyPair);
-    return {'success':true, "address":newKeyPair.address}
+    return {'success':true, "address":newKeyPair.address};
   }
   
   this.getAddressName = function(address) {
@@ -126,6 +135,12 @@ richwallet.Wallet = function(walletKey, walletId) {
     for(var i=0;i<keyPairs.length;i++)
       if(keyPairs[i].address == address)
         return keyPairs[i].name = name;
+  };
+
+  this.deleteAddress = function(address) {
+	for(var i=0;i<keyPairs.length;i++)
+      if(keyPairs[i].address == address)
+        return keyPairs.splice(i,1);
   };
 
   this.addresses = function(network) {
@@ -157,13 +172,24 @@ richwallet.Wallet = function(walletKey, walletId) {
   };
 
   this.fixKeyVersion = function(){
+    var newKeyPairs = [];
     for(var i=0; i<keyPairs.length; i++){
       var addr = new Bitcoin.Address(keyPairs[i].address);
-//todo  eckey may cause wrong key
-      var eckey = new Bitcoin.ECKey(keyPairs[i].key);
+      //todo  eckey may cause wrong key
+      try {
+	var eckey = new Bitcoin.ECKey(keyPairs[i].key);
+      }catch(e) {
+	// exclude invalid keys
+	continue;
+      }
+      newKeyPairs.push(keyPairs[i]);
       var key = eckey.getExportedPrivateKey(addr.getNetwork());
       if(keyPairs[i].key != key)
 	    keyPairs[i].key = key;
+    }
+
+    if(newKeyPairs.length != keyPairs.length) {
+      keyPairs = newKeyPairs;
     }
   };
 
