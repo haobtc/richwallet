@@ -11,7 +11,6 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.unspentConfirmations = [];
   
   var keyPairs = [];
-  this.kpairs =  keyPairs;
 
   this.loadPayloadWithLogin = function(id, password, payload) {
     this.createWalletKey(id, password);
@@ -71,7 +70,7 @@ richwallet.Wallet = function(walletKey, walletId) {
   this.createNewAddress = function(network, name, isChange) {
     var eckey      = new Bitcoin.ECKey();
     var newKeyPair = {
-      key: eckey.getExportedPrivateKey(network),
+      key: eckey.getExportedPrivateKey(network, eckey.compressed),
       publicKey: Bitcoin.convert.bytesToHex(eckey.getPubKeyHash()),
       address: eckey.getBitcoinAddress(network).toString(),
       isChange: (isChange == true)
@@ -99,7 +98,7 @@ richwallet.Wallet = function(walletKey, walletId) {
 
     try {
       // validate the private key;
-      var pk = eckey.getExportedPrivateKey(network);
+      var pk = eckey.getExportedPrivateKey(network, eckey.compressed);
       var tk = new Bitcoin.ECKey(pk);
     } catch(err) {
       return {'success': false, 'info': err.message};
@@ -114,7 +113,7 @@ richwallet.Wallet = function(walletKey, walletId) {
     }
     
     var newKeyPair = {
-      key: eckey.getExportedPrivateKey(network),
+      key: eckey.getExportedPrivateKey(network, eckey.compressed),
       publicKey: Bitcoin.convert.bytesToHex(eckey.getPubKeyHash()),
       address: eckey.getBitcoinAddress(network).toString(),
       isChange: (isChange == true)
@@ -182,10 +181,13 @@ richwallet.Wallet = function(walletKey, walletId) {
 	// exclude invalid keys
 	continue;
       }
-      newKeyPairs.push(keyPairs[i]);
-      var key = eckey.getExportedPrivateKey(addr.getNetwork());
+
+      var key = eckey.getExportedPrivateKey(addr.getNetwork(),
+					    eckey.compressed);
       if(keyPairs[i].key != key)
-	    keyPairs[i].key = key;
+	keyPairs[i].key = key;
+
+      newKeyPairs.push(keyPairs[i]);
     }
 
     if(newKeyPairs.length != keyPairs.length) {
