@@ -40,8 +40,13 @@ richwallet.router.listener = function() {
 };
 
 richwallet.router.initWallet = function(callback) {
-  if(richwallet.wallet)
+  if(richwallet.wallet) {
+    if(!richwallet.usingAuthKey && !/^\#\/account\//.test(window.location.hash)) {
+      richwallet.router.route('account/twofactor');
+      return;
+    }
     return callback(true);
+  }
 
   richwallet.router.route('signin');
 };
@@ -82,7 +87,7 @@ richwallet.router.map("#/signin").to(function() {
   return richwallet.router.render('view', 'signin');
 });
 
-richwallet.router.map("#/signout").to(function() {
+richwallet.router.map("#/account/signout").to(function() {
   richwallet.router.initWallet(function(res) {
     if(res == false)
       return;
@@ -175,8 +180,13 @@ richwallet.router.map('#/account/settings').to(function() {
   richwallet.router.initWallet(function(res) {
     if(res == false)
       return;
-    richwallet.router.render('view', 'accounts/settings');
+    richwallet.router.render('view', 'accounts/settings', function() {
+    });
   });
+});
+
+richwallet.router.map('#/account/twofactor').to(function() {
+  richwallet.router.render('view', 'accounts/twofactor');
 });
 
 richwallet.router.map('#/addresses/list').to(function() {
