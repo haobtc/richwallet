@@ -300,5 +300,5 @@
   "Reset Google Auth": "重置两步认证",
   "Input your email address to reset google auth, we will send your email the verify code . After the validation , we will reset your google auth in five days.For the reason of safe, reminding emails will be send in the following days": "输入您需要重置的邮箱地址, 并使用您邮箱收到的验证码进行验证. 验证通过后, 我们会在五天内重置您的两步认证. 安全起见, 在这五天内我们会每天给您发送提醒邮件.",
   "Twofactor will be expired in 2 hours after login": "两步认证会在登陆后二小时内有效",
-  "twofactor.required": "两步验证让你在登录时输入手机应用上的一个验证码，能很大程度提升账户的安全性。在作任何操作前，需要开启 <a class=\"btn btn-info\" href=\"#/account/settings\">两步验证</a>",
+  "twofactor.required": "两步验证让你在登录时输入手机应用上的一个验证码，能很大程度提升账户的安全性。在作任何操作前，需要开启 <a class=\"btn btn-info\" href=\"#/account/settings\">两步验证</a>"
 }
