@@ -49,7 +49,8 @@ var entrans = {
 		     "<p>Your password must also be a minimum of <b>10 characters</b>. If you're making a new password, write it down somewhere. You will likely forget it if you don't.</p>"),
     "twofactor.alert": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\" class=\"text-warning\">two factor authenticaton</a> is highly recommended.",
     "doge.merge.alert": "Dogecoin is undergoing a merged mining with litecoin, currently we are fixing this problem, please don't transfer you DOGEs for the time being, your balance will be right eventually. Sorry for the inconvenances.",
-    "close.alert": "Openblock will close its service at 2015-08-01, please export your private keys or transfer your coins to other wallets in time, bitcoin users is suggested to use <a target='_blank' href='https://haobtc.com'>Haobtc</a>."
+    "close.alert": "Openblock will close its service at 2015-08-01, please export your private keys or transfer your coins to other wallets in time, bitcoin users is suggested to use <a target='_blank' href='https://haobtc.com'>Haobtc</a>.",
+    "twofactor.required": "Two factor authentication allows you to require a code from your phone from Login. It increases your security level drastically. Make <a href=\"#/account/settings\" class=\"text-danger\">two factor authenticaton</a> is required before any operation."
 };
 richwallet.trans = {};
 for (var key in entrans) {

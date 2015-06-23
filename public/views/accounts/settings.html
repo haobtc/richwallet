@@ -69,22 +69,22 @@
   <div class="col-lg-4 col-lg-offset-2" id="authKey">
     <h3 class="text-center"><%- T('Two Factor Auth') %></h3>
     <% if(richwallet.usingAuthKey == true) { %>
-      <p><%- T('You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it') %>:</p>
+    <p><%- T('You are currently using Two Factor Authentication. If you would like to disable it, enter your auth code below and we will remove it') %>:</p>
 
-      <div id="disableAuthDialog" class="alert hidden">
+    <div id="disableAuthDialog" class="alert hidden">
+    </div>
+
+    <form id="disableAuth" role="form" onsubmit="richwallet.controllers.accounts.disableAuth(); return false;">
+      <div class="form-group">
+        <label for="authCode"><%- T('Enter code to disable') %></label>
+        <input class="form-control" type="password" id="disableAuthCode" autocomplete="off">
       </div>
-
-      <form id="disableAuth" role="form" onsubmit="richwallet.controllers.accounts.disableAuth(); return false;">
-        <div class="form-group">
-          <label for="authCode"><%- T('Enter code to disable') %></label>
-          <input class="form-control" type="password" id="disableAuthCode" autocomplete="off">
-        </div>
-        <button type="submit" class="btn btn-danger"><%- T('Disable') %></button>
-      </form>
+      <button type="submit" class="btn btn-danger"><%- T('Disable') %></button>
+    </form>
     <% } else { %>
-      <p><%- T('Two factor authentication allows you to require a code from your phone from Login. OpenBlock uses Google Authenticator, which you will need to download to use this.') %></p>
+    <p><%- T('Two factor authentication allows you to require a code from your phone from Login. OpenBlock uses Google Authenticator, which you will need to download to use this.') %></p>
 
-      <a class="btn btn-primary" href="javascript:richwallet.controllers.accounts.generateAuthQR();" id="generateAuthQR"><%- T('Generate QR Code to Scan') %></a>
+    <a class="btn btn-primary" href="javascript:richwallet.controllers.accounts.generateAuthQR();" id="generateAuthQR"><%- T('Generate QR Code to Scan') %></a>
     <% } %>
   </div>
 </div>
