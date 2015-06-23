@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# v0.4.5
+# v0.4.8
 
 index.html
 js/all.js
@@ -9,6 +9,9 @@ css/all.css
 
 images/switch/mask.png
 images/switch/mask-square.png
+
+img/apple-touch-icon.png
+img/title.png
 
 fonts/droidsans-bold.ttf
 fonts/droidsans.ttf
