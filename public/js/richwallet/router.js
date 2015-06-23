@@ -41,10 +41,10 @@ richwallet.router.listener = function() {
 
 richwallet.router.initWallet = function(callback) {
   if(richwallet.wallet) {
-    if(!richwallet.usingAuthKey && !/^\#\/account\//.test(window.location.hash)) {
+    /*if(!richwallet.usingAuthKey && !/^\#\/account\//.test(window.location.hash)) {
       richwallet.router.route('account/twofactor');
       return;
-    }
+    }*/
     return callback(true);
   }
 
