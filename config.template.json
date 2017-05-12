@@ -1,6 +1,6 @@
 {
   "mailer": {
-      "enabled": true,
+      "enabled": false,
       "fromAddress": "xx@gmail.com",
       "option": {
 	  "service": "gmail",

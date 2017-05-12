@@ -22,9 +22,10 @@
     "optimist": "~0.6.0",
     "redis": "~0.9.0",
     "request": "~2.27.0",
+    "sjcl": "^1.0.6",
     "sockjs": "~0.3.8",
-    "speakeasy": "~1.0.3",
-    "sqlite3": "~2.2.0"
+    "speakeasy": "~1.0.3"
+
   },
   "devDependencies": {
     "mocha": "~1.8.1",

@@ -2,6 +2,7 @@
 config.json
 node_modules
 .DS_Store
-coinpunk.key
-coinpunk.csr
-coinpunk.crt
+*.key
+*.csr
+*.crt
+*.db
